@@ -61,6 +61,7 @@ struct PomodoroTimerView: View {
                     .onDisappear {
                         viewModel.stopTimer()
                     }
+            
                 
                 Image("Pomodorini_Hat")
                     .offset(x: 90, y: -130)
