@@ -32,7 +32,8 @@ extension PlantFarmView {
         }
         
         var formatedCounter: String {
-            String(format: "%02d:%02d", counter / 60, counter % 60)
+            let time = seconds - counter
+            return String(format: "%02d:%02d", time / 60, time % 60)
         }
         
         func startTimer() {

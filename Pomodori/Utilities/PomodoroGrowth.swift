@@ -10,8 +10,8 @@ import SwiftUI
 
 struct PomodoroGrowth {
     let percentage: Double  // Wert zwischen 0 und 1
-    let defaultSize: Double = 25
-    let defaultGrowth: Double = 25
+    let defaultSize: Double =  0.15 // 25
+    let defaultGrowth: Double = 0.15 // 25
     
     init(at percentage: Double) {
         // Begrenze den Prozentwert auf den Bereich 0 bis 1.5
