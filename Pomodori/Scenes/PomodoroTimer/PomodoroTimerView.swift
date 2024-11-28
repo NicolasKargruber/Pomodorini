@@ -39,7 +39,7 @@ struct PomodoroTimerView: View {
                                     .opacity(0.3), lineWidth: 2)
                         )
                         // NavigationLink to HistoryView
-                        NavigationLink(destination: PlantFarmView(pomodoro: Pomodoro(color: viewModel.pomodoroColor, size: viewModel.seconds))) {
+                        NavigationLink(destination: PlantFarmView(pomodoro: Pomodoro(ripeness: viewModel.pomdoroRipeness, size: viewModel.seconds))) {
                             Button(action: {}) {
                                 Text("End")
                             }.disabled(true)
@@ -53,7 +53,7 @@ struct PomodoroTimerView: View {
                                         .stroke(Color(.white)
                                             .opacity(0.3), lineWidth: 2)
                                 )
-                        }.disabled(!viewModel.isCompleted)
+                        }.disabled(!viewModel.isRipe)
                     }
                     
                 }.containerRelativeFrame([.horizontal, .vertical])

@@ -14,7 +14,7 @@ struct PlantFarmView: View {
     @State var viewModel: ViewModel2
     
     init(duration: Int = 5 * 60, pomodoro: Pomodoro? = nil) {
-        self.viewModel = ViewModel2(seconds: duration)
+        self.viewModel = ViewModel2(seconds: duration, pomodoro: pomodoro)
         self.pomodoro = pomodoro
     }
     
@@ -29,7 +29,7 @@ struct PlantFarmView: View {
                 Image("Pomodorini-Unripe")
                     .scaleEffect(viewModel.pomodoroSize)
                     .frame(width: 100,height: 100)
-                    .grayscale(1).colorMultiply(viewModel.pomodorColor).colorMultiply(.white)
+                    .grayscale(1).colorMultiply(viewModel.pomodoroColor).colorMultiply(.white)
                     .padding([.bottom])
                 
                 HStack(spacing: 12) {
@@ -83,6 +83,6 @@ struct PlantFarmView: View {
 }
 
 #Preview {
-    PlantFarmView(duration: 15)
+    PlantFarmView(duration: 15, pomodoro: Pomodoro(ripeness: 1.2, size: 100))
 }
 
