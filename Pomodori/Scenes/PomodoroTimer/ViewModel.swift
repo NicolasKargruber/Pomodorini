@@ -10,6 +10,7 @@ import SwiftUICore
 extension PomodoroTimerView {
     @Observable
     class ViewModel {
+        var buttonScale = 1.0
         var seconds: Int
         var counter: Int = 0
         private var timer: Timer?
@@ -42,6 +43,10 @@ extension PomodoroTimerView {
             // Start a timer that increments the counter every second
             timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
                 self.counter += 1
+                
+                if self.isRipe {
+                    self.buttonScale = 1.4
+                }
                 
                 /*if self.counter >= self.seconds {
                                     self.stopTimer()

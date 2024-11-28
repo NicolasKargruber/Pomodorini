@@ -17,46 +17,39 @@ struct PomodoroTimerView: View {
     
     var body: some View {
         NavigationStack {
-            ZStack(alignment: .top) {
+            ZStack(alignment: .topLeading) {
                 VStack {
                     Text(viewModel.formatedCounter)
                         .font(.system(size: 80, weight: .bold))
                         .padding()
                         .foregroundColor(.white)
                     
-                    HStack(spacing: 12) {
-                        Button(action: viewModel.startTimer) {
-                            Text("Start")
+                    Button(action: {
+                        viewModel.startTimer()
+                        viewModel.buttonScale = 0.4
+                    }) {
+                        if viewModel.buttonScale == 1 && !viewModel.isRipe {Text("Start")}
+                        else if viewModel.isRipe {
+                            NavigationLink(destination: PlantFarmView(pomodoro: Pomodoro(ripeness: viewModel.pomdoroRipeness, size: viewModel.seconds))){
+                                Image(systemName: "apple.meditate").scaleEffect(1.5)}
                         }
-                        .frame(width: 70, height: 70)
-                        .foregroundColor(Color(.white))
-                        .background(Color(.white).opacity(0.3))
-                        .clipShape(Circle())
-                        .padding(.all, 3)
-                        .overlay(
-                            Circle()
-                                .stroke(Color(.white)
-                                    .opacity(0.3), lineWidth: 2)
-                        )
-                        // NavigationLink to HistoryView
-                        NavigationLink(destination: PlantFarmView(pomodoro: Pomodoro(ripeness: viewModel.pomdoroRipeness, size: viewModel.seconds))) {
-                            Button(action: {}) {
-                                Text("End")
-                            }.disabled(true)
-                                .frame(width: 70, height: 70)
-                                .foregroundColor(Color(.white))
-                                .background(Color(.white).opacity(0.3))
-                                .clipShape(Circle())
-                                .padding(.all, 3)
-                                .overlay(
-                                    Circle()
-                                        .stroke(Color(.white)
-                                            .opacity(0.3), lineWidth: 2)
-                                )
-                        }.disabled(!viewModel.isRipe)
+                        else {}
                     }
+                    .frame(width: 70, height: 70)
+                    .foregroundColor(Color(.white))
+                    .background(Color(.white).opacity(0.3))
+                    .clipShape(Circle())
+                    .padding(.all, 3)
+                    .overlay(
+                        Circle()
+                            .stroke(Color(.white)
+                                .opacity(0.3), lineWidth: 2)
+                    )
+                    .scaleEffect(viewModel.buttonScale)
+                    .animation(.easeIn, value: viewModel.buttonScale)
                     
-                }.containerRelativeFrame([.horizontal, .vertical])
+                }.frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .ignoresSafeArea()
                     .background(viewModel.pomodoroColor)
                     .onDisappear {
                         viewModel.stopTimer()
@@ -65,6 +58,14 @@ struct PomodoroTimerView: View {
                 
                 Image("Pomodorini_Hat")
                     .offset(x: 90, y: -130)
+                
+                Button("0 🍅", action: {})
+                    .font(.title)
+                    .fontWeight(.bold)
+                    .foregroundColor(.white)
+                    .buttonStyle(.bordered).tint(.white)
+                    .padding(.horizontal, 48)
+                    .padding(.vertical, 8)
             }
         }
     
