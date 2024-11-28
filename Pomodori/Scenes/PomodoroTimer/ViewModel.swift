@@ -19,12 +19,16 @@ extension PomodoroTimerView {
         }
         
         
-        var isCompleted: Bool {
+        var isRipe: Bool {
             return counter >= seconds
         }
         
+        var pomdoroRipeness: Double {
+            Double(counter) / Double(seconds)
+        }
+        
         var pomodoroColor: Color {
-            PomodoroGradient(at: Double(counter) / Double(seconds)).getColor()
+            PomodoroGradient(at: pomdoroRipeness).getColor()
         }
         
         var formatedCounter: String {
@@ -39,9 +43,9 @@ extension PomodoroTimerView {
             timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
                 self.counter += 1
                 
-                if self.counter >= self.seconds {
+                /*if self.counter >= self.seconds {
                                     self.stopTimer()
-                                }
+                                }*/
             }
         }
         

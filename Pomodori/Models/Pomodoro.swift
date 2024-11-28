@@ -8,6 +8,6 @@
 import SwiftUICore
 
 struct Pomodoro {
-    let color: Color
+    let ripeness: Double // 0 .. 0.5 .. 1.0 ...
     let size: Int // In seconds
 }

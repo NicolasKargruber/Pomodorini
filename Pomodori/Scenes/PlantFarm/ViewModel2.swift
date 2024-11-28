@@ -10,25 +10,30 @@ import SwiftUICore
 extension PlantFarmView {
     @Observable
     class ViewModel2 {
+        let pomodoro: Pomodoro?
         var seconds: Int
         var counter: Int = 0
         private var timer: Timer?
         
-        init(seconds: Int) {
+        init(seconds: Int, pomodoro: Pomodoro?) {
             self.seconds = seconds
+            self.pomodoro = pomodoro
         }
         
-        
-        var isCompleted: Bool {
+        var isRipe: Bool {
             return counter >= seconds
         }
         
-        var pomodorColor: Color {
-            PomodoroGradient(at: Double(counter) / Double(seconds)).getColor()
+        var pomdoroRipeness: Double {
+            (Double(counter) / Double(seconds)) * (pomodoro?.ripeness ?? 1.0)
         }
         
         var pomodoroSize: Double {
-            PomodoroGrowth(at: Double(counter) / Double(seconds)).getSize()
+            PomodoroGrowth(at: pomdoroRipeness).getSize()
+        }
+        
+        var pomodoroColor: Color {
+            PomodoroGradient(at: pomdoroRipeness).getColor()
         }
         
         var formatedCounter: String {
