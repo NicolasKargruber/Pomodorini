@@ -53,7 +53,7 @@ struct TimerView: View {
                     }) {
                         if buttonScale == 1 && !isRipe {Text("Start")}
                         else if isRipe {
-                            NavigationLink(destination: PlantFarmView(pomodoro: Pomodoro(ripeness: pomdoroRipeness, size: totalDuration))){
+                            NavigationLink(destination: BreakView(pomodoro: Pomodoro(ripeness: pomdoroRipeness, size: totalDuration))){
                                 Image(systemName: "apple.meditate").scaleEffect(1.5)}
                         }
                         else {}

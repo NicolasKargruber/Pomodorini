@@ -7,7 +7,7 @@
 
 import SwiftUICore
 
-extension PlantFarmView {
+extension BreakView {
     @Observable
     class ViewModel2 {
         let pomodoro: Pomodoro?
