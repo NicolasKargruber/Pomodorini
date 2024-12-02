@@ -12,7 +12,7 @@ import SwiftData
 struct PomodoriApp: App {
     var body: some Scene {
         WindowGroup {
-            PomodoroTimerView()
+            TimerView()
         }
     }
 }

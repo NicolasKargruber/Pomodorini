@@ -7,7 +7,7 @@
 
 import SwiftUICore
 
-extension PomodoroTimerView {
+extension TimerView {
     @Observable
     class ViewModel {
         var buttonScale = 1.0
