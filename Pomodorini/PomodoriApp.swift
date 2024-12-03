@@ -1,6 +1,6 @@
 //
-//  PomodoriApp.swift
-//  Pomodori
+//  PomodoriniApp.swift
+//  Pomodorini
 //
 //  Created by Nicolas Kargruber on 24.11.24.
 //
@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 @main
-struct PomodoriApp: App {
+struct PomodoriniApp: App {
     var body: some Scene {
         WindowGroup {
             TimerView()

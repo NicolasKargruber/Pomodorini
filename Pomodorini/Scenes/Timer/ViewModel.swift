@@ -1,6 +1,6 @@
 //
 //  ViewModel.swift
-//  Pomodori
+//  Pomodorini
 //
 //  Created by Nicolas Kargruber on 25.11.24.
 //

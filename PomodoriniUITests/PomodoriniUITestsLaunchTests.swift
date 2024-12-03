@@ -1,13 +1,13 @@
 //
-//  PomodoriUITestsLaunchTests.swift
-//  PomodoriUITests
+//  PomodoriniUITestsLaunchTests.swift
+//  PomodoriniUITests
 //
 //  Created by Nicolas Kargruber on 24.11.24.
 //
 
 import XCTest
 
-final class PomodoriUITestsLaunchTests: XCTestCase {
+final class PomodoriniUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true
