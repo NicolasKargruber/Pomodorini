@@ -9,9 +9,9 @@ import SwiftUICore
 import SwiftUI
 
 struct BreakView: View {
-        @Environment(\.presentationMode) var presentationMode
+    @Environment(\.presentationMode) var presentationMode
     
-    /*@Binding*/ @State var pomodorinoCount: Int
+    @Binding var pomodorinoCount: Int
     let totalDuration: Int // 5 * 60 .. In Seconds
     let ripeness: Double = 100.0
     
@@ -19,14 +19,14 @@ struct BreakView: View {
     @State private var isTimerRunning = false
     
     
-    let pomodoro: Pomodoro?
+    // let pomodoro: Pomodoro?
     //@State var viewModel: ViewModel2
     
-    init(duration: Int = 5 * 60, pomodoro: Pomodoro? = nil, pomodorinoCount: /*Binding<Int>*/Int = 0) {
-        self.pomodorinoCount = pomodorinoCount
+    init(duration: Int = 5 * 60, /*pomodoro: Pomodoro? = nil,*/ pomodorinoCount: Binding<Int>) {
         self.totalDuration = duration
+        _pomodorinoCount = pomodorinoCount
         //self.viewModel = ViewModel2(seconds: duration, pomodoro: pomodoro)
-        self.pomodoro = pomodoro
+        //self.pomodoro = pomodoro
         
         //viewModel.startTimer()
     }
@@ -68,6 +68,7 @@ struct BreakView: View {
                 Button(action: {
                     isTimerRunning = false
                     pomodorinoCount += 1
+                    presentationMode.wrappedValue.dismiss()
                 }) {
                     Text("Collect").font(.title)
                 }
@@ -97,11 +98,7 @@ struct BreakView: View {
                 .offset(x: -200,y: -460)
             
             
-            Button("\(pomodorinoCount) 🍅", action: {
-                isTimerRunning = false
-                pomodorinoCount += 1
-                presentationMode.wrappedValue.dismiss()
-            })
+            Button("\(pomodorinoCount) 🍅", action: {})
                             .font(.title)
                             .fontWeight(.bold)
                             .foregroundColor(.white)
@@ -131,6 +128,7 @@ struct BreakView: View {
 }
 
 #Preview {
-    BreakView(duration: 15, pomodoro: Pomodoro(ripeness: 1.2, size: 100), pomodorinoCount: 1)
+    @Previewable @State var pomodorini = 1
+    BreakView(duration: 10, /*pomodoro: Pomodoro(ripeness: 1.2, size: 100),*/ pomodorinoCount: $pomodorini)
 }
 

@@ -53,7 +53,7 @@ struct TimerView: View {
                     }) {
                         if buttonScale == 1 && !isRipe {Text("Start")}
                         else if isRipe {
-                            NavigationLink(destination: BreakView(pomodoro: Pomodoro(ripeness: pomdoroRipeness, size: totalDuration))){
+                            NavigationLink(destination: BreakView(duration: 10, /*pomodoro: Pomodoro(ripeness: pomdoroRipeness, size: totalDuration),*/ pomodorinoCount: $pomodorinoCount)){
                                 Image(systemName: "apple.meditate").scaleEffect(1.5)}
                         }
                         else {}
@@ -82,7 +82,7 @@ struct TimerView: View {
                 Image("Pomodorini_Hat")
                     .offset(x: 90, y: -130)
                 
-                Button("0 🍅", action: {})
+                Button("\(pomodorinoCount) 🍅", action: {})
                     .font(.title)
                     .fontWeight(.bold)
                     .foregroundColor(.white)
