@@ -24,25 +24,25 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		1F9CAD812CF36ADB00A82D52 /* Pomodori.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pomodori.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		1F9CAD932CF36ADC00A82D52 /* PomodoriTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PomodoriTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		1F9CAD9D2CF36ADC00A82D52 /* PomodoriUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PomodoriUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F9CAD812CF36ADB00A82D52 /* Pomodorini.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pomodorini.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F9CAD932CF36ADC00A82D52 /* PomodoriniTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PomodoriniTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F9CAD9D2CF36ADC00A82D52 /* PomodoriniUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PomodoriniUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		1F9CAD832CF36ADB00A82D52 /* Pomodori */ = {
+		1F9CAD832CF36ADB00A82D52 /* Pomodorini */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Pomodori;
+			path = Pomodorini;
 			sourceTree = "<group>";
 		};
-		1F9CAD962CF36ADC00A82D52 /* PomodoriTests */ = {
+		1F9CAD962CF36ADC00A82D52 /* PomodoriniTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = PomodoriTests;
+			path = PomodoriniTests;
 			sourceTree = "<group>";
 		};
-		1F9CADA02CF36ADC00A82D52 /* PomodoriUITests */ = {
+		1F9CADA02CF36ADC00A82D52 /* PomodoriniUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = PomodoriUITests;
+			path = PomodoriniUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -75,9 +75,9 @@
 		1F9CAD782CF36ADB00A82D52 = {
 			isa = PBXGroup;
 			children = (
-				1F9CAD832CF36ADB00A82D52 /* Pomodori */,
-				1F9CAD962CF36ADC00A82D52 /* PomodoriTests */,
-				1F9CADA02CF36ADC00A82D52 /* PomodoriUITests */,
+				1F9CAD832CF36ADB00A82D52 /* Pomodorini */,
+				1F9CAD962CF36ADC00A82D52 /* PomodoriniTests */,
+				1F9CADA02CF36ADC00A82D52 /* PomodoriniUITests */,
 				1F9CAD822CF36ADB00A82D52 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -85,9 +85,9 @@
 		1F9CAD822CF36ADB00A82D52 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1F9CAD812CF36ADB00A82D52 /* Pomodori.app */,
-				1F9CAD932CF36ADC00A82D52 /* PomodoriTests.xctest */,
-				1F9CAD9D2CF36ADC00A82D52 /* PomodoriUITests.xctest */,
+				1F9CAD812CF36ADB00A82D52 /* Pomodorini.app */,
+				1F9CAD932CF36ADC00A82D52 /* PomodoriniTests.xctest */,
+				1F9CAD9D2CF36ADC00A82D52 /* PomodoriniUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -95,9 +95,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		1F9CAD802CF36ADB00A82D52 /* Pomodori */ = {
+		1F9CAD802CF36ADB00A82D52 /* Pomodorini */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1F9CADA72CF36ADC00A82D52 /* Build configuration list for PBXNativeTarget "Pomodori" */;
+			buildConfigurationList = 1F9CADA72CF36ADC00A82D52 /* Build configuration list for PBXNativeTarget "Pomodorini" */;
 			buildPhases = (
 				1F9CAD7D2CF36ADB00A82D52 /* Sources */,
 				1F9CAD7E2CF36ADB00A82D52 /* Frameworks */,
@@ -108,18 +108,18 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				1F9CAD832CF36ADB00A82D52 /* Pomodori */,
+				1F9CAD832CF36ADB00A82D52 /* Pomodorini */,
 			);
-			name = Pomodori;
+			name = Pomodorini;
 			packageProductDependencies = (
 			);
 			productName = Pomodori;
-			productReference = 1F9CAD812CF36ADB00A82D52 /* Pomodori.app */;
+			productReference = 1F9CAD812CF36ADB00A82D52 /* Pomodorini.app */;
 			productType = "com.apple.product-type.application";
 		};
-		1F9CAD922CF36ADC00A82D52 /* PomodoriTests */ = {
+		1F9CAD922CF36ADC00A82D52 /* PomodoriniTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1F9CADAA2CF36ADC00A82D52 /* Build configuration list for PBXNativeTarget "PomodoriTests" */;
+			buildConfigurationList = 1F9CADAA2CF36ADC00A82D52 /* Build configuration list for PBXNativeTarget "PomodoriniTests" */;
 			buildPhases = (
 				1F9CAD8F2CF36ADC00A82D52 /* Sources */,
 				1F9CAD902CF36ADC00A82D52 /* Frameworks */,
@@ -131,18 +131,18 @@
 				1F9CAD952CF36ADC00A82D52 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				1F9CAD962CF36ADC00A82D52 /* PomodoriTests */,
+				1F9CAD962CF36ADC00A82D52 /* PomodoriniTests */,
 			);
-			name = PomodoriTests;
+			name = PomodoriniTests;
 			packageProductDependencies = (
 			);
 			productName = PomodoriTests;
-			productReference = 1F9CAD932CF36ADC00A82D52 /* PomodoriTests.xctest */;
+			productReference = 1F9CAD932CF36ADC00A82D52 /* PomodoriniTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		1F9CAD9C2CF36ADC00A82D52 /* PomodoriUITests */ = {
+		1F9CAD9C2CF36ADC00A82D52 /* PomodoriniUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1F9CADAD2CF36ADC00A82D52 /* Build configuration list for PBXNativeTarget "PomodoriUITests" */;
+			buildConfigurationList = 1F9CADAD2CF36ADC00A82D52 /* Build configuration list for PBXNativeTarget "PomodoriniUITests" */;
 			buildPhases = (
 				1F9CAD992CF36ADC00A82D52 /* Sources */,
 				1F9CAD9A2CF36ADC00A82D52 /* Frameworks */,
@@ -154,13 +154,13 @@
 				1F9CAD9F2CF36ADC00A82D52 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				1F9CADA02CF36ADC00A82D52 /* PomodoriUITests */,
+				1F9CADA02CF36ADC00A82D52 /* PomodoriniUITests */,
 			);
-			name = PomodoriUITests;
+			name = PomodoriniUITests;
 			packageProductDependencies = (
 			);
 			productName = PomodoriUITests;
-			productReference = 1F9CAD9D2CF36ADC00A82D52 /* PomodoriUITests.xctest */;
+			productReference = 1F9CAD9D2CF36ADC00A82D52 /* PomodoriniUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -186,7 +186,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 1F9CAD7C2CF36ADB00A82D52 /* Build configuration list for PBXProject "Pomodori" */;
+			buildConfigurationList = 1F9CAD7C2CF36ADB00A82D52 /* Build configuration list for PBXProject "Pomodorini" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -200,9 +200,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				1F9CAD802CF36ADB00A82D52 /* Pomodori */,
-				1F9CAD922CF36ADC00A82D52 /* PomodoriTests */,
-				1F9CAD9C2CF36ADC00A82D52 /* PomodoriUITests */,
+				1F9CAD802CF36ADB00A82D52 /* Pomodorini */,
+				1F9CAD922CF36ADC00A82D52 /* PomodoriniTests */,
+				1F9CAD9C2CF36ADC00A82D52 /* PomodoriniUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -258,12 +258,12 @@
 /* Begin PBXTargetDependency section */
 		1F9CAD952CF36ADC00A82D52 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 1F9CAD802CF36ADB00A82D52 /* Pomodori */;
+			target = 1F9CAD802CF36ADB00A82D52 /* Pomodorini */;
 			targetProxy = 1F9CAD942CF36ADC00A82D52 /* PBXContainerItemProxy */;
 		};
 		1F9CAD9F2CF36ADC00A82D52 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 1F9CAD802CF36ADB00A82D52 /* Pomodori */;
+			target = 1F9CAD802CF36ADB00A82D52 /* Pomodorini */;
 			targetProxy = 1F9CAD9E2CF36ADC00A82D52 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -395,9 +395,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Pomodori/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Pomodorini/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Pomodorini;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -407,8 +409,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.nicolasapps.Pomodori;
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nicolasapps.Pomodorini;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -423,9 +425,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Pomodori/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Pomodorini/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Pomodorini;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -435,8 +439,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.nicolasapps.Pomodori;
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nicolasapps.Pomodorini;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -458,7 +462,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Pomodori.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Pomodori";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Pomodorini.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Pomodorini";
 			};
 			name = Debug;
 		};
@@ -476,7 +480,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Pomodori.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Pomodori";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Pomodorini.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Pomodorini";
 			};
 			name = Release;
 		};
@@ -515,7 +519,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1F9CAD7C2CF36ADB00A82D52 /* Build configuration list for PBXProject "Pomodori" */ = {
+		1F9CAD7C2CF36ADB00A82D52 /* Build configuration list for PBXProject "Pomodorini" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1F9CADA52CF36ADC00A82D52 /* Debug */,
@@ -524,7 +528,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1F9CADA72CF36ADC00A82D52 /* Build configuration list for PBXNativeTarget "Pomodori" */ = {
+		1F9CADA72CF36ADC00A82D52 /* Build configuration list for PBXNativeTarget "Pomodorini" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1F9CADA82CF36ADC00A82D52 /* Debug */,
@@ -533,7 +537,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1F9CADAA2CF36ADC00A82D52 /* Build configuration list for PBXNativeTarget "PomodoriTests" */ = {
+		1F9CADAA2CF36ADC00A82D52 /* Build configuration list for PBXNativeTarget "PomodoriniTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1F9CADAB2CF36ADC00A82D52 /* Debug */,
@@ -542,7 +546,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1F9CADAD2CF36ADC00A82D52 /* Build configuration list for PBXNativeTarget "PomodoriUITests" */ = {
+		1F9CADAD2CF36ADC00A82D52 /* Build configuration list for PBXNativeTarget "PomodoriniUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1F9CADAE2CF36ADC00A82D52 /* Debug */,
