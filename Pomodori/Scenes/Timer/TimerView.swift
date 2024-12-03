@@ -13,6 +13,7 @@ struct TimerView: View {
     @State private var buttonScale = 1.0
     @State private var elapsedTime = 0  // Track time in seconds
     @State private var isTimerRunning = false
+    @State private var shouldResetTimer = false
 
     @State var pomodorinoCount = 0
     // @State var viewModel: ViewModel
@@ -42,10 +43,15 @@ struct TimerView: View {
         NavigationStack {
             ZStack(alignment: .topLeading) {
                 VStack {
-                    Text(formattedTime)
-                        .font(.system(size: 80, weight: .bold))
-                        .padding()
-                        .foregroundColor(.white)
+                    VStack(alignment: .trailing) {
+                        Text("Goal: \(totalDuration):00")
+                            .font(.system(size: 24, weight: .regular))
+                            .foregroundColor(.white).padding(.horizontal, 8)
+                        
+                        Text(formattedTime)
+                            .font(.system(size: 80, weight: .bold))
+                            .foregroundColor(.white)
+                    }
                     
                     Button(action: {
                         self.startTimer()
@@ -53,7 +59,7 @@ struct TimerView: View {
                     }) {
                         if buttonScale == 1 && !isRipe {Text("Start")}
                         else if isRipe {
-                            NavigationLink(destination: BreakView(duration: 10, /*pomodoro: Pomodoro(ripeness: pomdoroRipeness, size: totalDuration),*/ pomodorinoCount: $pomodorinoCount)){
+                            NavigationLink(destination: BreakView(duration: 10, /*pomodoro: Pomodoro(ripeness: pomdoroRipeness, size: totalDuration),*/ pomodorinoCount: $pomodorinoCount, shouldResetTimer: $shouldResetTimer).navigationBarBackButtonHidden(true)){
                                 Image(systemName: "apple.meditate").scaleEffect(1.5)}
                         }
                         else {}
@@ -89,6 +95,13 @@ struct TimerView: View {
                     .buttonStyle(.bordered).tint(.white)
                     .padding(.horizontal, 48)
                     .padding(.vertical, 8)
+            }
+        }.onChange(of: shouldResetTimer, initial: false) { _, newValue in
+            if(newValue)
+            {
+                elapsedTime = 0
+                startTimer()
+                self.shouldResetTimer = false
             }
         }
     }

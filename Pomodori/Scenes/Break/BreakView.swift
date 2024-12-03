@@ -12,8 +12,10 @@ struct BreakView: View {
     @Environment(\.presentationMode) var presentationMode
     
     @Binding var pomodorinoCount: Int
+    @Binding var shouldResetTimer: Bool
+    
     let totalDuration: Int // 5 * 60 .. In Seconds
-    let ripeness: Double = 100.0
+    let finalRipeness: Double = 1.0 // 0.0 .. 1.0
     
     @State private var elapsedTime = 0  // Track time in seconds
     @State private var isTimerRunning = false
@@ -22,9 +24,10 @@ struct BreakView: View {
     // let pomodoro: Pomodoro?
     //@State var viewModel: ViewModel2
     
-    init(duration: Int = 5 * 60, /*pomodoro: Pomodoro? = nil,*/ pomodorinoCount: Binding<Int>) {
+    init(duration: Int = 5 * 60, /*pomodoro: Pomodoro? = nil,*/ pomodorinoCount: Binding<Int>, shouldResetTimer: Binding<Bool>) {
         self.totalDuration = duration
         _pomodorinoCount = pomodorinoCount
+        _shouldResetTimer = shouldResetTimer
         //self.viewModel = ViewModel2(seconds: duration, pomodoro: pomodoro)
         //self.pomodoro = pomodoro
         
@@ -36,7 +39,7 @@ struct BreakView: View {
     }
     
     var pomdoroRipeness: Double {
-        (Double(elapsedTime) / Double(totalDuration)) * (ripeness ?? 1.0)
+        (Double(elapsedTime) / Double(totalDuration)) * (finalRipeness ?? 1.0)
     }
     
     var pomodoroSize: Double {
@@ -68,6 +71,7 @@ struct BreakView: View {
                 Button(action: {
                     isTimerRunning = false
                     pomodorinoCount += 1
+                    shouldResetTimer = true
                     presentationMode.wrappedValue.dismiss()
                 }) {
                     Text("Collect").font(.title)
@@ -129,6 +133,7 @@ struct BreakView: View {
 
 #Preview {
     @Previewable @State var pomodorini = 1
-    BreakView(duration: 10, /*pomodoro: Pomodoro(ripeness: 1.2, size: 100),*/ pomodorinoCount: $pomodorini)
+    @Previewable @State var shouldResetTimer = false
+    BreakView(duration: 10, /*pomodoro: Pomodoro(ripeness: 1.2, size: 100),*/ pomodorinoCount: $pomodorini, shouldResetTimer: $shouldResetTimer)
 }
 
