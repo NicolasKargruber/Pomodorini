@@ -1,4 +1,4 @@
-## 🍅 Pomodori 🍅 - The Hyperfocus Breaker
+## 🍅 Pomodorini 🍅 - The Hyperfocus Breaker
 
 A Swift app designed to help you manage focus and avoid the hyperfocus trap, for people with ADHD. 🌱
 
