@@ -1,6 +1,7 @@
 {
   "images" : [
     {
+      "filename" : "Pomodorini_App_Icon.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"

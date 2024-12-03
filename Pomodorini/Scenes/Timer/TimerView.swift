@@ -27,6 +27,10 @@ struct TimerView: View {
         return elapsedTime >= totalDuration
     }
     
+    var formattedTotalTime: String {
+        String(format: "%02d:%02d", totalDuration / 60, totalDuration % 60)
+    }
+    
     var formattedTime: String {
         String(format: "%02d:%02d", elapsedTime / 60, elapsedTime % 60)
     }
@@ -44,7 +48,7 @@ struct TimerView: View {
             ZStack(alignment: .topLeading) {
                 VStack {
                     VStack(alignment: .trailing) {
-                        Text("Goal: \(totalDuration):00")
+                        Text("Goal: \(formattedTotalTime)")
                             .font(.system(size: 24, weight: .regular))
                             .foregroundColor(.white).padding(.horizontal, 8)
                         
@@ -59,7 +63,7 @@ struct TimerView: View {
                     }) {
                         if buttonScale == 1 && !isRipe {Text("Start")}
                         else if isRipe {
-                            NavigationLink(destination: BreakView(duration: 10, /*pomodoro: Pomodoro(ripeness: pomdoroRipeness, size: totalDuration),*/ pomodorinoCount: $pomodorinoCount, shouldResetTimer: $shouldResetTimer).navigationBarBackButtonHidden(true)){
+                            NavigationLink(destination: BreakView(/*duration: 10,*/ /*pomodoro: Pomodoro(ripeness: pomdoroRipeness, size: totalDuration),*/ pomodorinoCount: $pomodorinoCount, shouldResetTimer: $shouldResetTimer).navigationBarBackButtonHidden(true)){
                                 Image(systemName: "apple.meditate").scaleEffect(1.5)}
                         }
                         else {}
