@@ -7,24 +7,29 @@
 
 import SwiftUICore
 
-extension PomodoroTimerView {
+extension BreakView {
     @Observable
-    class ViewModel {
+    class ViewModel2 {
+        let pomodoro: Pomodoro?
         var seconds: Int
         var counter: Int = 0
         private var timer: Timer?
         
-        init(seconds: Int) {
+        init(seconds: Int, pomodoro: Pomodoro?) {
             self.seconds = seconds
+            self.pomodoro = pomodoro
         }
-        
         
         var isRipe: Bool {
             return counter >= seconds
         }
         
         var pomdoroRipeness: Double {
-            Double(counter) / Double(seconds)
+            (Double(counter) / Double(seconds)) * (pomodoro?.ripeness ?? 1.0)
+        }
+        
+        var pomodoroSize: Double {
+            PomodoroGrowth(at: pomdoroRipeness).getSize()
         }
         
         var pomodoroColor: Color {
@@ -32,7 +37,8 @@ extension PomodoroTimerView {
         }
         
         var formatedCounter: String {
-            String(format: "%02d:%02d", counter / 60, counter % 60)
+            let time = seconds - counter
+            return String(format: "%02d:%02d", time / 60, time % 60)
         }
         
         func startTimer() {
@@ -43,9 +49,9 @@ extension PomodoroTimerView {
             timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
                 self.counter += 1
                 
-                /*if self.counter >= self.seconds {
+                if self.counter >= self.seconds {
                                     self.stopTimer()
-                                }*/
+                                }
             }
         }
         

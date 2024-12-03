@@ -7,29 +7,25 @@
 
 import SwiftUICore
 
-extension PlantFarmView {
+extension TimerView {
     @Observable
-    class ViewModel2 {
-        let pomodoro: Pomodoro?
+    class ViewModel {
+        var buttonScale = 1.0
         var seconds: Int
         var counter: Int = 0
         private var timer: Timer?
         
-        init(seconds: Int, pomodoro: Pomodoro?) {
+        init(seconds: Int) {
             self.seconds = seconds
-            self.pomodoro = pomodoro
         }
+        
         
         var isRipe: Bool {
             return counter >= seconds
         }
         
         var pomdoroRipeness: Double {
-            (Double(counter) / Double(seconds)) * (pomodoro?.ripeness ?? 1.0)
-        }
-        
-        var pomodoroSize: Double {
-            PomodoroGrowth(at: pomdoroRipeness).getSize()
+            Double(counter) / Double(seconds)
         }
         
         var pomodoroColor: Color {
@@ -37,8 +33,7 @@ extension PlantFarmView {
         }
         
         var formatedCounter: String {
-            let time = seconds - counter
-            return String(format: "%02d:%02d", time / 60, time % 60)
+            String(format: "%02d:%02d", counter / 60, counter % 60)
         }
         
         func startTimer() {
@@ -49,9 +44,13 @@ extension PlantFarmView {
             timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
                 self.counter += 1
                 
-                if self.counter >= self.seconds {
+                if self.isRipe {
+                    self.buttonScale = 1.4
+                }
+                
+                /*if self.counter >= self.seconds {
                                     self.stopTimer()
-                                }
+                                }*/
             }
         }
         
