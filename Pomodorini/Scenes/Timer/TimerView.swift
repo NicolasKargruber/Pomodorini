@@ -40,7 +40,7 @@ struct TimerView: View {
     }
     
     var pomodoroColor: Color {
-        PomodoroGradient(at: pomdoroRipeness).getColor()
+        try! PomodorinoGradient.color(for: pomdoroRipeness)
     }
     
     var body: some View {
@@ -128,6 +128,6 @@ struct TimerView: View {
 }
 
 #Preview() {
-    TimerView(duration: 5)
+    TimerView(duration: 60)
 }
 
