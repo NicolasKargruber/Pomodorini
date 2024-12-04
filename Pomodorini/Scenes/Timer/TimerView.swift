@@ -64,15 +64,18 @@ struct TimerView: View {
                         .buttonStyle(.bordered).tint(.white).frame(maxWidth: .infinity, alignment: .leading)
                     
                     VStack(){
+                        
                         VStack(alignment: .trailing) {
+                            
                             Text("Goal: \(formattedTotalTime)")
                                 .font(.system(size: 24, weight: .regular))
-                                .foregroundColor(.white).padding(.horizontal, 8)
+                                .foregroundColor(.white).padding(.horizontal, 72)
                             
                             Text(formattedTime)
                                 .font(.system(size: 80, weight: .bold))
-                                .foregroundColor(.white)
-                        }
+                                .foregroundColor(.white).frame(maxWidth: .infinity)
+                            
+                        }.frame(maxWidth: .infinity)
                         
                         Button(action: {
                             self.startTimer()
@@ -97,11 +100,12 @@ struct TimerView: View {
                         )
                         .scaleEffect(isRipe ?  1.4 : buttonScale)
                         .animation(.easeIn, value: isRipe ?  1.4 : buttonScale)
+                        
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     
                 }
-                .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .padding()
                 
             }
