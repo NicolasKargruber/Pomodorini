@@ -44,62 +44,73 @@ struct TimerView: View {
     }
     
     var body: some View {
+        
         NavigationStack {
-            ZStack(alignment: .topLeading) {
-                VStack {
-                    VStack(alignment: .trailing) {
-                        Text("Goal: \(formattedTotalTime)")
-                            .font(.system(size: 24, weight: .regular))
-                            .foregroundColor(.white).padding(.horizontal, 8)
-                        
-                        Text(formattedTime)
-                            .font(.system(size: 80, weight: .bold))
-                            .foregroundColor(.white)
-                    }
-                    
-                    Button(action: {
-                        self.startTimer()
-                        buttonScale = 0.4
-                    }) {
-                        if buttonScale == 1 && !isRipe {Text("Start")}
-                        else if isRipe {
-                            NavigationLink(destination: BreakView(/*duration: 10,*/ /*pomodoro: Pomodoro(ripeness: pomdoroRipeness, size: totalDuration),*/ pomodorinoCount: $pomodorinoCount, shouldResetTimer: $shouldResetTimer).navigationBarBackButtonHidden(true)){
-                                Image(systemName: "apple.meditate").scaleEffect(1.5)}
-                        }
-                        else {}
-                    }
-                    .frame(width: 70, height: 70)
-                    .foregroundColor(Color(.white))
-                    .background(Color(.white).opacity(0.3))
-                    .clipShape(Circle())
-                    .padding(.all, 3)
-                    .overlay(
-                        Circle()
-                            .stroke(Color(.white)
-                                .opacity(0.3), lineWidth: 2)
-                    )
-                    .scaleEffect(isRipe ?  1.4 : buttonScale)
-                    .animation(.easeIn, value: isRipe ?  1.4 : buttonScale)
-                    
-                }.frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .ignoresSafeArea()
-                    .background(pomodoroColor)
-                    .onDisappear {
-                        isTimerRunning = false
-                    }
             
+            ZStack(alignment: .top) {
                 
-                Image("Pomodorini_Hat")
-                    .offset(x: 90, y: -130)
+                // Background Color
+                pomodoroColor.ignoresSafeArea().overlay {
+                    // Pomodorino Hat
+                    Image("Pomodorini_Hat").offset(x: 90, y: -320)
+                }
                 
-                Button("\(pomodorinoCount) 🍅", action: {})
-                    .font(.title)
-                    .fontWeight(.bold)
-                    .foregroundColor(.white)
-                    .buttonStyle(.bordered).tint(.white)
-                    .padding(.horizontal, 48)
-                    .padding(.vertical, 8)
+                // Content
+                VStack {
+                    Button("\(pomodorinoCount) 🍅", action: {})
+                        .font(.title)
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                        .buttonStyle(.bordered).tint(.white).frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    VStack(){
+                        
+                        VStack(alignment: .trailing) {
+                            
+                            Text("Goal: \(formattedTotalTime)")
+                                .font(.system(size: 24, weight: .regular))
+                                .foregroundColor(.white).padding(.horizontal, 72)
+                            
+                            Text(formattedTime)
+                                .font(.system(size: 80, weight: .bold))
+                                .foregroundColor(.white).frame(maxWidth: .infinity)
+                            
+                        }.frame(maxWidth: .infinity)
+                        
+                        Button(action: {
+                            self.startTimer()
+                            buttonScale = 0.4
+                        }) {
+                            if buttonScale == 1 && !isRipe {Text("Start")}
+                            else if isRipe {
+                                NavigationLink(destination: BreakView(/*duration: 10,*/ /*pomodoro: Pomodoro(ripeness: pomdoroRipeness, size: totalDuration),*/ pomodorinoCount: $pomodorinoCount, shouldResetTimer: $shouldResetTimer).navigationBarBackButtonHidden(true)){
+                                    Image(systemName: "apple.meditate").scaleEffect(1.5)}
+                            }
+                            else {}
+                        }
+                        .frame(width: 70, height: 70)
+                        .foregroundColor(Color(.white))
+                        .background(Color(.white).opacity(0.3))
+                        .clipShape(Circle())
+                        .padding(.all, 3)
+                        .overlay(
+                            Circle()
+                                .stroke(Color(.white)
+                                    .opacity(0.3), lineWidth: 2)
+                        )
+                        .scaleEffect(isRipe ?  1.4 : buttonScale)
+                        .animation(.easeIn, value: isRipe ?  1.4 : buttonScale)
+                        
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .padding()
+                
             }
+            .onDisappear { isTimerRunning = false }
+            
         }.onChange(of: shouldResetTimer, initial: false) { _, newValue in
             if(newValue)
             {

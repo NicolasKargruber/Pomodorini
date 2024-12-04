@@ -57,60 +57,65 @@ struct BreakView: View {
     
     var body: some View {
         ZStack {
-            VStack(spacing: 30) {
-                VStack {
-                    Spacer()
-                    Image("Pomodorini-Unripe")
-                        .scaleEffect(pomodoroSize)
-                        .grayscale(1)
-                        .colorMultiply(pomodoroColor)
-                        .luminanceToAlpha()
-                }.frame(width: 50,height: 50)
-                    .padding(.vertical)
+            
+            // Background Color
+            Color(#colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1)).ignoresSafeArea().overlay {
+                // Background Scene
+                Ellipse()
+                    .fill(Color.brown).colorMultiply(.green).opacity(0.5)
+                    .frame(width: UIScreen.main.bounds.width * 2, height: 300)
+                    .offset(y: +400)
                 
-                Button(action: {
-                    isTimerRunning = false
-                    pomodorinoCount += 1
-                    shouldResetTimer = true
-                    presentationMode.wrappedValue.dismiss()
-                }) {
-                    Text("Collect").font(.title)
-                }
-                .disabled(!isRipe)
-                .buttonStyle(.bordered).tint(.white)
+                Ellipse()
+                    .fill(Color.brown).colorMultiply(.brown).opacity(0.7)
+                    .frame(width: UIScreen.main.bounds.width * 1, height: 150) // Oversized width
+                    .offset(y: 400)
                 
-                Text(formattedTime)
-                    .font(.system(size: 80, weight: .bold))
-                    .foregroundColor(.white)
-            }.containerRelativeFrame([.horizontal, .vertical])
-                .background(Color.teal)
+                Circle()
+                    .fill(Color.yellow).colorMultiply(.yellow).opacity(0.6)
+                    .frame(width: 400, height: 400)
+                    .offset(x: -200,y: -460)
+            }
             
-            
-            Ellipse()
-                .fill(Color.brown).colorMultiply(.green).opacity(0.5)
-                .frame(width: UIScreen.main.bounds.width * 2, height: 300)
-                .offset(y: +400)
-            
-            Ellipse()
-                .fill(Color.brown).colorMultiply(.brown).opacity(0.7)
-                .frame(width: UIScreen.main.bounds.width * 1, height: 150) // Oversized width
-                .offset(y: 400)
-            
-            Circle()
-                .fill(Color.yellow).colorMultiply(.yellow).opacity(0.6)
-                .frame(width: 400, height: 400)
-                .offset(x: -200,y: -460)
-            
-            
-            Button("\(pomodorinoCount) 🍅", action: {})
-                            .font(.title)
-                            .fontWeight(.bold)
-                            .foregroundColor(.white)
-                            .buttonStyle(.bordered).tint(.white)
-                            .frame(alignment: .topTrailing)
-                            .padding(.horizontal, 48) .padding(.vertical, 8)
-                            // TODO: Remove offset in POM-21
-                            .offset(x: 140,y: -350)
+            VStack(alignment: .trailing) {
+                Button("\(pomodorinoCount) 🍅", action: {})
+                                .font(.title)
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
+                                .buttonStyle(.bordered).tint(.white)
+                
+                VStack(spacing: 30) {
+                    
+                    VStack {
+                        Spacer()
+                        Image("Pomodorini-Unripe")
+                            .scaleEffect(pomodoroSize)
+                            .grayscale(1)
+                            .colorMultiply(pomodoroColor)
+                            .luminanceToAlpha()
+                    }.frame(width: 50,height: 50)
+                        .padding(.vertical)
+                    
+                    Button(action: {
+                        isTimerRunning = false
+                        pomodorinoCount += 1
+                        shouldResetTimer = true
+                        presentationMode.wrappedValue.dismiss()
+                    }) {
+                        Text("Collect").font(.title)
+                    }
+                    .disabled(!isRipe)
+                    .buttonStyle(.bordered).tint(.white)
+                    
+                    Text(formattedTime)
+                        .font(.system(size: 80, weight: .bold))
+                        .foregroundColor(.white)
+                    
+                }.frame(maxWidth: .infinity, maxHeight: .infinity)
+                
+            }.frame(maxWidth: .infinity, alignment: .trailing)
+                .padding()
+
         }.onAppear{startTimer()}
     }
     
