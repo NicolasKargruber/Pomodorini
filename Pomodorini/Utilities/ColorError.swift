@@ -6,11 +6,11 @@
 //
 
 enum ColorError: Error {
-    case invalidPercentage(value: Double)
+    case percentageOutOfRange(value: Double)
     
     var localizedDescription: String {
         switch self {
-        case .invalidPercentage(let value):
+        case .percentageOutOfRange(let value):
             return "Invalid percentage value: \(value). It must be between 0.0 and 2.0."
         }
     }
