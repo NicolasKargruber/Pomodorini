@@ -33,7 +33,7 @@ extension BreakView {
         }
         
         var pomodoroColor: Color {
-            PomodoroGradient(at: pomdoroRipeness).getColor()
+            try! PomodorinoGradient.color(for: pomdoroRipeness)
         }
         
         var formatedCounter: String {
