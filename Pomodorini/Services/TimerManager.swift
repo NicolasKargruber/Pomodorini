@@ -48,6 +48,7 @@ class TimerManager {
         guard timer == nil else { return }  // Prevent multiple timers
         
         // START Time
+        startTime = Date()
         guard let startTime = startTime else {
                 print("Start time is not initialized.")
                 return
@@ -70,6 +71,7 @@ class TimerManager {
         guard let _ = startTime, let endTime = endTime else { return }
         let now = Date()
         remainingTime = endTime.timeIntervalSince(now)
+        print(remainingTime)
         
         if remainingTime <= 0 {
             if isOvertimeEnabled {
@@ -82,7 +84,8 @@ class TimerManager {
     }
     
     private func formatTime(_ time: TimeInterval) -> String {
-        let totalSeconds = Int(time)
+        let totalSeconds = Int(round(time))
+        print("Rounded \(totalSeconds)")
         let minutes = totalSeconds / 60
         let seconds = totalSeconds % 60
         return String(format: "%02d:%02d", minutes, seconds)
