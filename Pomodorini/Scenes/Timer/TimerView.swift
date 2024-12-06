@@ -8,17 +8,15 @@
 import SwiftUI
 
 struct TimerView: View {
-    private let totalMinutes: Int
     @State private var buttonScale = 1.0
     @State private var shouldResetTimer = false
 
     @State var pomodorinoCount = 0
     @State var timerManager: TimerManager
     
-    init(totalMinutes: Int = 25) {
-        self.totalMinutes = totalMinutes
+    init(durationInMinutes: Int = 25) {
         try! self.timerManager = TimerManager(
-            totalMinutes: totalMinutes, allowOvertime: false)
+            totalMinutes: durationInMinutes, allowOvertime: false)
     }
     
     var isRipe: Bool {
@@ -57,7 +55,7 @@ struct TimerView: View {
                         
                         VStack(alignment: .trailing) {
                             
-                            Text("Goal: 0\(totalMinutes):00")
+                            Text("Goal: 01:00")
                                 .font(.system(size: 24, weight: .regular))
                                 .foregroundColor(.white).padding(.horizontal, 72)
                             
@@ -74,7 +72,7 @@ struct TimerView: View {
                             if buttonScale == 1 && !isRipe {Text("Start")}
                             else if isRipe {
                                 NavigationLink(
-                                    destination: BreakView(pomodorinoCount: $pomodorinoCount, shouldResetTimer: $shouldResetTimer).navigationBarBackButtonHidden(true)){
+                                    destination: BreakView(durationInMinutes: 1,pomodorinoCount: $pomodorinoCount, shouldResetTimer: $shouldResetTimer).navigationBarBackButtonHidden(true)){
                                     Image(systemName: "apple.meditate").scaleEffect(1.5)}
                             }
                             else {}
@@ -112,6 +110,6 @@ struct TimerView: View {
 }
 
 #Preview() {
-    TimerView(totalMinutes: 1)
+    TimerView(durationInMinutes: 1)
 }
 

@@ -11,7 +11,7 @@ import Combine
 
 @Observable
 class TimerManager {
-    let totalDuration: TimeInterval  // Total duration in seconds
+    private let totalDuration: TimeInterval  // Total duration in seconds
     private var remainingTime: TimeInterval  // Total time left in seconds
     private var overtime: TimeInterval?      // Overtime in seconds
     private var startTime: Date?             // Actual start time
@@ -71,7 +71,7 @@ class TimerManager {
         guard let _ = startTime, let endTime = endTime else { return }
         let now = Date()
         remainingTime = endTime.timeIntervalSince(now)
-        print(remainingTime)
+        print("Time left: \(remainingTime)")
         
         if remainingTime <= 0 {
             if isOvertimeEnabled {
@@ -85,7 +85,7 @@ class TimerManager {
     
     private func formatTime(_ time: TimeInterval) -> String {
         let totalSeconds = Int(round(time))
-        print("Rounded \(totalSeconds)")
+        print("Rounded to \(totalSeconds)")
         let minutes = totalSeconds / 60
         let seconds = totalSeconds % 60
         return String(format: "%02d:%02d", minutes, seconds)
