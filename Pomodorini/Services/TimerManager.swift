@@ -11,7 +11,7 @@ import Combine
 
 @Observable
 class TimerManager {
-    private var totalDuration: TimeInterval  // Total duration in seconds
+    let totalDuration: TimeInterval  // Total duration in seconds
     private var remainingTime: TimeInterval  // Total time left in seconds
     private var overtime: TimeInterval?      // Overtime in seconds
     private var startTime: Date?             // Actual start time
@@ -34,6 +34,14 @@ class TimerManager {
     
     var formattedOvertime: String {
         (formatTime(overtime ?? TimeInterval(0)))
+    }
+    
+    var progress: Double {
+        1 - (Double(remainingTime) / Double(totalDuration)) + Double(overtime ?? 0.0)
+    }
+    
+    var isCompleted: Bool {
+        remainingTime <= 0
     }
     
     func start() {
