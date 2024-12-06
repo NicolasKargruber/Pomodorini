@@ -8,35 +8,23 @@
 import SwiftUI
 
 struct TimerView: View {
-    let totalDuration: Int // In Seconds
-    
     @State private var buttonScale = 1.0
-    @State private var elapsedTime = 0  // Track time in seconds
-    @State private var isTimerRunning = false
     @State private var shouldResetTimer = false
 
     @State var pomodorinoCount = 0
-    // @State var viewModel: ViewModel
+    @State var timerManager: TimerManager
     
-    init(duration: Int = 25 * 60) {
-        self.totalDuration = duration
-        //self.viewModel = ViewModel(seconds: duration)
+    init(durationInMinutes: Int = 25) {
+        try! self.timerManager = TimerManager(
+            totalMinutes: durationInMinutes, allowsOvertime: false)
     }
     
     var isRipe: Bool {
-        return elapsedTime >= totalDuration
-    }
-    
-    var formattedTotalTime: String {
-        String(format: "%02d:%02d", totalDuration / 60, totalDuration % 60)
-    }
-    
-    var formattedTime: String {
-        String(format: "%02d:%02d", elapsedTime / 60, elapsedTime % 60)
+        self.timerManager.isCompleted
     }
     
     var pomdoroRipeness: Double {
-        Double(elapsedTime) / Double(totalDuration)
+        self.timerManager.progress
     }
     
     var pomodoroColor: Color {
@@ -67,23 +55,24 @@ struct TimerView: View {
                         
                         VStack(alignment: .trailing) {
                             
-                            Text("Goal: \(formattedTotalTime)")
+                            Text("Goal: 01:00")
                                 .font(.system(size: 24, weight: .regular))
                                 .foregroundColor(.white).padding(.horizontal, 72)
                             
-                            Text(formattedTime)
+                            Text(timerManager.formattedTime)
                                 .font(.system(size: 80, weight: .bold))
                                 .foregroundColor(.white).frame(maxWidth: .infinity)
                             
                         }.frame(maxWidth: .infinity)
                         
                         Button(action: {
-                            self.startTimer()
+                            timerManager.start()
                             buttonScale = 0.4
-                        }) {
+                                }) {
                             if buttonScale == 1 && !isRipe {Text("Start")}
                             else if isRipe {
-                                NavigationLink(destination: BreakView(/*duration: 10,*/ /*pomodoro: Pomodoro(ripeness: pomdoroRipeness, size: totalDuration),*/ pomodorinoCount: $pomodorinoCount, shouldResetTimer: $shouldResetTimer).navigationBarBackButtonHidden(true)){
+                                NavigationLink(
+                                    destination: BreakView(durationInMinutes: 1,pomodorinoCount: $pomodorinoCount, shouldResetTimer: $shouldResetTimer).navigationBarBackButtonHidden(true)){
                                     Image(systemName: "apple.meditate").scaleEffect(1.5)}
                             }
                             else {}
@@ -109,36 +98,18 @@ struct TimerView: View {
                     .padding()
                 
             }
-            .onDisappear { isTimerRunning = false }
+            .onDisappear { timerManager.stop() }
             
         }.onChange(of: shouldResetTimer, initial: false) { _, newValue in
             if(newValue)
             {
-                elapsedTime = 0
-                startTimer()
-                self.shouldResetTimer = false
+                timerManager.start()
             }
         }
     }
-    
-    private func startTimer() {
-        isTimerRunning = true
-            Timer.scheduledTimer(withTimeInterval: 1, repeats: true) {timer in
-                
-                if self.isTimerRunning {
-                    self.elapsedTime += 1 // +1 Second
-                    if self.elapsedTime >= totalDuration { // 25 min
-                        timer.invalidate()
-                        isTimerRunning = false
-                    }
-                } else {
-                    timer.invalidate()
-                }
-            }
-        }
 }
 
 #Preview() {
-    TimerView(duration: 60)
+    TimerView(durationInMinutes: 1)
 }
 

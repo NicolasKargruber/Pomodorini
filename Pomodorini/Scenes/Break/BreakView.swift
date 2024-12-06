@@ -14,45 +14,31 @@ struct BreakView: View {
     @Binding var pomodorinoCount: Int
     @Binding var shouldResetTimer: Bool
     
-    let totalDuration: Int // 5 * 60 .. In Seconds
     let finalRipeness: Double = 1.0 // 0.0 .. 1.0
     
-    @State private var elapsedTime = 0  // Track time in seconds
-    @State private var isTimerRunning = false
+    @State var timerManager: TimerManager
     
-    
-    // let pomodoro: Pomodoro?
-    //@State var viewModel: ViewModel2
-    
-    init(duration: Int = 5 * 60, /*pomodoro: Pomodoro? = nil,*/ pomodorinoCount: Binding<Int>, shouldResetTimer: Binding<Bool>) {
-        self.totalDuration = duration
+    init(durationInMinutes: Int = 5, pomodorinoCount: Binding<Int>, shouldResetTimer: Binding<Bool>) {
         _pomodorinoCount = pomodorinoCount
         _shouldResetTimer = shouldResetTimer
-        //self.viewModel = ViewModel2(seconds: duration, pomodoro: pomodoro)
-        //self.pomodoro = pomodoro
-        
-        //viewModel.startTimer()
+        try! self.timerManager = TimerManager(
+            totalMinutes: durationInMinutes, allowsOvertime: false)
     }
     
     var isRipe: Bool {
-        return elapsedTime >= totalDuration
+        self.timerManager.isCompleted
     }
     
     var pomdoroRipeness: Double {
-        (Double(elapsedTime) / Double(totalDuration)) * (finalRipeness ?? 1.0)
-    }
-    
-    var pomodoroSize: Double {
-        PomodoroGrowth(at: pomdoroRipeness).getSize()
+        self.timerManager.progress
     }
     
     var pomodoroColor: Color {
         try! PomodorinoGradient.color(for: pomdoroRipeness)
     }
     
-    var formattedTime: String {
-        let display = totalDuration - elapsedTime
-        return String(format: "%02d:%02d", display / 60, display % 60)
+    var pomodoroSize: Double {
+        PomodoroGrowth(at: pomdoroRipeness).getSize()
     }
     
     var body: some View {
@@ -97,7 +83,7 @@ struct BreakView: View {
                         .padding(.vertical)
                     
                     Button(action: {
-                        isTimerRunning = false
+                        timerManager.stop()
                         pomodorinoCount += 1
                         shouldResetTimer = true
                         presentationMode.wrappedValue.dismiss()
@@ -107,7 +93,7 @@ struct BreakView: View {
                     .disabled(!isRipe)
                     .buttonStyle(.bordered).tint(.white)
                     
-                    Text(formattedTime)
+                    Text(timerManager.formattedTime)
                         .font(.system(size: 80, weight: .bold))
                         .foregroundColor(.white)
                     
@@ -116,29 +102,13 @@ struct BreakView: View {
             }.frame(maxWidth: .infinity, alignment: .trailing)
                 .padding()
 
-        }.onAppear{startTimer()}
-    }
-    
-    private func startTimer() {
-        isTimerRunning = true
-        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) {timer in
-            
-            if self.isTimerRunning {
-                self.elapsedTime += 1 // +1 Second
-                if self.elapsedTime >= totalDuration { // 25 min
-                    timer.invalidate()
-                    isTimerRunning = false
-                }
-            } else {
-                timer.invalidate()
-            }
-        }
+        }.onAppear{timerManager.start()}
     }
 }
 
 #Preview {
     @Previewable @State var pomodorini = 1
     @Previewable @State var shouldResetTimer = false
-    BreakView(duration: 10, /*pomodoro: Pomodoro(ripeness: 1.2, size: 100),*/ pomodorinoCount: $pomodorini, shouldResetTimer: $shouldResetTimer)
+    BreakView(durationInMinutes: 1, pomodorinoCount: $pomodorini, shouldResetTimer: $shouldResetTimer)
 }
 
