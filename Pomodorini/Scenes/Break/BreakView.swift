@@ -22,7 +22,7 @@ struct BreakView: View {
         _pomodorinoCount = pomodorinoCount
         _shouldResetTimer = shouldResetTimer
         try! self.timerManager = TimerManager(
-            totalMinutes: durationInMinutes, allowOvertime: false)
+            totalMinutes: durationInMinutes, allowsOvertime: false)
     }
     
     var isRipe: Bool {

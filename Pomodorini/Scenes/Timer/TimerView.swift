@@ -16,7 +16,7 @@ struct TimerView: View {
     
     init(durationInMinutes: Int = 25) {
         try! self.timerManager = TimerManager(
-            totalMinutes: durationInMinutes, allowOvertime: false)
+            totalMinutes: durationInMinutes, allowsOvertime: false)
     }
     
     var isRipe: Bool {

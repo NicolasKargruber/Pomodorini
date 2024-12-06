@@ -11,29 +11,31 @@ import Combine
 
 @Observable
 class TimerManager {
+    // TODO: Rename to -ViewModel or -Controller
+    
     private let totalDuration: TimeInterval  // Total duration in seconds
     private var remainingTime: TimeInterval  // Total time left in seconds
     private var overtime: TimeInterval?      // Overtime in seconds
     private var startTime: Date?             // Actual start time
     private var endTime: Date?               // Predicted end time
     private var timer: Timer?                // Timer object
-    private var isOvertimeEnabled: Bool      // Overtime toggle
+    private var allowsOvertime: Bool      // Overtime toggle
     
-    init(totalMinutes: Int, allowOvertime: Bool = false) throws {
+    init(totalMinutes: Int, allowsOvertime: Bool = false) throws {
         // Clamp totalMinutes between 0 and 60
         let clampedMinutes = max(0, min(totalMinutes, 60))
         self.totalDuration = TimeInterval(clampedMinutes * 60)
         
         self.remainingTime = TimeInterval(totalMinutes * 60)
-        self.isOvertimeEnabled = allowOvertime
+        self.allowsOvertime = allowsOvertime
     }
     
     var formattedTime: String {
-        (formatTime(remainingTime))
+        (formattedTimeString(for: remainingTime))
     }
     
     var formattedOvertime: String {
-        (formatTime(overtime ?? TimeInterval(0)))
+        (formattedTimeString(for: overtime ?? TimeInterval(0)))
     }
     
     var progress: Double {
@@ -74,7 +76,7 @@ class TimerManager {
         print("Time left: \(remainingTime)")
         
         if remainingTime <= 0 {
-            if isOvertimeEnabled {
+            if allowsOvertime {
                 overtime = now.timeIntervalSince(endTime)
             } else {
                 stop()
@@ -83,7 +85,7 @@ class TimerManager {
         }
     }
     
-    private func formatTime(_ time: TimeInterval) -> String {
+    private func formattedTimeString(for time: TimeInterval) -> String {
         let totalSeconds = Int(round(time))
         print("Rounded to \(totalSeconds)")
         let minutes = totalSeconds / 60
