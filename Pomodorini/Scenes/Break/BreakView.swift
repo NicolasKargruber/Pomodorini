@@ -79,7 +79,8 @@ struct BreakView: View {
                         
                         Image(pomodorinoImage)
                             .resizable()
-                            .frame(width: 72, height: 72)
+                            .frame(width: 100, height: 100)
+                            .animation(.snappy(duration: 1.8), value: pomodorinoImage)
                         
                     }.frame(width: 50,height: 50)
                         .padding(.vertical)
