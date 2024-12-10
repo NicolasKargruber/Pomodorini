@@ -28,9 +28,9 @@ extension BreakView {
             (Double(counter) / Double(seconds)) * (pomodoro?.ripeness ?? 1.0)
         }
         
-        var pomodoroSize: Double {
-            PomodoroGrowth(at: pomdoroRipeness).getSize()
-        }
+        /*var pomodoroSize: Double {
+            PomodorinoGrowth(at: pomdoroRipeness).getSize()
+        }*/
         
         var pomodoroColor: Color {
             try! PomodorinoGradient.color(for: pomdoroRipeness)
