@@ -1,5 +1,5 @@
 //
-//  GradientColor.swift
+//  PomodorinoGradient.swift
 //  HyperfocusBreaker
 //
 //  Created by Nicolas Kargruber on 18.11.24.
@@ -25,13 +25,15 @@ struct PomodorinoGradient {
     static func color(for position: Double) throws -> Color {
         guard position >= 0.0 && position <= 2.0
         else {
-            throw ColorError.percentageOutOfRange(value: position)
+            throw PomodorinoRipenessError.outOfRange(value: position)
         }
         
-        // Find the color stop that is the upper bound (greater than or equal to the position)
-        let (index, endStop) = colorStops.enumerated().first(where: { $0.1.position >= position })!
+        // Safely find the upper bound stop
+        guard let (index, endStop) = colorStops.enumerated().first(where: { $0.1.position >= position }) else {
+            throw PomodorinoRipenessError.noMatchingElement(value: position)
+        }
         
-        // Find the color stop that is the lower bound (less than the position)
+        // Find the lower bound stop
         let startStop = (index > 0) ? colorStops[index - 1] : endStop
         
         // Fraction for interpolation
