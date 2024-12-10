@@ -1,5 +1,5 @@
 //
-//  Untitled.swift
+//  TimerView.swift
 //  HyperfocusBreaker
 //
 //  Created by Nicolas Kargruber on 17.11.24.
@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct TimerView: View {
-    @State private var buttonScale = 1.0
     @State private var shouldResetTimer = false
 
     @State var pomodorinoCount = 0
@@ -17,6 +16,10 @@ struct TimerView: View {
     init(durationInMinutes: Int = 25) {
         try! self.timerManager = TimerManager(
             totalMinutes: durationInMinutes, allowsOvertime: false)
+    }
+    
+    var isGrowing: Bool {
+        self.timerManager.isRunning
     }
     
     var isRipe: Bool {
@@ -37,13 +40,12 @@ struct TimerView: View {
             
             ZStack(alignment: .top) {
                 
-                // Background Color
+                // MARK: - Background
                 pomodoroColor.ignoresSafeArea().overlay {
-                    // Pomodorino Hat
                     Image("Pomodorini_Hat").offset(x: 90, y: -320)
                 }
                 
-                // Content
+                // MARK: - Content
                 VStack {
                     Button("\(pomodorinoCount) 🍅", action: {})
                         .font(.title)
@@ -65,30 +67,14 @@ struct TimerView: View {
                             
                         }.frame(maxWidth: .infinity)
                         
-                        Button(action: {
-                            timerManager.start()
-                            buttonScale = 0.4
-                                }) {
-                            if buttonScale == 1 && !isRipe {Text("Start")}
-                            else if isRipe {
-                                NavigationLink(
-                                    destination: BreakView(/*durationInMinutes: 1,*/pomodorinoCount: $pomodorinoCount, shouldResetTimer: $shouldResetTimer).navigationBarBackButtonHidden(true)){
-                                    Image(systemName: "apple.meditate").scaleEffect(1.5)}
-                            }
-                            else {}
-                        }
-                        .frame(width: 70, height: 70)
-                        .foregroundColor(Color(.white))
-                        .background(Color(.white).opacity(0.3))
-                        .clipShape(Circle())
-                        .padding(.all, 3)
-                        .overlay(
-                            Circle()
-                                .stroke(Color(.white)
-                                    .opacity(0.3), lineWidth: 2)
+                        // MARK: - Timer Button
+                        TimerButton(
+                            pomodorinoCount: $pomodorinoCount,
+                            shouldResetTimer: $shouldResetTimer,
+                            state: timerButtonState,
+                            onStart: { timerManager.start() },
+                            onNavigate: {}
                         )
-                        .scaleEffect(isRipe ?  1.4 : buttonScale)
-                        .animation(.easeIn, value: isRipe ?  1.4 : buttonScale)
                         
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -102,14 +88,23 @@ struct TimerView: View {
             
         }.onChange(of: shouldResetTimer, initial: false) { _, newValue in
             if(newValue)
-            {
-                timerManager.start()
-            }
+            { timerManager.start() }
         }
     }
+    
+    private var timerButtonState: TimerButton.TimerState {
+            if isRipe {
+                return .finished
+            } else if isGrowing {
+                return .running
+            } else {
+                return .notStarted
+            }
+        }
 }
 
 #Preview() {
     TimerView(durationInMinutes: 1)
 }
+
 

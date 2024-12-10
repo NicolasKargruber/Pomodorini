@@ -46,6 +46,10 @@ class TimerManager {
         remainingTime <= 0
     }
     
+    var isRunning: Bool {
+        timer?.isValid ?? false
+    }
+    
     func start() {
         guard timer == nil else { return }  // Prevent multiple timers
         
