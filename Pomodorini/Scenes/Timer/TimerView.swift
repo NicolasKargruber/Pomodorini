@@ -55,7 +55,7 @@ struct TimerView: View {
                         
                         VStack(alignment: .trailing) {
                             
-                            Text("Goal: 01:00")
+                            Text("Goal: 25:00")
                                 .font(.system(size: 24, weight: .regular))
                                 .foregroundColor(.white).padding(.horizontal, 72)
                             
@@ -72,7 +72,7 @@ struct TimerView: View {
                             if buttonScale == 1 && !isRipe {Text("Start")}
                             else if isRipe {
                                 NavigationLink(
-                                    destination: BreakView(durationInMinutes: 1,pomodorinoCount: $pomodorinoCount, shouldResetTimer: $shouldResetTimer).navigationBarBackButtonHidden(true)){
+                                    destination: BreakView(/*durationInMinutes: 1,*/pomodorinoCount: $pomodorinoCount, shouldResetTimer: $shouldResetTimer).navigationBarBackButtonHidden(true)){
                                     Image(systemName: "apple.meditate").scaleEffect(1.5)}
                             }
                             else {}
