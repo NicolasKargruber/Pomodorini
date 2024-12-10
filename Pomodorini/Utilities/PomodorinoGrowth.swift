@@ -9,11 +9,11 @@
 import SwiftUI
 
 struct PomodorinoGrowth {
-    // TODO: Rename to "Pomdorino-gradient-00"
-    private static let images: [(position: Double, name: String)] = [
+    // TODO: Rename to "Pomdorino-ripeness-00"
+    private static let growthStages: [(ripeness: Double, imageName: String)] = [
         (0.00, "Pomodorino-Unripest"),          // 0%
         (0.10, "Pomodorino-Unriper"),           // 10%
-        (0.20, "Pomodorino-Unripe"),            // 20%
+        //(0.20, "Pomodorino-Unripe"),            // 20%
         (0.30, "Pomodorino-Ripening"),          // 30%
         (0.60, "Pomodorino-Almost-Ripe"),       // 60%
         (0.96, "Pomodorino-Ripe"),              // 96%
@@ -23,20 +23,20 @@ struct PomodorinoGrowth {
     ]
     
     // Function to get image for a given percentage position
-    static func imageName(for position: Double) throws -> String {
-        guard position >= 0.0 && position <= 2.0
+    static func imageName(forRipeness ripeness: Double) throws -> String {
+        guard ripeness >= 0.0 && ripeness <= 2.0
         else {
-            throw PomodorinoRipenessError.outOfRange(value: position)
+            throw PomodorinoRipenessError.outOfRange(value: ripeness)
         }
         
         // Safely find the image
-        if let image = images.last(where: { $0.position <= position }) {
+        if let stage = growthStages.last(where: { $0.ripeness <= ripeness }) {
             // TODO: Delete
             // print(image, position)
             
-            return image.name
+            return stage.imageName
         } else {
-            throw PomodorinoRipenessError.noMatchingElement(value: position)
+            throw PomodorinoRipenessError.noMatchingElement(value: ripeness)
         }
     }
 }

@@ -35,7 +35,7 @@ struct BreakView: View {
     
     var pomodorinoImage: String {
         do {
-            return try PomodorinoGrowth.imageName(for: pomdorinoRipeness)
+            return try PomodorinoGrowth.imageName(forRipeness: pomdorinoRipeness)
         } catch {
             print("Error info: \(error)")
         }
