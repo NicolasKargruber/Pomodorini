@@ -76,7 +76,8 @@ class TimerManager {
     private func updateTime() {
         guard let _ = startTime, let endTime = endTime else { return }
         let now = Date()
-        remainingTime = endTime.timeIntervalSince(now)
+        remainingTime = endTime.timeIntervalSince(now) + 0.5
+        if(remainingTime < 0) {remainingTime = 0}
         print("Time left: \(remainingTime)")
         
         if remainingTime <= 0 {
