@@ -7,73 +7,117 @@
 
 import SwiftUI
 
+/// A view that represents a Pomodorino timer screen.
+///
+/// This screen allows the user to track their Pomodoro progress, displaying the timer,
+/// a count of completed Pomodorini, and a button to manage the timer state.
 struct TimerView: View {
+    // MARK: - State Properties
+
+    /// A flag to indicate whether the timer should reset.
     @State private var shouldResetTimer = false
 
+    /// The total count of collected Pomodorini.
     @State var pomodorinoCount = 0
+
+    /// The timer manager responsible for tracking the countdown timer.
     @State var timerManager: TimerManager
-    
+
+    // MARK: - Initializer
+
+    /// Initializes the `TimerView` with a specified duration.
+    /// - Parameter durationInMinutes: The duration of the timer in minutes. Default is 25 minutes.
     init(durationInMinutes: Int = 25) {
         try! self.timerManager = TimerManager(
             totalMinutes: durationInMinutes, allowsOvertime: false)
     }
-    
-    var isGrowing: Bool {
-        self.timerManager.isRunning
+
+    // MARK: - Computed Properties
+
+    /// Indicates whether the timer is currently running.
+    private var isGrowing: Bool {
+        timerManager.isRunning
     }
-    
-    var isRipe: Bool {
-        self.timerManager.isCompleted
+
+    /// Indicates whether the Pomodorino is ripe (timer has completed).
+    private var isRipe: Bool {
+        timerManager.isCompleted
     }
-    
-    var pomdoroRipeness: Double {
-        self.timerManager.progress
+
+    /// Represents the ripeness of the Pomodorino, as a value from 0.0 to 2.0.
+    private var pomodoroRipeness: Double {
+        timerManager.progress
     }
-    
-    var pomodoroColor: Color {
+
+    /// Determines the color of the Pomodorino based on its ripeness.
+    private var pomodoroColor: Color {
         do {
-            return try PomodorinoGradient.color(forRipeness: pomdoroRipeness)
-            } catch {
-                print("Error info: \(error)")
-            }
-        return Color.black
+            return try PomodorinoGradient.color(forRipeness: pomodoroRipeness)
+        } catch {
+            print("Error determining color: \(error)")
+            return Color.black
+        }
     }
-    
+
+    /// Determines the state of the timer button.
+    private var timerButtonState: TimerButton.TimerState {
+        if isRipe {
+            return .finished
+        } else if isGrowing {
+            return .running
+        } else {
+            return .notStarted
+        }
+    }
+
+    // MARK: - Body
+
     var body: some View {
-        
         NavigationStack {
-            
             ZStack(alignment: .top) {
-                
-                // MARK: - Background
-                LinearGradient(gradient: Gradient(colors: [pomodoroColor, pomodoroColor.mix(with: Color.black, by: 0.2), ]), startPoint: .topTrailing, endPoint: .bottomLeading)
-                .ignoresSafeArea().overlay {
-                    Image("Pomodorini_Hat").offset(x: 90, y: -320)
+                // MARK: Background
+                LinearGradient(
+                    gradient: Gradient(colors: [
+                        pomodoroColor,
+                        pomodoroColor.mix(with: Color.black, by: 0.2)
+                    ]),
+                    startPoint: .topTrailing,
+                    endPoint: .bottomLeading
+                )
+                .ignoresSafeArea()
+                .overlay {
+                    Image("Pomodorini_Hat")
+                        .offset(x: 90, y: -320)
                 }
-                
-                // MARK: - Content
+
+                // MARK: Content
                 VStack {
-                    Button("\(pomodorinoCount) 🍅", action: {})
+                    // Pomodorino Count Display
+                    Button("\(pomodorinoCount) 🍅") {}
                         .font(.title)
                         .fontWeight(.bold)
                         .foregroundColor(.white)
-                        .buttonStyle(.bordered).tint(.white).frame(maxWidth: .infinity, alignment: .leading)
-                    
-                    VStack(){
-                        
+                        .buttonStyle(.bordered)
+                        .tint(.white)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+
+                    VStack {
                         VStack(alignment: .trailing) {
-                            
+                            // Goal Display
                             Text("Goal: 25:00")
                                 .font(.system(size: 24, weight: .regular))
-                                .foregroundColor(.white).padding(.horizontal, 72)
-                            
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 72)
+
+                            // Timer Display
                             Text(timerManager.formattedTime)
                                 .font(.system(size: 80, weight: .bold))
-                                .foregroundColor(.white).frame(maxWidth: .infinity)
-                            
-                        }.frame(maxWidth: .infinity)
-                        
-                        // MARK: - Timer Button
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                        }
+                        .frame(maxWidth: .infinity)
+
+                        // Timer Button
                         TimerButton(
                             pomodorinoCount: $pomodorinoCount,
                             shouldResetTimer: $shouldResetTimer,
@@ -81,36 +125,26 @@ struct TimerView: View {
                             onStart: { timerManager.start() },
                             onNavigate: {}
                         )
-                        
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .padding()
-                
+                .padding()
             }
-            .onDisappear { timerManager.stop() }
-            
-        }.onChange(of: shouldResetTimer, initial: false) { _, newValue in
-            if(newValue)
-            { timerManager.start() }
+            .onDisappear {
+                timerManager.stop()
+            }
+        }
+        .onChange(of: shouldResetTimer, initial: false) { _, newValue in
+            if newValue {
+                timerManager.start()
+            }
         }
     }
-    
-    private var timerButtonState: TimerButton.TimerState {
-            if isRipe {
-                return .finished
-            } else if isGrowing {
-                return .running
-            } else {
-                return .notStarted
-            }
-        }
 }
 
-#Preview() {
+// MARK: - Preview
+
+#Preview {
     TimerView(durationInMinutes: 1)
 }
-
-
