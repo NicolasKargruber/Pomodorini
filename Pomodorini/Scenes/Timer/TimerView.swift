@@ -31,7 +31,12 @@ struct TimerView: View {
     }
     
     var pomodoroColor: Color {
-        try! PomodorinoGradient.color(for: pomdoroRipeness)
+        do {
+            return try PomodorinoGradient.color(forRipeness: pomdoroRipeness)
+            } catch {
+                print("Error info: \(error)")
+            }
+        return Color.black
     }
     
     var body: some View {

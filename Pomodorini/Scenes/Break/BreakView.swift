@@ -1,5 +1,5 @@
 //
-//  PlantFarmView.swift
+//  BreakView.swift
 //  Pomodorini
 //
 //  Created by Nicolas Kargruber on 25.11.24.
@@ -29,16 +29,17 @@ struct BreakView: View {
         self.timerManager.isCompleted
     }
     
-    var pomdoroRipeness: Double {
+    var pomdorinoRipeness: Double {
         self.timerManager.progress
     }
     
-    var pomodoroColor: Color {
-        try! PomodorinoGradient.color(for: pomdoroRipeness)
-    }
-    
-    var pomodoroSize: Double {
-        PomodoroGrowth(at: pomdoroRipeness).getSize()
+    var pomodorinoImage: String {
+        do {
+            return try PomodorinoGrowth.imageName(forRipeness: pomdorinoRipeness)
+        } catch {
+            print("Error info: \(error)")
+        }
+        return ""
     }
     
     var body: some View {
@@ -73,12 +74,14 @@ struct BreakView: View {
                 VStack(spacing: 30) {
                     
                     VStack {
+                        
                         Spacer()
-                        Image("Pomodorini-Unripe")
-                            .scaleEffect(pomodoroSize)
-                            .grayscale(1)
-                            .colorMultiply(pomodoroColor)
-                            .luminanceToAlpha()
+                        
+                        Image(pomodorinoImage)
+                            .resizable()
+                            .frame(width: 100, height: 100)
+                            .animation(.snappy(duration: 1.8), value: pomodorinoImage)
+                        
                     }.frame(width: 50,height: 50)
                         .padding(.vertical)
                     
