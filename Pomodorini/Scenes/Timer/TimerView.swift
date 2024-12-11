@@ -76,19 +76,7 @@ struct TimerView: View {
         NavigationStack {
             ZStack(alignment: .top) {
                 // MARK: Background
-                LinearGradient(
-                    gradient: Gradient(colors: [
-                        pomodoroColor,
-                        pomodoroColor.mix(with: Color.black, by: 0.2)
-                    ]),
-                    startPoint: .topTrailing,
-                    endPoint: .bottomLeading
-                )
-                .ignoresSafeArea()
-                .overlay {
-                    Image("Pomodorini_Hat")
-                        .offset(x: 90, y: -320)
-                }
+                createBackground()
 
                 // MARK: Content
                 VStack {
@@ -139,6 +127,24 @@ struct TimerView: View {
             if newValue {
                 timerManager.start()
             }
+        }
+    }
+    
+    // MARK: - Actions
+    /// Creates background image.
+    private func createBackground() -> some View {
+        LinearGradient(
+            gradient: Gradient(colors: [
+                pomodoroColor,
+                pomodoroColor.mix(with: Color.black, by: 0.2)
+            ]),
+            startPoint: .topTrailing,
+            endPoint: .bottomLeading
+        )
+        .ignoresSafeArea()
+        .overlay {
+            Image("Pomodorini_Hat")
+                .offset(x: 90, y: -320)
         }
     }
 }
