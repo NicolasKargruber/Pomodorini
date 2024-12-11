@@ -14,8 +14,6 @@ struct BreakView: View {
     @Binding var pomodorinoCount: Int
     @Binding var shouldResetTimer: Bool
     
-    let finalRipeness: Double = 1.0 // 0.0 .. 1.0
-    
     @State var timerManager: TimerManager
     
     init(durationInMinutes: Int = 5, pomodorinoCount: Binding<Int>, shouldResetTimer: Binding<Bool>) {
@@ -46,20 +44,21 @@ struct BreakView: View {
         ZStack {
             
             // Background Color
-            Color(#colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1)).ignoresSafeArea().overlay {
+            LinearGradient(gradient: Gradient(colors: [Color(#colorLiteral(red: 0.5843137503, green: 0.8235294223, blue: 0.4196078479, alpha: 1)), Color(#colorLiteral(red: 0.03041391261, green: 0.3515392542, blue: 0.02641633712, alpha: 1))]), startPoint: .top, endPoint: .bottom)
+                .ignoresSafeArea().overlay {
                 // Background Scene
                 Ellipse()
-                    .fill(Color.brown).colorMultiply(.green).opacity(0.5)
+                    .fill(Color.white).opacity(0.1)
                     .frame(width: UIScreen.main.bounds.width * 2, height: 300)
-                    .offset(y: +400)
+                    .offset(y: +430)
                 
-                Ellipse()
-                    .fill(Color.brown).colorMultiply(.brown).opacity(0.7)
+                /*Ellipse()
+                    .fill(Color.black).opacity(0.3)
                     .frame(width: UIScreen.main.bounds.width * 1, height: 150) // Oversized width
-                    .offset(y: 400)
+                    .offset(y: 400)*/
                 
                 Circle()
-                    .fill(Color.yellow).colorMultiply(.yellow).opacity(0.6)
+                    .fill(.white).opacity(0.3)
                     .frame(width: 400, height: 400)
                     .offset(x: -200,y: -460)
             }

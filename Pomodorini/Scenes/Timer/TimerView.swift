@@ -46,7 +46,8 @@ struct TimerView: View {
             ZStack(alignment: .top) {
                 
                 // MARK: - Background
-                pomodoroColor.ignoresSafeArea().overlay {
+                LinearGradient(gradient: Gradient(colors: [pomodoroColor, pomodoroColor.mix(with: Color.black, by: 0.2), ]), startPoint: .topTrailing, endPoint: .bottomLeading)
+                .ignoresSafeArea().overlay {
                     Image("Pomodorini_Hat").offset(x: 90, y: -320)
                 }
                 
