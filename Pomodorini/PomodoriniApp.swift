@@ -13,6 +13,6 @@ struct PomodoriniApp: App {
     var body: some Scene {
         WindowGroup {
             TimerView()
-        }
+        }.environment(\.colorScheme, .dark)
     }
 }
