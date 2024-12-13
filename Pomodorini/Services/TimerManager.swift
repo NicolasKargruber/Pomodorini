@@ -73,6 +73,15 @@ class TimerManager {
         timer = nil
     }
     
+    func reset() {
+        remainingTime = totalDuration
+        overtime = nil
+        startTime = nil
+        endTime = nil
+        
+        print("TimerManager reseted")
+    }
+    
     private func updateTime() {
         guard let _ = startTime, let endTime = endTime else { return }
         let now = Date()
