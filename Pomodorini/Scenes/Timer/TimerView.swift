@@ -155,5 +155,6 @@ struct TimerView: View {
 // MARK: - Preview
 
 #Preview {
-    TimerView(durationInMinutes: 1)
+    @Previewable @AppStorage("pomodorinoCount") var count = 0
+    TimerView(durationInMinutes: 1).onAppear { count = 3 }
 }
