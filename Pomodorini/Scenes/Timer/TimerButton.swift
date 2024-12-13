@@ -48,7 +48,7 @@ struct TimerButton: View {
             EmptyView()
         case .finished:
             NavigationLink(
-                destination: BreakView(pomodorinoCount: $pomodorinoCount, shouldResetTimer: $shouldResetTimer).navigationBarBackButtonHidden(true)){
+                destination: BreakView(shouldResetTimer: $shouldResetTimer).navigationBarBackButtonHidden(true)){
                 Image(systemName: "apple.meditate").scaleEffect(1.5)}
         }
     }

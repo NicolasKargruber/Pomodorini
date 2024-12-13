@@ -12,13 +12,14 @@ import SwiftUI
 /// This screen allows the user to track their Pomodoro progress, displaying the timer,
 /// a count of completed Pomodorini, and a button to manage the timer state.
 struct TimerView: View {
+    // MARK: - User Default Properties
+    /// The total count of collected Pomodorini.
+    @AppStorage("pomodorinoCount") var pomodorinoCount = 0
+    
     // MARK: - State Properties
 
     /// A flag to indicate whether the timer should reset.
     @State private var shouldResetTimer = false
-
-    /// The total count of collected Pomodorini.
-    @State var pomodorinoCount = 0
 
     /// The timer manager responsible for tracking the countdown timer.
     @State var timerManager: TimerManager

@@ -15,11 +15,13 @@ import SwiftUI
 struct BreakView: View {
     // MARK: - Environment
     @Environment(\.presentationMode) private var presentationMode
+    
+    
+    // MARK: - User Default Properties
+    /// The total count of collected Pomodorini.
+    @AppStorage("pomodorinoCount") var pomodorinoCount = 0
 
     // MARK: - Bindings
-    /// The current count of collected Pomodorini.
-    @Binding var pomodorinoCount: Int
-    
     /// A flag to indicate whether the timer should reset.
     @Binding var shouldResetTimer: Bool
 
@@ -35,10 +37,8 @@ struct BreakView: View {
     ///   - shouldResetTimer: A binding to the timer reset state.
     init(
         durationInMinutes: Int = 5,
-        pomodorinoCount: Binding<Int>,
         shouldResetTimer: Binding<Bool>
     ) {
-        _pomodorinoCount = pomodorinoCount
         _shouldResetTimer = shouldResetTimer
         try! self.timerManager = TimerManager(
             totalMinutes: durationInMinutes, allowsOvertime: false)
@@ -127,11 +127,9 @@ struct BreakView: View {
 
 // MARK: - Preview
 #Preview {
-    @Previewable @State var pomodorini = 1
     @Previewable @State var shouldResetTimer = false
     BreakView(
         durationInMinutes: 1,
-        pomodorinoCount: $pomodorini,
         shouldResetTimer: $shouldResetTimer
     )
 }
