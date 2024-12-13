@@ -112,7 +112,7 @@ struct TimerView: View {
                             shouldResetTimer: $shouldResetTimer,
                             state: timerButtonState,
                             onStart: { timerManager.start() },
-                            onNavigate: {}
+                            onNavigate: { } // Won't respond due to NavigationLink
                         )
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -125,8 +125,10 @@ struct TimerView: View {
             }
         }
         .onChange(of: shouldResetTimer, initial: false) { _, newValue in
+            print("Value changed of shouldResetTimer: \(shouldResetTimer)")
             if newValue {
-                timerManager.start()
+                timerManager.reset()
+                shouldResetTimer = false
             }
         }
     }
@@ -153,5 +155,6 @@ struct TimerView: View {
 // MARK: - Preview
 
 #Preview {
-    TimerView(durationInMinutes: 1)
+    @Previewable @AppStorage("pomodorinoCount") var count = 0
+    TimerView(durationInMinutes: 1).onAppear { count = 3 }
 }

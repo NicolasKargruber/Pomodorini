@@ -121,6 +121,7 @@ struct BreakView: View {
         timerManager.stop()
         pomodorinoCount += 1
         shouldResetTimer = true
+        print("Send value of shouldResetTimer: \(shouldResetTimer)")
         presentationMode.wrappedValue.dismiss()
     }
 }
