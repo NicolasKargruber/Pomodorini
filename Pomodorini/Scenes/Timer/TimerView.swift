@@ -139,7 +139,7 @@ struct TimerView: View {
         LinearGradient(
             gradient: Gradient(colors: [
                 pomodoroColor,
-                pomodoroColor.mix(with: Color.black, by: 0.2)
+                pomodoroColor.mix(with: Color.black, by: 0.35)
             ]),
             startPoint: .topTrailing,
             endPoint: .bottomLeading
