@@ -24,9 +24,10 @@ class TimerManager {
     init(totalMinutes: Int, allowsOvertime: Bool = false) throws {
         // Clamp total minutes between 0 and 60
         let clampedMinutes = max(0, min(totalMinutes, 60))
-        self.totalDuration = TimeInterval(clampedMinutes * 60)
+        let totalSeconds = clampedMinutes * 60
+        self.totalDuration = TimeInterval(totalSeconds)
         
-        self.remainingTime = TimeInterval(clampedMinutes * 60)
+        self.remainingTime = TimeInterval(totalSeconds)
         self.allowsOvertime = allowsOvertime
         
         // TODO: warning when total & remaining !=
@@ -37,12 +38,14 @@ class TimerManager {
     }
     
     var formattedOvertime: String {
-        (formattedTimeString(for: overtime ?? TimeInterval(0)))
+        "+\(formattedTimeString(for: overtime ?? TimeInterval(0)))"
     }
     
     var progress: Double {
         // 1 - (ACTUAL / EXPECTED)
-        1 - ((Double(remainingTime) + Double(overtime ?? 0.0)) / Double(totalDuration))
+        let timePassed = Double(totalDuration) - Double(remainingTime) + Double(overtime ?? 0.0)
+        let progress = timePassed / Double(totalDuration)
+        print("Timer progressed:", progress); return progress
     }
     
     var isCompleted: Bool {

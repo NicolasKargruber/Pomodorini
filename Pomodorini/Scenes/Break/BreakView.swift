@@ -41,7 +41,7 @@ struct BreakView: View {
     ) {
         _shouldResetTimer = shouldResetTimer
         try! self.timerManager = TimerManager(
-            totalMinutes: durationInMinutes, allowsOvertime: false)
+            totalMinutes: durationInMinutes, allowsOvertime: true)
     }
 
     // MARK: - Computed Properties
@@ -86,7 +86,8 @@ struct BreakView: View {
                         Spacer()
 
                         Image(pomodorinoImage)
-                            .resizable()
+                            //.resizable()
+                            .scaleEffect(0.35)
                             .frame(width: 100, height: 100)
                             .animation(.snappy(duration: 1.8), value: pomodorinoImage)
                     }
@@ -103,7 +104,7 @@ struct BreakView: View {
                     .tint(.white)
 
                     // MARK: Timer Display
-                    Text(timerManager.formattedTime)
+                    Text(!isRipe ? timerManager.formattedTime : timerManager.formattedOvertime)
                         .font(.system(size: 80, weight: .bold))
                         .foregroundColor(.white)
                 }
