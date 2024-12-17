@@ -42,7 +42,9 @@ class TimerManager {
     
     var progress: Double {
         // 1 - (ACTUAL / EXPECTED)
-        1 - ((Double(remainingTime) + Double(overtime ?? 0.0)) / Double(totalDuration))
+        let timePassed = Double(totalDuration) - Double(remainingTime) + Double(overtime ?? 0.0)
+        let progress = timePassed / Double(totalDuration)
+        print("Timer progressed:", progress); return progress
     }
     
     var isCompleted: Bool {

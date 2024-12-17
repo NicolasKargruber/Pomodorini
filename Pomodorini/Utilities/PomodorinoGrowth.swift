@@ -24,6 +24,7 @@ struct PomodorinoGrowth {
     
     // Function to get image for a given percentage position
     static func imageName(forRipeness ripeness: Double) throws -> String {
+        if(ripeness >= 2.0) { return growthStages.last!.imageName }
         guard ripeness >= 0.0 && ripeness <= 2.0
         else {
             throw PomodorinoRipenessError.outOfRange(value: ripeness)
