@@ -40,7 +40,7 @@ final class NotificationManager {
     ///   - title: The title of the notification.
     ///   - body: The body text of the notification.
     ///   - timeInterval: The time interval after which the notification will be triggered.
-    func scheduleNotification(title: String, body: String, timeInterval: TimeInterval) {
+    func scheduleNotification(title: String, body: String, timeInterval: TimeInterval = 2.0) {
         let content = UNMutableNotificationContent()
         content.title = title
         content.body = body

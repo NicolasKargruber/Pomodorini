@@ -14,7 +14,8 @@ class TimerManager {
     // TODO: Rename to -ViewModel or -Controller
     
     private let totalDuration: TimeInterval  // Total duration in seconds
-    private var remainingTime: TimeInterval  // Total time left in seconds
+    private var _remainingTime: TimeInterval  // Total time left in seconds
+    var remainingTime: TimeInterval { _remainingTime }
     private var overtime: TimeInterval?      // Overtime in seconds
     private var startTime: Date?             // Actual start time
     private var endTime: Date?               // Predicted end time
@@ -27,14 +28,14 @@ class TimerManager {
         let totalSeconds = clampedMinutes * 60
         self.totalDuration = TimeInterval(totalSeconds)
         
-        self.remainingTime = TimeInterval(totalSeconds)
+        self._remainingTime = TimeInterval(totalSeconds)
         self.allowsOvertime = allowsOvertime
         
         // TODO: warning when total & remaining !=
     }
     
     var formattedTime: String {
-        (formattedTimeString(for: remainingTime))
+        (formattedTimeString(for: _remainingTime))
     }
     
     var formattedOvertime: String {
@@ -43,13 +44,13 @@ class TimerManager {
     
     var progress: Double {
         // 1 - (ACTUAL / EXPECTED)
-        let timePassed = Double(totalDuration) - Double(remainingTime) + Double(overtime ?? 0.0)
+        let timePassed = Double(totalDuration) - Double(_remainingTime) + Double(overtime ?? 0.0)
         let progress = timePassed / Double(totalDuration)
         print("Timer progressed:", progress); return progress
     }
     
     var isCompleted: Bool {
-        remainingTime <= 0
+        _remainingTime <= 0
     }
     
     var isRunning: Bool {
@@ -80,7 +81,7 @@ class TimerManager {
     }
     
     func reset() {
-        remainingTime = totalDuration
+        _remainingTime = totalDuration
         overtime = nil
         startTime = nil
         endTime = nil
@@ -93,18 +94,24 @@ class TimerManager {
         
         // Running
         let now = Date()
-        remainingTime = endTime.timeIntervalSince(now) + 0.5
-        if(remainingTime < 0) {remainingTime = 0}
-        print("Time left: \(remainingTime)")
+        _remainingTime = endTime.timeIntervalSince(now) + 0.5
+        if(_remainingTime < 0) {_remainingTime = 0}
+        print("Time left: \(_remainingTime)")
         
         // Finished
-        if remainingTime <= 0 {
-            // Notification
+        if _remainingTime <= 0 {
+            /*// Notification
             NotificationManager.shared.scheduleNotification(
                 title: "Pomodorino Complete!",
                 body: "Your Pomodorino timer is done. Take a break! 🍅",
                 timeInterval: 1 // Trigger immediately (for testing)
             )
+            // Notification - Break
+            NotificationManager.shared.scheduleNotification(
+                title: "Pomodorino Grown!",
+                body: "Your Pomodorino has fully grown. Ready for another! ♻️",
+                timeInterval: 1 // Trigger immediately (for testing)
+            )*/
             
             if allowsOvertime {
                 // Overtime

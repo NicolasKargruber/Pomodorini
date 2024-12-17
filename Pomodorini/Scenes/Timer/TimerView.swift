@@ -112,7 +112,7 @@ struct TimerView: View {
                             pomodorinoCount: $pomodorinoCount,
                             shouldResetTimer: $shouldResetTimer,
                             state: timerButtonState,
-                            onStart: { timerManager.start() },
+                            onStart: { startTimer() },
                             onNavigate: { } // Won't respond due to NavigationLink
                         )
                     }
@@ -125,7 +125,7 @@ struct TimerView: View {
                 UNUserNotificationCenter.current().setBadgeCount(0)
             }
             .onDisappear {
-                timerManager.stop()
+                stopTimer()
             }
         }
         .onChange(of: shouldResetTimer, initial: false) { _, newValue in
@@ -135,6 +135,24 @@ struct TimerView: View {
                 shouldResetTimer = false
             }
         }
+    }
+    
+    private func startTimer() {
+        timerManager.start()
+        
+        // Notification
+        NotificationManager.shared.scheduleNotification(
+            title: "Pomodorino Complete!",
+            body: "Your Pomodorino timer is done. Take a break! 🍅",
+            timeInterval: timerManager.remainingTime
+        )
+    }
+    
+    private func stopTimer() {
+        timerManager.stop()
+        
+        // TODO: Remove when app dies
+        //UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [UUID().uuidString])
     }
     
     // MARK: - Actions
