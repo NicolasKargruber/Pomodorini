@@ -10,11 +10,15 @@ import UserNotifications
 import Foundation
 
 /// A service to handle user notifications for the Pomodorini app.
-final class NotificationManager {
+final class NotificationManager: NSObject, UNUserNotificationCenterDelegate  {
     // MARK: - Shared Instance
     
     static let shared = NotificationManager()
-    private init() {}
+    
+    private override init() {
+        super.init()
+        UNUserNotificationCenter.current().delegate = self
+    }
     
     // MARK: - Authorization Request
     
@@ -63,4 +67,12 @@ final class NotificationManager {
             }
         }
     }
+    
+    // MARK: - Handle Foreground Notifications
+        func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                    willPresent notification: UNNotification,
+                                    withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+            // Show banner, sound, and badge when app is open
+            completionHandler([.banner, .sound])
+        }
 }
