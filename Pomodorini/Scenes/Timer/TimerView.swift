@@ -30,7 +30,7 @@ struct TimerView: View {
     /// - Parameter durationInMinutes: The duration of the timer in minutes. Default is 25 minutes.
     init(durationInMinutes: Int = 25) {
         try! self.timerManager = TimerManager(
-            totalMinutes: durationInMinutes, allowsOvertime: false)
+            totalMinutes: durationInMinutes, allowsOvertime: true)
     }
 
     // MARK: - Computed Properties
@@ -99,7 +99,7 @@ struct TimerView: View {
                                 .padding(.horizontal, 72)
 
                             // Timer Display
-                            Text(timerManager.formattedTime)
+                            Text(!isRipe ? timerManager.formattedTime : timerManager.formattedOvertime)
                                 .font(.system(size: 80, weight: .bold))
                                 .foregroundColor(.white)
                                 .frame(maxWidth: .infinity)
