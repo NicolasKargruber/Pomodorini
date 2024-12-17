@@ -90,13 +90,24 @@ class TimerManager {
     
     private func updateTime() {
         guard let _ = startTime, let endTime = endTime else { return }
+        
+        // Running
         let now = Date()
         remainingTime = endTime.timeIntervalSince(now) + 0.5
         if(remainingTime < 0) {remainingTime = 0}
         print("Time left: \(remainingTime)")
         
+        // Finished
         if remainingTime <= 0 {
+            // Notification
+            NotificationManager.shared.scheduleNotification(
+                title: "Pomodorino Complete!",
+                body: "Your Pomodorino timer is done. Take a break! 🍅",
+                timeInterval: 1 // Trigger immediately (for testing)
+            )
+            
             if allowsOvertime {
+                // Overtime
                 overtime = now.timeIntervalSince(endTime)
             } else {
                 stop()

@@ -29,6 +29,7 @@ struct TimerView: View {
     /// Initializes the `TimerView` with a specified duration.
     /// - Parameter durationInMinutes: The duration of the timer in minutes. Default is 25 minutes.
     init(durationInMinutes: Int = 25) {
+        NotificationManager.shared.requestAuthorization ()
         try! self.timerManager = TimerManager(
             totalMinutes: durationInMinutes, allowsOvertime: true)
     }
@@ -119,6 +120,9 @@ struct TimerView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .padding()
+            }
+            .onAppear    {
+                UNUserNotificationCenter.current().setBadgeCount(0)
             }
             .onDisappear {
                 timerManager.stop()
