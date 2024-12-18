@@ -113,9 +113,30 @@ struct BreakView: View {
             .frame(maxWidth: .infinity, alignment: .trailing)
             .padding()
         }
-        .onAppear { timerManager.start() }
+        .onAppear {
+            UNUserNotificationCenter.current().setBadgeCount(0)
+            startTimer()
+        }
+        .onDisappear {
+            stopTimer()
+        }
+    }
+    
+    func startTimer() {
+        timerManager.start()
+        
+        // Notification - Break
+        NotificationManager.shared.scheduleNotification(
+            title: "Pomodorino Done!",
+            body: "Your Pomodorino has fully grown. Ready for another! 🌱",
+            timeInterval: timerManager.remainingTime
+        )
     }
 
+    func stopTimer() {
+        timerManager.stop()
+    }
+    
     // MARK: - Actions
     /// Handles the collection of a ripe Pomodorino.
     private func collectPomodorino() {

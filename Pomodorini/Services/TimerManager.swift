@@ -14,7 +14,8 @@ class TimerManager {
     // TODO: Rename to -ViewModel or -Controller
     
     private let totalDuration: TimeInterval  // Total duration in seconds
-    private var remainingTime: TimeInterval  // Total time left in seconds
+    private var _remainingTime: TimeInterval  // Total time left in seconds
+    var remainingTime: TimeInterval { _remainingTime }
     private var overtime: TimeInterval?      // Overtime in seconds
     private var startTime: Date?             // Actual start time
     private var endTime: Date?               // Predicted end time
@@ -24,17 +25,17 @@ class TimerManager {
     init(totalMinutes: Int, allowsOvertime: Bool = false) throws {
         // Clamp total minutes between 0 and 60
         let clampedMinutes = max(0, min(totalMinutes, 60))
-        let totalSeconds = clampedMinutes * 60
+        let totalSeconds = clampedMinutes * 60 / 60
         self.totalDuration = TimeInterval(totalSeconds)
         
-        self.remainingTime = TimeInterval(totalSeconds)
+        self._remainingTime = TimeInterval(totalSeconds)
         self.allowsOvertime = allowsOvertime
         
         // TODO: warning when total & remaining !=
     }
     
     var formattedTime: String {
-        (formattedTimeString(for: remainingTime))
+        (formattedTimeString(for: _remainingTime))
     }
     
     var formattedOvertime: String {
@@ -43,13 +44,13 @@ class TimerManager {
     
     var progress: Double {
         // 1 - (ACTUAL / EXPECTED)
-        let timePassed = Double(totalDuration) - Double(remainingTime) + Double(overtime ?? 0.0)
+        let timePassed = Double(totalDuration) - Double(_remainingTime) + Double(overtime ?? 0.0)
         let progress = timePassed / Double(totalDuration)
         print("Timer progressed:", progress); return progress
     }
     
     var isCompleted: Bool {
-        remainingTime <= 0
+        _remainingTime <= 0
     }
     
     var isRunning: Bool {
@@ -80,7 +81,7 @@ class TimerManager {
     }
     
     func reset() {
-        remainingTime = totalDuration
+        _remainingTime = totalDuration
         overtime = nil
         startTime = nil
         endTime = nil
@@ -90,13 +91,17 @@ class TimerManager {
     
     private func updateTime() {
         guard let _ = startTime, let endTime = endTime else { return }
-        let now = Date()
-        remainingTime = endTime.timeIntervalSince(now) + 0.5
-        if(remainingTime < 0) {remainingTime = 0}
-        print("Time left: \(remainingTime)")
         
-        if remainingTime <= 0 {
+        // Running
+        let now = Date()
+        _remainingTime = endTime.timeIntervalSince(now) + 0.5
+        if(_remainingTime < 0) {_remainingTime = 0}
+        print("Time left: \(_remainingTime)")
+        
+        // Finished
+        if _remainingTime <= 0 {
             if allowsOvertime {
+                // Overtime
                 overtime = now.timeIntervalSince(endTime)
             } else {
                 stop()
