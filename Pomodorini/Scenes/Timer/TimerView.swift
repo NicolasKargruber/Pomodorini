@@ -23,6 +23,9 @@ struct TimerView: View {
 
     /// The timer manager responsible for tracking the countdown timer.
     @State var timerManager: TimerManager
+    
+    /// The scale value for animation.
+    @State private var overtimeScale = 0.0
 
     // MARK: - Initializer
 
@@ -90,7 +93,7 @@ struct TimerView: View {
                         .tint(.white)
                         .frame(maxWidth: .infinity, alignment: .leading)
 
-                    VStack {
+                    VStack(spacing: 72) {
                         VStack(alignment: .trailing) {
                             // Goal Display
                             Text("Goal: 25:00")
@@ -99,10 +102,27 @@ struct TimerView: View {
                                 .padding(.horizontal, 72)
 
                             // Timer Display
-                            Text(!isRipe ? timerManager.formattedTime : timerManager.formattedOvertime)
+                            Text(timerManager.formattedTime)
                                 .font(.system(size: 80, weight: .bold))
                                 .foregroundColor(.white)
                                 .frame(maxWidth: .infinity)
+                        
+                            // Timer Display
+                            if isRipe {
+                                Text(timerManager.formattedOvertime)
+                                    .font(.system(size: 36, weight: .semibold))
+                                    .foregroundColor(.white).opacity(0.7)
+                                    .padding(.horizontal, 84)
+                                    .scaleEffect(overtimeScale)
+                                    // Animation
+                                    .transition(
+                                        .asymmetric(
+                                            insertion: .scale,
+                                            removal: .opacity
+                                        ))
+                                    .onAppear { withAnimation { overtimeScale = 1 } }
+                            }
+                            
                         }
                         .frame(maxWidth: .infinity)
 

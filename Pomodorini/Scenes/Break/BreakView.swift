@@ -26,6 +26,10 @@ struct BreakView: View {
     @Binding var shouldResetTimer: Bool
 
     // MARK: - State
+    
+    /// The scale value for animation.
+    @State private var overtimeScale = 0.0
+    
     /// The timer manager responsible for tracking the break timer.
     @State private var timerManager: TimerManager
 
@@ -104,9 +108,24 @@ struct BreakView: View {
                     .tint(.white)
 
                     // MARK: Timer Display
-                    Text(!isRipe ? timerManager.formattedTime : timerManager.formattedOvertime)
-                        .font(.system(size: 80, weight: .bold))
-                        .foregroundColor(.white)
+                    VStack {
+                        Text(timerManager.formattedTime)
+                            .font(.system(size: 80, weight: .bold))
+                            .foregroundColor(.white)
+                        
+                        
+                        // Timer Display
+                        if isRipe {
+                            Text(timerManager.formattedOvertime)
+                                .font(.system(size: 36, weight: .semibold))
+                                .foregroundColor(.white).opacity(0.7)
+                                .padding(.horizontal, 84)
+                                .scaleEffect(overtimeScale)
+                            // Animation
+                                .transition( .asymmetric(insertion: .scale, removal: .opacity) )
+                                .onAppear { withAnimation { overtimeScale = 1 } }
+                        }
+                    }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
