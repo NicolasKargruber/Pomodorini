@@ -25,7 +25,7 @@ class TimerManager {
     init(totalMinutes: Int, allowsOvertime: Bool = false) throws {
         // Clamp total minutes between 0 and 60
         let clampedMinutes = max(0, min(totalMinutes, 60))
-        let totalSeconds = clampedMinutes * 60
+        let totalSeconds = clampedMinutes * 60 / 60
         self.totalDuration = TimeInterval(totalSeconds)
         
         self._remainingTime = TimeInterval(totalSeconds)
@@ -100,19 +100,6 @@ class TimerManager {
         
         // Finished
         if _remainingTime <= 0 {
-            /*// Notification
-            NotificationManager.shared.scheduleNotification(
-                title: "Pomodorino Complete!",
-                body: "Your Pomodorino timer is done. Take a break! 🍅",
-                timeInterval: 1 // Trigger immediately (for testing)
-            )
-            // Notification - Break
-            NotificationManager.shared.scheduleNotification(
-                title: "Pomodorino Grown!",
-                body: "Your Pomodorino has fully grown. Ready for another! ♻️",
-                timeInterval: 1 // Trigger immediately (for testing)
-            )*/
-            
             if allowsOvertime {
                 // Overtime
                 overtime = now.timeIntervalSince(endTime)

@@ -142,8 +142,8 @@ struct TimerView: View {
         
         // Notification
         NotificationManager.shared.scheduleNotification(
-            title: "Pomodorino Complete!",
-            body: "Your Pomodorino timer is done. Take a break! 🍅",
+            title: "Pomodorino Ready!",
+            body: "Your Pomodorino is almost done. Take a break! 🍅",
             timeInterval: timerManager.remainingTime
         )
     }
