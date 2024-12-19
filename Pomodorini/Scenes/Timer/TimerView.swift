@@ -13,8 +13,12 @@ import SwiftUI
 /// a count of completed Pomodorini, and a button to manage the timer state.
 struct TimerView: View {
     // MARK: - User Default Properties
+    
     /// The total count of collected Pomodorini.
     @AppStorage("pomodorinoCount") var pomodorinoCount = 0
+    
+    /// The total count of collected Pomodorini.
+    @AppStorage("timerThreshold") var timerThreshold = 0.04/*%*/
     
     // MARK: - State Properties
 
@@ -30,8 +34,9 @@ struct TimerView: View {
     /// - Parameter durationInMinutes: The duration of the timer in minutes. Default is 25 minutes.
     init(durationInMinutes: Int = 25) {
         NotificationManager.shared.requestAuthorization ()
+        // TODO: remove 0.5
         try! self.timerManager = TimerManager(
-            totalMinutes: durationInMinutes, allowsOvertime: true)
+            totalMinutes: durationInMinutes,threshold: 0.5, allowsOvertime: true)
     }
 
     // MARK: - Computed Properties
@@ -39,6 +44,11 @@ struct TimerView: View {
     /// Indicates whether the timer is currently running.
     private var isGrowing: Bool {
         timerManager.isRunning
+    }
+
+    /// Indicates whether the Pomodorino is pickable (timer is stoppable).
+    private var isPickable: Bool {
+        timerManager.isCompletable
     }
 
     /// Indicates whether the Pomodorino is ripe (timer has completed).
@@ -63,7 +73,7 @@ struct TimerView: View {
 
     /// Determines the state of the timer button.
     private var timerButtonState: TimerButton.TimerState {
-        if isRipe {
+        if isPickable {
             return .finished
         } else if isGrowing {
             return .running
@@ -128,6 +138,15 @@ struct TimerView: View {
                 stopTimer()
             }
         }
+        .onChange(of: pomodoroRipeness) { _, newValue in
+            print("Pomodorino ripeness: \(newValue)")
+        }
+        .onChange(of: isPickable, initial: false) { _, newValue in
+            print("Pomodorino is now pickable: \(newValue)")
+        }
+        /*.onChange(of: isRipe, initial: false) { _, newValue in
+            print("Pomodorino is now ripe: \(newValue)")
+        }*/
         .onChange(of: shouldResetTimer, initial: false) { _, newValue in
             print("Value changed of shouldResetTimer: \(shouldResetTimer)")
             if newValue {

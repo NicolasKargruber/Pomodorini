@@ -14,21 +14,30 @@ class TimerManager {
     // TODO: Rename to -ViewModel or -Controller
     
     private let totalDuration: TimeInterval  // Total duration in seconds
-    private var _remainingTime: TimeInterval  // Total time left in seconds
+    private var _remainingTime: TimeInterval // Total time left in seconds
     var remainingTime: TimeInterval { _remainingTime }
     private var overtime: TimeInterval?      // Overtime in seconds
     private var startTime: Date?             // Actual start time
     private var endTime: Date?               // Predicted end time
     private var timer: Timer?                // Timer object
-    private var allowsOvertime: Bool      // Overtime toggle
+    private let threshold: Double               // Threshold in percentage, 0.00 .. 1.00
+    private var allowsOvertime: Bool         // Overtime toggle
     
-    init(totalMinutes: Int, allowsOvertime: Bool = false) throws {
+    init(totalMinutes: Int, threshold: Double = 0.04, allowsOvertime: Bool = false) throws {
         // Clamp total minutes between 0 and 60
         let clampedMinutes = max(0, min(totalMinutes, 60))
-        let totalSeconds = clampedMinutes * 60 / 60
+        let totalSeconds = clampedMinutes * 60 / 10 // TODO: Remove /15
         self.totalDuration = TimeInterval(totalSeconds)
         
         self._remainingTime = TimeInterval(totalSeconds)
+        
+        // If Let THRESHOLD
+        if threshold >= 0.0 && threshold <= 1.0 { self.threshold = threshold }
+        else {
+            print(TimerManagerError.outOfRange(value: threshold))
+            self.threshold = 0.4
+            print("Reset threshold to 0.04%")
+        }
         self.allowsOvertime = allowsOvertime
         
         // TODO: warning when total & remaining !=
@@ -46,7 +55,13 @@ class TimerManager {
         // 1 - (ACTUAL / EXPECTED)
         let timePassed = Double(totalDuration) - Double(_remainingTime) + Double(overtime ?? 0.0)
         let progress = timePassed / Double(totalDuration)
-        print("Timer progressed:", progress); return progress
+        // print("Timer progressed:", progress);
+        return progress
+    }
+    
+    // Add isCompletable as a computed property
+    var isCompletable: Bool {
+        return progress + threshold >= 1.00/*%*/ || isCompleted
     }
     
     var isCompleted: Bool {
@@ -94,7 +109,7 @@ class TimerManager {
         
         // Running
         let now = Date()
-        _remainingTime = endTime.timeIntervalSince(now) + 0.5
+        _remainingTime = endTime.timeIntervalSince(now)
         if(_remainingTime < 0) {_remainingTime = 0}
         print("Time left: \(_remainingTime)")
         
@@ -117,4 +132,8 @@ class TimerManager {
         let seconds = totalSeconds % 60
         return String(format: "%02d:%02d", minutes, seconds)
     }
+}
+
+enum TimerManagerError: Error {
+    case outOfRange(value: Double)
 }
