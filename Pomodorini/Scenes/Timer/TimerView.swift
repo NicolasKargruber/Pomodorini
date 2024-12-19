@@ -17,8 +17,10 @@ struct TimerView: View {
     /// The total count of collected Pomodorini.
     @AppStorage("pomodorinoCount") var pomodorinoCount = 0
     
-    /// The total count of collected Pomodorini.
-    @AppStorage("timerThreshold") var timerThreshold = 0.04/*%*/
+    // FIXME: Make AppStorage in [POM-73]
+    /// The timer threshold for Pomodorino ripeness.
+    //@AppStorage("timerThreshold") var timerThreshold = 0.04/*%*/
+    let timerThreshold: Double = 0.04/*%*/
     
     // MARK: - State Properties
 
@@ -34,9 +36,8 @@ struct TimerView: View {
     /// - Parameter durationInMinutes: The duration of the timer in minutes. Default is 25 minutes.
     init(durationInMinutes: Int = 25) {
         NotificationManager.shared.requestAuthorization ()
-        // TODO: remove 0.5
-        try! self.timerManager = TimerManager(
-            totalMinutes: durationInMinutes,threshold: 0.5, allowsOvertime: true)
+        self.timerManager = TimerManager(
+            totalMinutes: durationInMinutes,threshold: timerThreshold, allowsOvertime: true)
     }
 
     // MARK: - Computed Properties
@@ -101,6 +102,7 @@ struct TimerView: View {
                         .tint(.white)
                         .frame(maxWidth: .infinity, alignment: .leading)
 
+                    // TODO: Refactor to new View in [POM-69]
                     VStack {
                         VStack(alignment: .trailing) {
                             // Goal Display
