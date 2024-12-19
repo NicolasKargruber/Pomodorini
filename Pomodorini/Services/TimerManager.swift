@@ -32,7 +32,11 @@ class TimerManager {
     ///   - allowsOvertime: Whether the timer allows overtime (default false).
     init(totalMinutes: Int, threshold: Double = 0.04, allowsOvertime: Bool = false) {
         let clampedMinutes = max(1, min(totalMinutes, 60)) // Ensure a valid duration
-        self.totalDuration = TimeInterval(clampedMinutes * 60)
+        
+        // #Preview
+        if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" { self.totalDuration = TimeInterval(10) }
+        else { self.totalDuration = TimeInterval(clampedMinutes * 60) }
+        
         self._remainingTime = self.totalDuration
         self.allowsOvertime = allowsOvertime
         
