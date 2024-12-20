@@ -68,7 +68,7 @@ class TimerManager {
     /// The timer's progress as a value from 0.0 to 1.0.
     var progress: Double {
         let timeElapsed = totalDuration - _remainingTime + (overtime ?? 0)
-        return min(max(timeElapsed / totalDuration, 0), 1)
+        return timeElapsed / totalDuration
     }
     
     /// A formatted string representation of the remaining time.

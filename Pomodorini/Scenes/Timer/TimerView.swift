@@ -58,14 +58,14 @@ struct TimerView: View {
     }
 
     /// Represents the ripeness of the Pomodorino, as a value from 0.0 to 2.0.
-    private var pomodoroRipeness: Double {
+    private var pomodorinoRipeness: Double {
         timerManager.progress
     }
 
     /// Determines the color of the Pomodorino based on its ripeness.
-    private var pomodoroColor: Color {
+    private var pomodorinoColor: Color {
         do {
-            return try PomodorinoGradient.color(forRipeness: pomodoroRipeness)
+            return try PomodorinoGradient.color(forRipeness: pomodorinoRipeness)
         } catch {
             print("Error determining color: \(error)")
             return Color.black
@@ -140,7 +140,7 @@ struct TimerView: View {
                 stopTimer()
             }
         }
-        .onChange(of: pomodoroRipeness) { _, newValue in
+        .onChange(of: pomodorinoRipeness) { _, newValue in
             print("Pomodorino ripeness: \(newValue)")
         }
         .onChange(of: isPickable, initial: false) { _, newValue in
@@ -181,8 +181,8 @@ struct TimerView: View {
     private func createBackground() -> some View {
         LinearGradient(
             gradient: Gradient(colors: [
-                pomodoroColor,
-                pomodoroColor.mix(with: Color.black, by: 0.35)
+                pomodorinoColor,
+                pomodorinoColor.mix(with: Color.black, by: 0.35)
             ]),
             startPoint: .topTrailing,
             endPoint: .bottomLeading
