@@ -34,7 +34,8 @@ class TimerManager {
         let clampedMinutes = max(1, min(totalMinutes, 60)) // Ensure a valid duration
         
         // #Preview
-        if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" { self.totalDuration = TimeInterval(10) }
+        if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1"
+        { self.totalDuration = TimeInterval(30) }
         else { self.totalDuration = TimeInterval(clampedMinutes * 60) }
         
         self._remainingTime = self.totalDuration
@@ -68,7 +69,7 @@ class TimerManager {
     /// The timer's progress as a value from 0.0 to 1.0.
     var progress: Double {
         let timeElapsed = totalDuration - _remainingTime + (overtime ?? 0)
-        return min(max(timeElapsed / totalDuration, 0), 1)
+        return timeElapsed / totalDuration
     }
     
     /// A formatted string representation of the remaining time.
