@@ -114,27 +114,12 @@ struct TimerView: View {
                                 .foregroundColor(.white)
                                 .padding(.horizontal, 72)
 
-                            // Timer Display
-                            Text(timerManager.formattedTime)
-                                .font(.system(size: 80, weight: .bold))
-                                .foregroundColor(.white)
-                                .frame(maxWidth: .infinity)
-                        
-                            // Timer Display
-                            if isRipe {
-                                Text(timerManager.formattedOvertime)
-                                    .font(.system(size: 36, weight: .semibold))
-                                    .foregroundColor(.white).opacity(0.7)
-                                    .padding(.horizontal, 84)
-                                    .scaleEffect(overtimeScale)
-                                    // Animation
-                                    .transition(
-                                        .asymmetric(
-                                            insertion: .scale,
-                                            removal: .opacity
-                                        ))
-                                    .onAppear { withAnimation { overtimeScale = 1 } }
-                            }
+                            // MARK: Timer Display
+                            TimerDisplay(
+                                formatedTime: timerManager.formattedTime,
+                                formatedOvertime: timerManager.formattedOvertime,
+                                showOvertime: isRipe
+                            )
                             
                         }
                         .frame(maxWidth: .infinity)
