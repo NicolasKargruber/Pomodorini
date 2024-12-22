@@ -96,13 +96,8 @@ struct TimerView: View {
 
                 // MARK: Content
                 VStack {
-                    // Pomodorino Count Display
-                    Button("\(pomodorinoCount) 🍅") {}
-                        .font(.title)
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
-                        .buttonStyle(.bordered)
-                        .tint(.white)
+                    // MARK: Pomodorino Count
+                    PomodoriniButton()
                         .frame(maxWidth: .infinity, alignment: .leading)
 
                     // TODO: Refactor to new View in [POM-69]

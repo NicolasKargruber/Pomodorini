@@ -63,13 +63,7 @@ struct BreakView: View {
 
             VStack(alignment: .trailing) {
                 // MARK: Pomodorino Count
-                Button("\(pomodorinoCount) 🍅", action: {})
-                    .font(.title)
-                    .fontWeight(.bold)
-                    .foregroundColor(.white)
-                    .buttonStyle(.bordered)
-                    .tint(.white)
-                
+                PomodoriniButton()
 
                 VStack(spacing: 30) {
                     
