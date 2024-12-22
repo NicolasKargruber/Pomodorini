@@ -59,16 +59,6 @@ struct BreakView: View {
         timerManager.progress
     }
 
-    /// Determines the appropriate Pomodorino image based on its ripeness.
-    private var pomodorinoImage: String {
-        do {
-            return try PomodorinoGrowth.imageName(forRipeness: pomodorinoRipeness)
-        } catch {
-            print("Error determining image: \(error)")
-            return ""
-        }
-    }
-
     // MARK: - Body
     var body: some View {
         ZStack {
@@ -83,29 +73,28 @@ struct BreakView: View {
                     .foregroundColor(.white)
                     .buttonStyle(.bordered)
                     .tint(.white)
+                
 
                 VStack(spacing: 30) {
+                    
                     // MARK: Pomodorino Display
-                    VStack {
-                        Spacer()
-
-                        Image(pomodorinoImage)
-                            //.resizable()
-                            .scaleEffect(0.35)
-                            .frame(width: 100, height: 100)
-                            .animation(.snappy(duration: 1.8), value: pomodorinoImage)
+                    ZStack {
+                        Capsule().fill(Color(#colorLiteral(red: 0.1294117719, green: 0.2156862766, blue: 0.06666667014, alpha: 1))).opacity(0.5).frame(height: 260).padding(.horizontal)
+                        
+                        // Use the extracted SVGImage component
+                        VStack (spacing: 30) {
+                            PomodorinoStageView(ripeness: pomodorinoRipeness)
+                            
+                            // MARK: Collect Button
+                            Button(action: collectPomodorino) {
+                                Text("Collect").font(.title)
+                            }
+                            .disabled(!isRipe)
+                            .buttonStyle(.bordered)
+                            .tint(.white)
+                            
+                        }.padding()
                     }
-                    .frame(width: 50, height: 50)
-                    .padding(.vertical)
-
-                    // MARK: Collect Button
-                    Button(action: collectPomodorino) {
-                        Text("Collect")
-                            .font(.title)
-                    }
-                    .disabled(!isRipe)
-                    .buttonStyle(.bordered)
-                    .tint(.white)
 
                     // MARK: Timer Display
                     VStack {
@@ -132,9 +121,30 @@ struct BreakView: View {
             .frame(maxWidth: .infinity, alignment: .trailing)
             .padding()
         }
-        .onAppear { timerManager.start() }
+        .onAppear {
+            UNUserNotificationCenter.current().setBadgeCount(0)
+            startTimer()
+        }
+        .onDisappear {
+            stopTimer()
+        }
+    }
+    
+    func startTimer() {
+        timerManager.start()
+        
+        // Notification - Break
+        NotificationManager.shared.scheduleNotification(
+            title: "Pomodorino Done!",
+            body: "Your Pomodorino has fully grown. Ready for another! 🌱",
+            timeInterval: timerManager.remainingTime
+        )
     }
 
+    func stopTimer() {
+        timerManager.stop()
+    }
+    
     // MARK: - Actions
     /// Handles the collection of a ripe Pomodorino.
     private func collectPomodorino() {
