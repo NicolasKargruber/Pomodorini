@@ -12,7 +12,7 @@ import SwiftData
 struct PomodoriniApp: App {
     var body: some Scene {
         WindowGroup {
-            TimerView()
+            FocusView()
         }.environment(\.colorScheme, .dark)
     }
 }

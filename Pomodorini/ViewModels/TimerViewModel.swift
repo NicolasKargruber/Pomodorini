@@ -10,7 +10,7 @@ import Foundation
 import Combine
 
 @Observable
-class TimerManager {
+class TimerViewModel {
     // MARK: - Properties
     
     private let totalDuration: TimeInterval  // Total duration in seconds

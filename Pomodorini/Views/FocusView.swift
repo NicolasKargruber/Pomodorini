@@ -1,6 +1,6 @@
 //
 //  TimerView.swift
-//  HyperfocusBreaker
+//  Pomodorini
 //
 //  Created by Nicolas Kargruber on 17.11.24.
 //
@@ -11,7 +11,7 @@ import SwiftUI
 ///
 /// This screen allows the user to track their Pomodoro progress, displaying the timer,
 /// a count of completed Pomodorini, and a button to manage the timer state.
-struct TimerView: View {
+struct FocusView: View {
     // MARK: - User Default Properties
     
     /// The total count of collected Pomodorini.
@@ -28,7 +28,7 @@ struct TimerView: View {
     @State private var shouldResetTimer = false
 
     /// The timer manager responsible for tracking the countdown timer.
-    @State var timerManager: TimerManager
+    @State var timerViewModel: TimerViewModel
 
     // MARK: - Initializer
 
@@ -36,7 +36,7 @@ struct TimerView: View {
     /// - Parameter durationInMinutes: The duration of the timer in minutes. Default is 25 minutes.
     init(durationInMinutes: Int = 25) {
         NotificationManager.shared.requestAuthorization ()
-        self.timerManager = TimerManager(
+        self.timerViewModel = TimerViewModel(
             totalMinutes: durationInMinutes,threshold: timerThreshold, allowsOvertime: true)
     }
 
@@ -44,22 +44,22 @@ struct TimerView: View {
 
     /// Indicates whether the timer is currently running.
     private var isGrowing: Bool {
-        timerManager.isRunning
+        timerViewModel.isRunning
     }
 
     /// Indicates whether the Pomodorino is pickable (timer is stoppable).
     private var isPickable: Bool {
-        timerManager.isCompletable
+        timerViewModel.isCompletable
     }
 
     /// Indicates whether the Pomodorino is ripe (timer has completed).
     private var isRipe: Bool {
-        timerManager.isCompleted
+        timerViewModel.isCompleted
     }
 
     /// Represents the ripeness of the Pomodorino, as a value from 0.0 to 2.0.
     private var pomodorinoRipeness: Double {
-        timerManager.progress
+        timerViewModel.progress
     }
 
     /// Determines the color of the Pomodorino based on its ripeness.
@@ -73,7 +73,7 @@ struct TimerView: View {
     }
 
     /// Determines the state of the timer button.
-    private var timerButtonState: TimerButton.TimerState {
+    private var timerButtonState: FocusButton.TimerState {
         if isPickable {
             return .finished
         } else if isGrowing {
@@ -107,7 +107,7 @@ struct TimerView: View {
                                 .padding(.horizontal, 72)
 
                             // Timer Display
-                            Text(!isRipe ? timerManager.formattedTime : timerManager.formattedOvertime)
+                            Text(!isRipe ? timerViewModel.formattedTime : timerViewModel.formattedOvertime)
                                 .font(.system(size: 80, weight: .bold))
                                 .foregroundColor(.white)
                                 .frame(maxWidth: .infinity)
@@ -115,7 +115,7 @@ struct TimerView: View {
                         .frame(maxWidth: .infinity)
 
                         // Timer Button
-                        TimerButton(
+                        FocusButton(
                             pomodorinoCount: $pomodorinoCount,
                             shouldResetTimer: $shouldResetTimer,
                             state: timerButtonState,
@@ -147,25 +147,25 @@ struct TimerView: View {
         .onChange(of: shouldResetTimer, initial: false) { _, newValue in
             print("Value changed of shouldResetTimer: \(shouldResetTimer)")
             if newValue {
-                timerManager.reset()
+                timerViewModel.reset()
                 shouldResetTimer = false
             }
         }
     }
     
     private func startTimer() {
-        timerManager.start()
+        timerViewModel.start()
         
         // Notification
         NotificationManager.shared.scheduleNotification(
             title: "Pomodorino Ready!",
             body: "Your Pomodorino is almost done. Take a break! 🍅",
-            timeInterval: timerManager.remainingTime
+            timeInterval: timerViewModel.remainingTime
         )
     }
     
     private func stopTimer() {
-        timerManager.stop()
+        timerViewModel.stop()
         
         // TODO: Remove when app dies
         //UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [UUID().uuidString])
@@ -194,5 +194,5 @@ struct TimerView: View {
 
 #Preview {
     @Previewable @AppStorage("pomodorinoCount") var count = 0
-    TimerView(durationInMinutes: 1).onAppear { count = 3 }
+    FocusView(durationInMinutes: 1).onAppear { count = 3 }
 }

@@ -27,7 +27,7 @@ struct BreakView: View {
 
     // MARK: - State
     /// The timer manager responsible for tracking the break timer.
-    @State private var timerManager: TimerManager
+    @State private var timerManager: TimerViewModel
 
     // MARK: - Initializer
     /// Initializes the `BreakView` with the specified duration and bindings.
@@ -40,7 +40,7 @@ struct BreakView: View {
         shouldResetTimer: Binding<Bool>
     ) {
         _shouldResetTimer = shouldResetTimer
-        try! self.timerManager = TimerManager(
+        try! self.timerManager = TimerViewModel(
             totalMinutes: durationInMinutes, allowsOvertime: true)
     }
 

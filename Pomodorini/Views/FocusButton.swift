@@ -1,5 +1,5 @@
 //
-//  TimerButton.swift
+//  FocusButton.swift
 //  Pomodorini
 //
 //  Created by Nicolas Kargruber on 10.12.24.
@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct TimerButton: View {
+struct FocusButton: View {
     // TODO: Fix with @AppStorage in -> POM-30
     @Binding var pomodorinoCount: Int
     @Binding var shouldResetTimer: Bool
