@@ -12,60 +12,25 @@ import SwiftUI
 /// This screen allows the user to track their Pomodoro progress, displaying the timer,
 /// a count of completed Pomodorini, and a button to manage the timer state.
 struct FocusView: View {
-    // MARK: - User Default Properties
-    
-    /// The total count of collected Pomodorini.
     @AppStorage("pomodorinoCount") var pomodorinoCount = 0
     
     // FIXME: Make AppStorage in [POM-73]
-    /// The timer threshold for Pomodorino ripeness.
     //@AppStorage("timerThreshold") var timerThreshold = 0.04/*%*/
     let timerThreshold: Double = 0.04/*%*/
     
-    // MARK: - State Properties
-
-    /// A flag to indicate whether the timer should reset.
+    @State var vm: TimerViewModel
     @State private var shouldResetTimer = false
-
-    /// The timer manager responsible for tracking the countdown timer.
-    @State var timerViewModel: TimerViewModel
-
-    // MARK: - Initializer
-
-    /// Initializes the `TimerView` with a specified duration.
-    /// - Parameter durationInMinutes: The duration of the timer in minutes. Default is 25 minutes.
+    
     init(durationInMinutes: Int = 25) {
         NotificationManager.shared.requestAuthorization ()
-        self.timerViewModel = TimerViewModel(
+        self.vm = TimerViewModel(
             totalMinutes: durationInMinutes,threshold: timerThreshold, allowsOvertime: true)
-    }
-
-    // MARK: - Computed Properties
-
-    /// Indicates whether the timer is currently running.
-    private var isGrowing: Bool {
-        timerViewModel.isRunning
-    }
-
-    /// Indicates whether the Pomodorino is pickable (timer is stoppable).
-    private var isPickable: Bool {
-        timerViewModel.isCompletable
-    }
-
-    /// Indicates whether the Pomodorino is ripe (timer has completed).
-    private var isRipe: Bool {
-        timerViewModel.isCompleted
-    }
-
-    /// Represents the ripeness of the Pomodorino, as a value from 0.0 to 2.0.
-    private var pomodorinoRipeness: Double {
-        timerViewModel.progress
     }
 
     /// Determines the color of the Pomodorino based on its ripeness.
     private var pomodorinoColor: Color {
         do {
-            return try PomodorinoGradient.color(forRipeness: pomodorinoRipeness)
+            return try PomodorinoGradient.color(forRipeness: vm.progress)
         } catch {
             print("Error determining color: \(error)")
             return Color.black
@@ -74,43 +39,29 @@ struct FocusView: View {
 
     /// Determines the state of the timer button.
     private var timerButtonState: FocusButton.TimerState {
-        if isPickable {
+        if vm.isCompletable {
             return .finished
-        } else if isGrowing {
+        } else if vm.isRunning {
             return .running
         } else {
             return .notStarted
         }
     }
 
-    // MARK: - Body
-
     var body: some View {
         NavigationStack {
             ZStack(alignment: .top) {
-                // MARK: Background
-                createBackground()
+                background
 
-                // MARK: Content
                 VStack {
-                    // MARK: Pomodorino Count
                     PomodoriniButton()
                         .frame(maxWidth: .infinity, alignment: .leading)
 
                     // TODO: Refactor to new View in [POM-69]
                     VStack {
                         VStack(alignment: .trailing) {
-                            // Goal Display
-                            Text("Goal: 25:00")
-                                .font(.system(size: 24, weight: .regular))
-                                .foregroundColor(.white)
-                                .padding(.horizontal, 72)
-
-                            // Timer Display
-                            Text(!isRipe ? timerViewModel.formattedTime : timerViewModel.formattedOvertime)
-                                .font(.system(size: 80, weight: .bold))
-                                .foregroundColor(.white)
-                                .frame(maxWidth: .infinity)
+                            goalDisplay
+                            timerDisplay
                         }
                         .frame(maxWidth: .infinity)
 
@@ -135,10 +86,10 @@ struct FocusView: View {
                 stopTimer()
             }
         }
-        .onChange(of: pomodorinoRipeness) { _, newValue in
+        .onChange(of: vm.progress) { _, newValue in
             print("Pomodorino ripeness: \(newValue)")
         }
-        .onChange(of: isPickable, initial: false) { _, newValue in
+        .onChange(of: vm.isCompletable, initial: false) { _, newValue in
             print("Pomodorino is now pickable: \(newValue)")
         }
         /*.onChange(of: isRipe, initial: false) { _, newValue in
@@ -147,33 +98,40 @@ struct FocusView: View {
         .onChange(of: shouldResetTimer, initial: false) { _, newValue in
             print("Value changed of shouldResetTimer: \(shouldResetTimer)")
             if newValue {
-                timerViewModel.reset()
+                vm.reset()
                 shouldResetTimer = false
             }
         }
     }
     
     private func startTimer() {
-        timerViewModel.start()
+        vm.start()
         
-        // Notification
+        // Notification - Focus
         NotificationManager.shared.scheduleNotification(
             title: "Pomodorino Ready!",
             body: "Your Pomodorino is almost done. Take a break! 🍅",
-            timeInterval: timerViewModel.remainingTime
+            timeInterval: vm.remainingTime
         )
     }
     
     private func stopTimer() {
-        timerViewModel.stop()
+        vm.stop()
         
-        // TODO: Remove when app dies
+        // TODO: Not remove when app dies, but when new timer gets started
         //UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [UUID().uuidString])
     }
-    
-    // MARK: - Actions
-    /// Creates background image.
-    private func createBackground() -> some View {
+}
+
+// MARK: - Preview
+
+#Preview {
+    @Previewable @AppStorage("pomodorinoCount") var count = 0
+    FocusView(durationInMinutes: 1).onAppear { count = 3 }
+}
+
+extension FocusView {
+    private var background: some View {
         LinearGradient(
             gradient: Gradient(colors: [
                 pomodorinoColor,
@@ -188,11 +146,19 @@ struct FocusView: View {
                 .offset(x: 90, y: -320)
         }
     }
-}
-
-// MARK: - Preview
-
-#Preview {
-    @Previewable @AppStorage("pomodorinoCount") var count = 0
-    FocusView(durationInMinutes: 1).onAppear { count = 3 }
+    
+    // TODO: Delete
+    private var goalDisplay: some View {
+        Text("Goal: 25:00")
+            .font(.system(size: 24, weight: .regular))
+            .foregroundColor(.white)
+            .padding(.horizontal, 72)
+    }
+    
+    private var timerDisplay: some View {
+        Text(!vm.isCompleted ? vm.formattedTime : vm.formattedOvertime)
+            .font(.system(size: 80, weight: .bold))
+            .foregroundColor(.white)
+            .frame(maxWidth: .infinity)
+    }
 }
