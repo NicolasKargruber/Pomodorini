@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct PomodoriniButton: View {
-    // MARK: - User Default Properties
     /// The total count of collected Pomodorini.
     @AppStorage("pomodorinoCount") var pomodorinoCount = 0
     

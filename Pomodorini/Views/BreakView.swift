@@ -13,7 +13,7 @@ import SwiftUI
 /// The break screen allows users to view the ripening Pomodorino during a countdown
 /// and collect it once the timer completes.
 struct BreakView: View {
-    @Environment(\.presentationMode) private var presentationMode
+    @Environment(\.dismiss) private var dismiss
     
     @AppStorage("pomodorinoCount") var pomodorinoCount = 0
 
@@ -77,7 +77,7 @@ struct BreakView: View {
         pomodorinoCount += 1
         shouldResetTimer = true
         print("Send value of shouldResetTimer: \(shouldResetTimer)")
-        presentationMode.wrappedValue.dismiss()
+        dismiss()
     }
 }
 

@@ -123,8 +123,6 @@ struct FocusView: View {
     }
 }
 
-// MARK: - Preview
-
 #Preview {
     @Previewable @AppStorage("pomodorinoCount") var count = 0
     FocusView(durationInMinutes: 1).onAppear { count = 3 }
