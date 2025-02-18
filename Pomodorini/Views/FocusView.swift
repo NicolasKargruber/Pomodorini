@@ -58,10 +58,10 @@ struct FocusView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
 
                     // TODO: Refactor to new View in [POM-69]
-                    VStack {
+                    VStack(spacing: 72) {
                         VStack(alignment: .trailing) {
                             goalDisplay
-                            timerDisplay
+                            TimerDisplay(formatedTime: vm.formattedTime, formatedOvertime: vm.formattedOvertime, showOvertime: vm.isCompleted)
                         }
                         .frame(maxWidth: .infinity)
 
@@ -151,12 +151,5 @@ extension FocusView {
             .font(.system(size: 24, weight: .regular))
             .foregroundColor(.white)
             .padding(.horizontal, 72)
-    }
-    
-    private var timerDisplay: some View {
-        Text(!vm.isCompleted ? vm.formattedTime : vm.formattedOvertime)
-            .font(.system(size: 80, weight: .bold))
-            .foregroundColor(.white)
-            .frame(maxWidth: .infinity)
     }
 }

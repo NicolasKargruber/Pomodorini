@@ -29,14 +29,14 @@ struct BreakView: View {
 
     var body: some View {
         ZStack {
-            background
+            Background()
             
             VStack(alignment: .trailing) {
                 PomodoriniButton()
                 
                 VStack(spacing: 30) {
                     growingPomodorino
-                    timerDisplay
+                    TimerDisplay(formatedTime: vm.formattedTime, formatedOvertime: vm.formattedOvertime, showOvertime: vm.isCompleted)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 
@@ -90,33 +90,52 @@ struct BreakView: View {
 }
 
 extension BreakView {
-    private var background: some View {
-        LinearGradient(
-            gradient: Gradient(colors: [
-                Color(#colorLiteral(red: 0.584, green: 0.824, blue: 0.420, alpha: 1)),
-                Color(#colorLiteral(red: 0.030, green: 0.352, blue: 0.026, alpha: 1))
-            ]),
-            startPoint: .top,
-            endPoint: .bottom
-        )
-        .ignoresSafeArea()
-        .overlay {
-            Ellipse()
-                .fill(Color.white.opacity(0.1))
-                .frame(width: UIScreen.main.bounds.width * 2, height: 300)
-                .offset(y: 430)
+    
+    struct Background: View {
+        @State private var isAnimating = false
+        
+        var body: some View {
+            LinearGradient(
+                gradient: Gradient(colors: [
+                    Color(#colorLiteral(red: 0.1298420429, green: 0.1298461258, blue: 0.1298439503, alpha: 1)),
+                    Color(#colorLiteral(red: 0.107204847, green: 0.107204847, blue: 0.107204847, alpha: 1))
+                ]),
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .ignoresSafeArea()
+            .overlay {
+                Ellipse()
+                    .fill(Color(#colorLiteral(red: 0.4500938654, green: 0.9813225865, blue: 0.4743030667, alpha: 1)).opacity(0.3))
+                    .frame(width: UIScreen.main.bounds.width * 2, height: 300)
+                    .offset(y: 450)
 
-            Circle()
-                .fill(Color.white.opacity(0.3))
-                .frame(width: 400, height: 400)
-                .offset(x: -200, y: -460)
+                Circle()
+                    .fill(Color(#colorLiteral(red: 1, green: 0.5781051517, blue: 0, alpha: 1)).opacity(0.8))
+                    .frame(width: 330, height: 330)
+                    .scaleEffect(isAnimating ? 1.1 : 1)
+                    .animation(
+                      isAnimating ?
+                        .easeInOut(duration: 2).repeatForever(autoreverses: true) :
+                        .default,
+                      value: isAnimating
+                    )
+                    .offset(x: -200, y: -460)
+                    .onAppear {
+                        isAnimating = true
+                      }
+                
+                Circle()
+                    .fill(Color(#colorLiteral(red: 0.9978314042, green: 0.7260366082, blue: 0.07187078148, alpha: 1)).opacity(0.8))
+                    .frame(width: 300, height: 300)
+                    .offset(x: -200, y: -460)
+            }
         }
     }
     
-    
     private var growingPomodorino: some View {
         ZStack {
-            Capsule().fill(Color(#colorLiteral(red: 0.1294117719, green: 0.2156862766, blue: 0.06666667014, alpha: 1))).opacity(0.5).frame(height: 260).padding(.horizontal)
+            //Capsule().fill(Color(#colorLiteral(red: 0.5843137503, green: 0.8235294223, blue: 0.4196078479, alpha: 1))).opacity(0.2).frame(height: 260).padding(.horizontal)
             
             VStack (spacing: 30) {
                 // SVGImage
@@ -132,11 +151,5 @@ extension BreakView {
                 
             }.padding()
         }
-    }
-    
-    private var timerDisplay: some View {
-        Text(!vm.isCompleted ? vm.formattedTime : vm.formattedOvertime)
-            .font(.system(size: 80, weight: .bold))
-            .foregroundColor(.white)
     }
 }
