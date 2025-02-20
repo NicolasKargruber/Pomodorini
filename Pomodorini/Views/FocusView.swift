@@ -80,7 +80,10 @@ struct FocusView: View {
                 .padding()
             }
             .onAppear    {
+                // Reset Badge Count
                 UNUserNotificationCenter.current().setBadgeCount(0)
+                // Disable Screen Lock
+                UIApplication.shared.isIdleTimerDisabled = true
             }
             .onDisappear {
                 stopTimer()
