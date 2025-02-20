@@ -109,6 +109,12 @@ extension BreakView {
                     .fill(Color(#colorLiteral(red: 0.4500938654, green: 0.9813225865, blue: 0.4743030667, alpha: 1)).opacity(0.3))
                     .frame(width: UIScreen.main.bounds.width * 2, height: 300)
                     .offset(y: 450)
+                
+                
+                    Ellipse()
+                        .fill(Color(#colorLiteral(red: 0.4500938654, green: 0.9813225865, blue: 0.4743030667, alpha: 1)).opacity(0.3))
+                        .frame(width: UIScreen.main.bounds.width * 2, height: 600)
+                        .offset(y: 660)
 
                 Circle()
                     .fill(Color(#colorLiteral(red: 1, green: 0.5781051517, blue: 0, alpha: 1)).opacity(0.8))
@@ -116,7 +122,7 @@ extension BreakView {
                     .scaleEffect(isAnimating ? 1.1 : 1)
                     .animation(
                       isAnimating ?
-                        .easeInOut(duration: 2).repeatForever(autoreverses: true) :
+                        .easeInOut(duration: 2.25).repeatForever(autoreverses: true) :
                         .default,
                       value: isAnimating
                     )
@@ -127,7 +133,14 @@ extension BreakView {
                 
                 Circle()
                     .fill(Color(#colorLiteral(red: 0.9978314042, green: 0.7260366082, blue: 0.07187078148, alpha: 1)).opacity(0.8))
-                    .frame(width: 300, height: 300)
+                    .frame(width: 275, height: 275)
+                    .scaleEffect(isAnimating ? 1.1 : 1)
+                    .animation(
+                      isAnimating ?
+                        .easeInOut(duration: 2).repeatForever(autoreverses: true) :
+                        .default,
+                      value: isAnimating
+                    )
                     .offset(x: -200, y: -460)
             }
         }
