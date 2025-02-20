@@ -48,8 +48,9 @@ struct FocusButton: View {
             EmptyView()
         case .finished:
             NavigationLink(
-                destination: BreakView(shouldResetTimer: $shouldResetTimer).navigationBarBackButtonHidden(true)){
-                Image(systemName: "apple.meditate").scaleEffect(1.5)}
+                destination: BreakView(shouldResetTimer: $shouldResetTimer)
+                    .navigationBarBackButtonHidden(true)) { Image(systemName: "apple.meditate").scaleEffect(1.5) }
+                    .environment(\.colorScheme, .dark) // Enforce Dark-Mode
         }
     }
 

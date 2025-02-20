@@ -13,6 +13,7 @@ struct PomodoriniApp: App {
     var body: some Scene {
         WindowGroup {
             FocusView()
-        }.environment(\.colorScheme, .dark)
+                .environment(\.colorScheme, .dark) // Enforce Dark-Mode
+        }
     }
 }

@@ -15,7 +15,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" fixedFrame="YES" image="Pomodorino-Ripe" translatesAutoresizingMaskIntoConstraints="NO" id="uAy-DH-Lbd">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" fixedFrame="YES" image="Pomodorino Ripe" translatesAutoresizingMaskIntoConstraints="NO" id="uAy-DH-Lbd">
                                 <rect key="frame" x="20" y="257" width="353" height="338"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
@@ -37,6 +37,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Pomodorino-Ripe" width="409.86679077148438" height="419.5172119140625"/>
+        <image name="Pomodorino Ripe" width="409.86679077148438" height="419.5172119140625"/>
     </resources>
 </document>
