@@ -48,8 +48,19 @@ class TimerViewModel {
     
     // MARK: - Computed Properties
     
+    /// Determines the state of the pomodorino timer.
+    var timerState: PomodorinoTimerState {
+        if isEndable {
+            return .endable
+        } else if isRunning {
+            return .running
+        } else {
+            return .notStarted
+        }
+    }
+    
     /// Indicates whether the timer is in the "completable" phase.
-    var isCompletable: Bool {
+    var isEndable: Bool {
         progress + threshold >= 1.0 || isCompleted
     }
     

@@ -25,17 +25,6 @@ struct BreakView: View {
         _shouldResetTimer = shouldResetTimer
         self.vm = TimerViewModel(totalMinutes: durationInMinutes)
     }
-    
-    /// Determines the state of the timer button.
-    private var timerButtonState: BreakButton.TimerState {
-        if vm.isCompletable {
-            return .finished
-        } else if vm.isRunning {
-            return .running
-        } else {
-            return .notStarted
-        }
-    }
 
     var body: some View {
         ZStack {
@@ -100,14 +89,6 @@ struct BreakView: View {
     }
 }
 
-#Preview {
-    @Previewable @State var shouldResetTimer = false
-    BreakView(
-        durationInMinutes: 1,
-        shouldResetTimer: $shouldResetTimer
-    )
-}
-
 extension BreakView {
     
     struct Background: View {
@@ -165,13 +146,22 @@ extension BreakView {
         }
     }
     
+    // TODO: Refactor this View
     private var growingPomodorino: some View {
         VStack (spacing: 30) {
             // SVGImage
             PomodorinoStageView(ripeness: vm.progress)
             
-            BreakButton(state: timerButtonState, onSkip: {}, onCollect: collectPomodorino)
+            BreakButton(state: vm.timerState, onSkip: {}, onCollect: collectPomodorino)
             
         }.padding()
     }
+}
+
+#Preview {
+    @Previewable @State var shouldResetTimer = false
+    BreakView(
+        durationInMinutes: 1,
+        shouldResetTimer: $shouldResetTimer
+    )
 }

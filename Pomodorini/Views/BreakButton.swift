@@ -9,16 +9,7 @@
 import SwiftUI
 
 struct BreakButton: View {
-    
-    // TODO: Move to ViewModel in POM-83
-    enum TimerState {
-        case notStarted
-        case running
-        // case finishable
-        case finished
-    }
-
-    var state: TimerState
+    var state: PomodorinoTimerState
     var onSkip: () -> Void
     var onCollect: () -> Void
 
@@ -47,7 +38,7 @@ struct BreakButton: View {
             .disabled(true)
             .buttonStyle(.bordered)
             .tint(.white)
-        case .finished:
+        case .endable:
             Button(action: onCollect) {
                 Text("Collect").font(.title)
             }
@@ -63,7 +54,7 @@ struct BreakButton: View {
             break // Add behavior for notStarted if needed
         case .running:
             onSkip()
-        case .finished:
+        case .endable:
             onCollect()
         }
     }
@@ -75,7 +66,7 @@ struct BreakButton: View {
             buttonScale = 1.0
         case .running:
             buttonScale = 0.4
-        case .finished:
+        case .endable:
             buttonScale = 1.4
         }
     }
@@ -96,5 +87,5 @@ struct BreakButton: View {
     Spacer().frame(height: 48)
     
     BreakButton(
-        state: .finished, onSkip: {}, onCollect: {})
+        state: .endable, onSkip: {}, onCollect: {})
 }

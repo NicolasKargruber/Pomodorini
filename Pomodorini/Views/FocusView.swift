@@ -37,17 +37,6 @@ struct FocusView: View {
         }
     }
 
-    /// Determines the state of the timer button.
-    private var timerButtonState: FocusButton.TimerState {
-        if vm.isCompletable {
-            return .endable
-        } else if vm.isRunning {
-            return .running
-        } else {
-            return .notStarted
-        }
-    }
-
     var body: some View {
         NavigationStack {
             ZStack(alignment: .top) {
@@ -69,7 +58,7 @@ struct FocusView: View {
                         FocusButton(
                             pomodorinoCount: $pomodorinoCount,
                             shouldResetTimer: $shouldResetTimer,
-                            state: timerButtonState,
+                            state: vm.timerState,
                             onStart: { startTimer() },
                             onEnd: { } // Won't respond due to NavigationLink
                         )
@@ -94,7 +83,7 @@ struct FocusView: View {
             // Live Activity - Update
             LiveActivityManager.shared.updateActivity(formattedTime: vm.formattedTime, pomdorinoColor: pomodorinoColor)
         }
-        .onChange(of: vm.isCompletable, initial: false) { _, newValue in
+        .onChange(of: vm.isEndable, initial: false) { _, newValue in
             print("Pomodorino is now pickable: \(newValue)")
         }
         .onChange(of: shouldResetTimer, initial: false) { _, newValue in
@@ -140,11 +129,6 @@ struct FocusView: View {
     }
 }
 
-#Preview {
-    @Previewable @AppStorage("pomodorinoCount") var count = 0
-    FocusView(durationInMinutes: 1).onAppear { count = 3 }
-}
-
 extension FocusView {
     private var background: some View {
         LinearGradient(
@@ -169,4 +153,9 @@ extension FocusView {
             .foregroundColor(.white)
             .padding(.horizontal, 72)
     }
+}
+
+#Preview {
+    @Previewable @AppStorage("pomodorinoCount") var count = 0
+    FocusView(durationInMinutes: 1).onAppear { count = 3 }
 }
