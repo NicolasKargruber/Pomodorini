@@ -26,7 +26,10 @@ struct FocusButton: View {
     private let animationDuration: TimeInterval = 0.3
 
     var body: some View {
-        Button(action: { handleAction() }) { content }
+        Button(action: {
+            let impactMed = UIImpactFeedbackGenerator(style: .medium)
+                impactMed.impactOccurred()
+            handleAction() }) { content }
         .frame(width: 70, height: 70)
         .foregroundColor(.primary)
         .background(.primary.opacity(0.3))
@@ -124,6 +127,8 @@ extension FocusButton {
                 updateScale()
            }
            .onLongPressGesture(minimumDuration: 3, perform: {}, onPressingChanged: { (isPressed) in
+               let impactHeavy = UIImpactFeedbackGenerator(style: .heavy)
+                   impactHeavy.impactOccurred()
                if(isPressed){
                    print("Focus Button long pressed")
                    isLongPressed = true
