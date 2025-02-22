@@ -23,8 +23,7 @@ struct BreakView: View {
 
     init(durationInMinutes: Int = 5, shouldResetTimer: Binding<Bool>) {
         _shouldResetTimer = shouldResetTimer
-        self.vm = TimerViewModel(
-            totalMinutes: durationInMinutes, allowsOvertime: true)
+        self.vm = TimerViewModel(totalMinutes: durationInMinutes)
     }
 
     var body: some View {

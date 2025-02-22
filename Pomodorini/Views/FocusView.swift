@@ -13,18 +13,12 @@ import SwiftUI
 /// a count of completed Pomodorini, and a button to manage the timer state.
 struct FocusView: View {
     @AppStorage("pomodorinoCount") var pomodorinoCount = 0
-    
-    // FIXME: Make AppStorage in [POM-73]
-    //@AppStorage("timerThreshold") var timerThreshold = 0.04/*%*/
-    let timerThreshold: Double = 0.04/*%*/
-    
     @State var vm: TimerViewModel
     @State private var shouldResetTimer = false
     
     init(durationInMinutes: Int = 25) {
         NotificationManager.shared.requestAuthorization ()
-        self.vm = TimerViewModel(
-            totalMinutes: durationInMinutes,threshold: timerThreshold, allowsOvertime: true)
+        self.vm = TimerViewModel(totalMinutes: durationInMinutes)
     }
 
     /// Determines the color of the Pomodorino based on its ripeness.
@@ -148,7 +142,7 @@ extension FocusView {
         }
     }
     
-    // TODO: Delete
+    // TODO: Delete in POM-90
     private var goalDisplay: some View {
         Text("Goal: 25:00")
             .font(.system(size: 24, weight: .regular))

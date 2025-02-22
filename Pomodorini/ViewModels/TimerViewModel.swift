@@ -20,17 +20,15 @@ class TimerViewModel {
     private var startTime: Date?             // Start time of the timer
     private var endTime: Date?               // End time of the timer
     private var timer: Timer?                // Timer object
-    private let threshold: Double            // Completion threshold (percentage: 0.0 - 1.0)
-    private let allowsOvertime: Bool         // Determines if overtime is allowed
+    private var threshold: Double = 0.079    // Completion threshold (percentage: 0.0 - 1.0)
 
     // MARK: - Initializer
     
     /// Initializes a new TimerManager with the specified configuration.
     /// - Parameters:
     ///   - totalMinutes: The total timer duration in minutes.
-    ///   - threshold: The completion threshold (default 4%).
-    ///   - allowsOvertime: Whether the timer allows overtime (default false).
-    init(totalMinutes: Int, threshold: Double = 0.04, allowsOvertime: Bool = false) {
+    ///   - threshold: The completion threshold (default 8%).
+    init(totalMinutes: Int, threshold: Double? = nil) {
         let clampedMinutes = max(1, min(totalMinutes, 60)) // Ensure a valid duration
         
         // #Preview
@@ -39,13 +37,12 @@ class TimerViewModel {
         else { self.totalDuration = TimeInterval(clampedMinutes * 60) }
         
         self._remainingTime = self.totalDuration
-        self.allowsOvertime = allowsOvertime
         
-        if (0...1).contains(threshold) {
+        if let threshold, (0...1).contains(threshold) {
             self.threshold = threshold
         } else {
-            self.threshold = 0.04
-            print("Invalid threshold value. Defaulting to 4%.")
+            print("Invalid OR no threshold value provided. Set to default value.")
+            self.threshold = 0.08 // Explicitly set the default
         }
     }
     
@@ -117,7 +114,7 @@ class TimerViewModel {
         let now = Date()
         
         _remainingTime = max(endTime.timeIntervalSince(now), 0)
-        if _remainingTime == 0 && allowsOvertime {
+        if _remainingTime == 0 /*&& allowsOvertime*/ {
             overtime = abs(now.timeIntervalSince(endTime))
         } else if _remainingTime == 0 {
             stop()
