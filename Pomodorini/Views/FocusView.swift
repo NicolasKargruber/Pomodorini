@@ -110,13 +110,22 @@ struct FocusView: View {
             body: "Your Pomodorino is almost done. Take a break! 🍅",
             timeInterval: vm.remainingTime
         )
+        
+        // Cancel Notifications when app dies
+        NotificationCenter.default.addObserver(forName: UIApplication.willTerminateNotification, object: nil, queue: .main) { _ in
+            // Terminating
+            print("App died")
+            stopTimer()
+        }
     }
     
     private func stopTimer() {
         vm.stop()
+        print("Stopped Timer")
         
-        // TODO: Not remove when app dies, but when new timer gets started
-        //UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [UUID().uuidString])
+        // Remove notifications when timer stops before
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [UUID().uuidString])
+        print("Cancelled notifications")
     }
 }
 
