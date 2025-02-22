@@ -40,7 +40,7 @@ struct FocusView: View {
     /// Determines the state of the timer button.
     private var timerButtonState: FocusButton.TimerState {
         if vm.isCompletable {
-            return .finished
+            return .endable
         } else if vm.isRunning {
             return .running
         } else {
@@ -71,7 +71,7 @@ struct FocusView: View {
                             shouldResetTimer: $shouldResetTimer,
                             state: timerButtonState,
                             onStart: { startTimer() },
-                            onNavigate: { } // Won't respond due to NavigationLink
+                            onEnd: { } // Won't respond due to NavigationLink
                         )
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)

@@ -12,16 +12,14 @@ struct FocusButton: View {
     // TODO: Fix with @AppStorage in -> POM-30
     @Binding var pomodorinoCount: Int
     @Binding var shouldResetTimer: Bool
-    
-    enum TimerState {
-        case notStarted
-        case running
-        case finished
-    }
 
     var state: TimerState
     var onStart: () -> Void
-    var onNavigate: () -> Void
+    var onEnd: () -> Void
+    
+    // Animation
+    @State var isTapped: Bool = false
+    @State var isLongPressed: Bool = false
 
     // Animation
     @State private var buttonScale = 1.0
@@ -38,6 +36,9 @@ struct FocusButton: View {
         .scaleEffect(buttonScale)
         .onChange(of: state) { _, _ in updateScale() }
         .animation(.bouncy(duration: animationDuration), value: buttonScale)
+        .onAppear(){
+            updateScale() // For Preview
+        }
     }
 
     @ViewBuilder
@@ -46,12 +47,10 @@ struct FocusButton: View {
         case .notStarted:
             Text("Start")
         case .running:
-            EmptyView()
-        case .finished:
-            NavigationLink(
-                destination: BreakView(shouldResetTimer: $shouldResetTimer)
-                    .navigationBarBackButtonHidden(true)) { Image(systemName: "apple.meditate").scaleEffect(1.5) }
-                    .environment(\.colorScheme, .dark) // Enforce Dark-Mode
+            if(isTapped){ navigationButton.task(delayShrink) }
+            else { invisibleView }
+        case .endable:
+            navigationButton
         }
     }
 
@@ -61,19 +60,22 @@ struct FocusButton: View {
             onStart()
         case .running:
             break // Add behavior for running if needed
-        case .finished:
-            onNavigate()
+        case .endable:
+            onEnd()
         }
     }
 
     // Animation
     private func updateScale() {
+        // print("Update Scale")
         switch state {
         case .notStarted:
             buttonScale = 1.0
         case .running:
-            buttonScale = 0.4
-        case .finished:
+            if(isLongPressed) { buttonScale = 1.4 }
+            else if(isTapped) { buttonScale = 1.4 }
+            else { buttonScale = 0.4 }
+        case .endable:
             buttonScale = 1.4
         }
     }
@@ -86,15 +88,70 @@ struct FocusButton: View {
     FocusButton(
         pomodorinoCount: $pomodorinoCount,
         shouldResetTimer: $shouldResetTimer,
-        state: .notStarted, onStart: {}, onNavigate: {}).scaleEffect(1)
+        state: .notStarted, onStart: {}, onEnd: {})
+    
+    Spacer().frame(height: 48)
     
     FocusButton(
         pomodorinoCount: $pomodorinoCount,
         shouldResetTimer: $shouldResetTimer,
-        state: .running, onStart: {}, onNavigate: {}).scaleEffect(0.4)
+        state: .running, onStart: {}, onEnd: {})
+    
+    Spacer().frame(height: 48)
     
     FocusButton(
         pomodorinoCount: $pomodorinoCount,
         shouldResetTimer: $shouldResetTimer,
-        state: .finished, onStart: {}, onNavigate: {}).scaleEffect(1.4)
+        state: .endable, onStart: {}, onEnd: {})
+}
+
+extension FocusButton {
+    
+    // TODO: Move to ViewModel in POM-83
+    enum TimerState {
+        case notStarted
+        case running
+        case endable
+        // TODO: Add if needed:
+        // case ended
+    }
+    
+    private var invisibleView: some View {
+        Circle().opacity(0.01)
+            .onTapGesture {
+                print("Focus Button was tapped")
+                isTapped = true
+                updateScale()
+           }
+           .onLongPressGesture(minimumDuration: 3, perform: {}, onPressingChanged: { (isPressed) in
+               if(isPressed){
+                   print("Focus Button long pressed")
+                   isLongPressed = true
+                   updateScale()
+               } else {
+                   print("Focus Button is let go of after long pressed")
+                   isLongPressed = false
+                   updateScale()
+               }
+           })
+    }
+    
+    // Shrinks button back down after X seconds
+    @Sendable private func delayShrink() async {
+        try? await Task.sleep(for: .seconds(4))
+        isTapped = false
+        updateScale()
+    }
+    
+    private var navigationButton: some View {
+        // Navigation + Destination
+        NavigationLink(
+            destination: BreakView(shouldResetTimer: $shouldResetTimer)
+            .navigationBarBackButtonHidden(true)
+            .environment(\.colorScheme, .dark)) // Enforce Dark-Mode
+        {
+            // Button Content
+            Image(systemName: "apple.meditate").scaleEffect(1.5)
+        }
+    }
 }
