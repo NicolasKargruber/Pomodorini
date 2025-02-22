@@ -23,14 +23,15 @@ struct FocusButton: View {
     var onStart: () -> Void
     var onNavigate: () -> Void
 
+    // Animation
     @State private var buttonScale = 1.0
     private let animationDuration: TimeInterval = 0.3
 
     var body: some View {
         Button(action: { handleAction() }) { content }
         .frame(width: 70, height: 70)
-        .foregroundColor(Color.white)
-        .background(Color.white.opacity(0.3))
+        .foregroundColor(.primary)
+        .background(.primary.opacity(0.3))
         .clipShape(Circle())
         .padding(3)
         .overlay(Circle().stroke(Color.white.opacity(0.3), lineWidth: 2))
@@ -65,6 +66,7 @@ struct FocusButton: View {
         }
     }
 
+    // Animation
     private func updateScale() {
         switch state {
         case .notStarted:
@@ -75,4 +77,24 @@ struct FocusButton: View {
             buttonScale = 1.4
         }
     }
+}
+
+#Preview {
+    @Previewable @State var pomodorinoCount = 0
+    @Previewable @State var shouldResetTimer = false
+    
+    FocusButton(
+        pomodorinoCount: $pomodorinoCount,
+        shouldResetTimer: $shouldResetTimer,
+        state: .notStarted, onStart: {}, onNavigate: {}).scaleEffect(1)
+    
+    FocusButton(
+        pomodorinoCount: $pomodorinoCount,
+        shouldResetTimer: $shouldResetTimer,
+        state: .running, onStart: {}, onNavigate: {}).scaleEffect(0.4)
+    
+    FocusButton(
+        pomodorinoCount: $pomodorinoCount,
+        shouldResetTimer: $shouldResetTimer,
+        state: .finished, onStart: {}, onNavigate: {}).scaleEffect(1.4)
 }
