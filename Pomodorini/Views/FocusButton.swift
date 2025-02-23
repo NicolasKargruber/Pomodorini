@@ -26,10 +26,7 @@ struct FocusButton: View {
     private let animationDuration: TimeInterval = 0.3
 
     var body: some View {
-        Button(action: {
-            let impactMed = UIImpactFeedbackGenerator(style: .medium)
-                impactMed.impactOccurred()
-            handleAction() }) { content }
+        Button(action: { handleAction() }) { content }
         .frame(width: 70, height: 70)
         .foregroundColor(.primary)
         .background(.primary.opacity(0.3))
@@ -39,25 +36,44 @@ struct FocusButton: View {
         .scaleEffect(buttonScale)
         .onChange(of: state) { _, _ in updateScale() }
         .animation(.bouncy(duration: animationDuration), value: buttonScale)
-        .onAppear(){
-            updateScale() // For Preview
-        }
+        .onAppear(){ updateScale() } // For Preview
     }
 
     @ViewBuilder
     private var content: some View {
-        switch state {
-        case .notStarted:
-            Text("Start")
-        case .running:
-            if(isTapped){ navigationButton.task(delayShrink) }
-            else { invisibleView }
-        case .endable:
-            navigationButton
-        }
+        // Content
+        Group {
+            switch state {
+            case .notStarted:
+                Text("Start")
+            case .running:
+                if(isTapped){ navigationButton.task(delayShrink) }
+                else { invisibleView }
+            case .endable:
+                navigationButton
+            }
+        } // Handle Long Press
+        .onLongPressGesture(minimumDuration: 3, perform: {}, onPressingChanged: { (isPressed) in
+            let impactHeavy = UIImpactFeedbackGenerator(style: .heavy)
+                impactHeavy.impactOccurred()
+            if(isPressed){
+                print("Focus Button long pressed")
+                isLongPressed = true
+                updateScale()
+            } else {
+                print("Focus Button is let go of after long pressed")
+                isLongPressed = false
+                updateScale()
+            }
+        })
     }
 
     private func handleAction() {
+        // Haptic Feedback
+        let impactMed = UIImpactFeedbackGenerator(style: .medium)
+        impactMed.impactOccurred()
+        
+        // Action
         switch state {
         case .notStarted:
             onStart()
@@ -70,13 +86,12 @@ struct FocusButton: View {
 
     // Animation
     private func updateScale() {
-        // print("Update Scale")
+        if(isLongPressed) { return buttonScale = 1.4 }
         switch state {
         case .notStarted:
             buttonScale = 1.0
         case .running:
-            if(isLongPressed) { buttonScale = 1.4 }
-            else if(isTapped) { buttonScale = 1.4 }
+            if(isTapped) { buttonScale = 1.4 }
             else { buttonScale = 0.4 }
         case .endable:
             buttonScale = 1.4
@@ -126,19 +141,6 @@ extension FocusButton {
                 isTapped = true
                 updateScale()
            }
-           .onLongPressGesture(minimumDuration: 3, perform: {}, onPressingChanged: { (isPressed) in
-               let impactHeavy = UIImpactFeedbackGenerator(style: .heavy)
-                   impactHeavy.impactOccurred()
-               if(isPressed){
-                   print("Focus Button long pressed")
-                   isLongPressed = true
-                   updateScale()
-               } else {
-                   print("Focus Button is let go of after long pressed")
-                   isLongPressed = false
-                   updateScale()
-               }
-           })
     }
     
     // Shrinks button back down after X seconds
