@@ -11,21 +11,33 @@ import SwiftUI
 
 struct PomodorinoTimerAttributes: ActivityAttributes {
     public struct ContentState: Codable, Hashable {
-        // Dynamic stateful properties about your activity go here!
-        var emoji: String
+        // Dynamic (stateful) properties
+        // <--
+        var formattedTime: String
+        var red: Double
+        var green: Double
+        var blue: Double
+        // -->
     }
 
-    // Fixed non-changing properties about your activity go here!
-    var name: String
+    // Static (non-changing) properties
+    // <--
+    var taskLabel: String
+    // -->
 }
 
 struct PomodorinoTimerLiveActivity: Widget {
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: PomodorinoTimerAttributes.self) { context in
-            // Lock screen/banner UI goes here
-            VStack {
-                Text("Hello \(context.state.emoji)")
+            // Lock screen/banner UI
+            HStack {
+                Text(context.attributes.taskLabel)
+                Spacer()
+                Text(context.state.formattedTime).font(.title.bold())
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .padding()
+            .background(Color(UIColor(red: context.state.red, green: context.state.green, blue: context.state.blue, alpha: 1)))
             .activityBackgroundTint(Color.cyan)
             .activitySystemActionForegroundColor(Color.black)
 
@@ -40,15 +52,15 @@ struct PomodorinoTimerLiveActivity: Widget {
                     Text("Trailing")
                 }
                 DynamicIslandExpandedRegion(.bottom) {
-                    Text("Bottom \(context.state.emoji)")
+                    Text("Bottom \(context.state.formattedTime)")
                     // more content
                 }
             } compactLeading: {
                 Text("L")
             } compactTrailing: {
-                Text("T \(context.state.emoji)")
+                Text("T \(context.state.formattedTime)")
             } minimal: {
-                Text(context.state.emoji)
+                Text(context.state.formattedTime)
             }
             .widgetURL(URL(string: "http://www.apple.com"))
             .keylineTint(Color.red)
@@ -58,23 +70,23 @@ struct PomodorinoTimerLiveActivity: Widget {
 
 extension PomodorinoTimerAttributes {
     fileprivate static var preview: PomodorinoTimerAttributes {
-        PomodorinoTimerAttributes(name: "World")
+        PomodorinoTimerAttributes(taskLabel: "Lernen")
     }
 }
 
 extension PomodorinoTimerAttributes.ContentState {
-    fileprivate static var smiley: PomodorinoTimerAttributes.ContentState {
-        PomodorinoTimerAttributes.ContentState(emoji: "😀")
+    fileprivate static var started: PomodorinoTimerAttributes.ContentState {
+        PomodorinoTimerAttributes.ContentState(formattedTime: "24:59", red: 0.3, green: 0.6, blue: 0.2)
      }
      
-     fileprivate static var starEyes: PomodorinoTimerAttributes.ContentState {
-         PomodorinoTimerAttributes.ContentState(emoji: "🤩")
+     fileprivate static var ended: PomodorinoTimerAttributes.ContentState {
+         PomodorinoTimerAttributes.ContentState(formattedTime: "00:00", red: 0.7, green: 0.2, blue: 0.1)
      }
 }
 
 #Preview("Notification", as: .content, using: PomodorinoTimerAttributes.preview) {
    PomodorinoTimerLiveActivity()
 } contentStates: {
-    PomodorinoTimerAttributes.ContentState.smiley
-    PomodorinoTimerAttributes.ContentState.starEyes
+    PomodorinoTimerAttributes.ContentState.started
+    PomodorinoTimerAttributes.ContentState.ended
 }
