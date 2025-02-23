@@ -23,8 +23,7 @@ struct BreakView: View {
 
     init(durationInMinutes: Int = 5, shouldResetTimer: Binding<Bool>) {
         _shouldResetTimer = shouldResetTimer
-        self.vm = TimerViewModel(
-            totalMinutes: durationInMinutes, allowsOvertime: true)
+        self.vm = TimerViewModel(totalMinutes: durationInMinutes)
     }
 
     var body: some View {
@@ -63,13 +62,22 @@ struct BreakView: View {
             body: "Your Pomodorino has fully grown. Ready for another! 🌱",
             timeInterval: vm.remainingTime
         )
+        
+        // Cancel Notifications when app dies
+        NotificationCenter.default.addObserver(forName: UIApplication.willTerminateNotification, object: nil, queue: .main) { _ in
+            // Terminating
+            print("App died")
+            stopTimer()
+        }
     }
 
     func stopTimer() {
         vm.stop()
+        print("Stopped Timer")
         
-        // TODO: Not remove when app dies, but when new timer gets started
-        //UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [UUID().uuidString])
+        // Remove notifications when timer stops before
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [UUID().uuidString])
+        print("Cancelled notifications")
    }
     
     private func collectPomodorino() {

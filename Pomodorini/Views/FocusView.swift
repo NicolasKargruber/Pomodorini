@@ -13,18 +13,12 @@ import SwiftUI
 /// a count of completed Pomodorini, and a button to manage the timer state.
 struct FocusView: View {
     @AppStorage("pomodorinoCount") var pomodorinoCount = 0
-    
-    // FIXME: Make AppStorage in [POM-73]
-    //@AppStorage("timerThreshold") var timerThreshold = 0.04/*%*/
-    let timerThreshold: Double = 0.04/*%*/
-    
     @State var vm: TimerViewModel
     @State private var shouldResetTimer = false
     
     init(durationInMinutes: Int = 25) {
         NotificationManager.shared.requestAuthorization ()
-        self.vm = TimerViewModel(
-            totalMinutes: durationInMinutes,threshold: timerThreshold, allowsOvertime: true)
+        self.vm = TimerViewModel(totalMinutes: durationInMinutes)
     }
 
     /// Determines the color of the Pomodorino based on its ripeness.
@@ -40,7 +34,7 @@ struct FocusView: View {
     /// Determines the state of the timer button.
     private var timerButtonState: FocusButton.TimerState {
         if vm.isCompletable {
-            return .finished
+            return .endable
         } else if vm.isRunning {
             return .running
         } else {
@@ -71,7 +65,7 @@ struct FocusView: View {
                             shouldResetTimer: $shouldResetTimer,
                             state: timerButtonState,
                             onStart: { startTimer() },
-                            onNavigate: { } // Won't respond due to NavigationLink
+                            onEnd: { } // Won't respond due to NavigationLink
                         )
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -116,13 +110,22 @@ struct FocusView: View {
             body: "Your Pomodorino is almost done. Take a break! 🍅",
             timeInterval: vm.remainingTime
         )
+        
+        // Cancel Notifications when app dies
+        NotificationCenter.default.addObserver(forName: UIApplication.willTerminateNotification, object: nil, queue: .main) { _ in
+            // Terminating
+            print("App died")
+            stopTimer()
+        }
     }
     
     private func stopTimer() {
         vm.stop()
+        print("Stopped Timer")
         
-        // TODO: Not remove when app dies, but when new timer gets started
-        //UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [UUID().uuidString])
+        // Remove notifications when timer stops before
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [UUID().uuidString])
+        print("Cancelled notifications")
     }
 }
 
@@ -148,7 +151,7 @@ extension FocusView {
         }
     }
     
-    // TODO: Delete
+    // TODO: Delete in POM-90
     private var goalDisplay: some View {
         Text("Goal: 25:00")
             .font(.system(size: 24, weight: .regular))
