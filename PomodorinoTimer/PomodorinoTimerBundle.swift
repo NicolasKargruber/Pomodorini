@@ -11,7 +11,6 @@ import SwiftUI
 @main
 struct PomodorinoTimerBundle: WidgetBundle {
     var body: some Widget {
-        PomodorinoTimer()
         PomodorinoTimerLiveActivity()
     }
 }

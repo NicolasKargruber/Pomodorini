@@ -66,12 +66,14 @@ struct PomodorinoTimerLiveActivity: Widget {
     }
 }
 
+// Preview
 extension PomodorinoTimerAttributes {
     fileprivate static var preview: PomodorinoTimerAttributes {
         PomodorinoTimerAttributes(taskLabel: "Lernen")
     }
 }
 
+// Preview
 extension PomodorinoTimerAttributes.ContentState {
     fileprivate static var started: PomodorinoTimerAttributes.ContentState {
         PomodorinoTimerAttributes.ContentState(formattedTime: "24:59", hexColor: Color.green.toHex()!)
@@ -82,6 +84,7 @@ extension PomodorinoTimerAttributes.ContentState {
      }
 }
 
+// Preview
 #Preview("Notification", as: .content, using: PomodorinoTimerAttributes.preview) {
    PomodorinoTimerLiveActivity()
 } contentStates: {
