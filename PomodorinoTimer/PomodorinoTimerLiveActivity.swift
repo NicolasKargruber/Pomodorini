@@ -14,9 +14,7 @@ struct PomodorinoTimerAttributes: ActivityAttributes {
         // Dynamic (stateful) properties
         // <--
         var formattedTime: String
-        var red: Double
-        var green: Double
-        var blue: Double
+        var hexColor: String
         // -->
     }
 
@@ -37,7 +35,7 @@ struct PomodorinoTimerLiveActivity: Widget {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .padding()
-            .background(Color(UIColor(red: context.state.red, green: context.state.green, blue: context.state.blue, alpha: 1)))
+            .background(Color(hex:context.state.hexColor))
             .activityBackgroundTint(Color.cyan)
             .activitySystemActionForegroundColor(Color.black)
 
@@ -76,11 +74,11 @@ extension PomodorinoTimerAttributes {
 
 extension PomodorinoTimerAttributes.ContentState {
     fileprivate static var started: PomodorinoTimerAttributes.ContentState {
-        PomodorinoTimerAttributes.ContentState(formattedTime: "24:59", red: 0.3, green: 0.6, blue: 0.2)
+        PomodorinoTimerAttributes.ContentState(formattedTime: "24:59", hexColor: Color.green.toHex()!)
      }
      
      fileprivate static var ended: PomodorinoTimerAttributes.ContentState {
-         PomodorinoTimerAttributes.ContentState(formattedTime: "00:00", red: 0.7, green: 0.2, blue: 0.1)
+         PomodorinoTimerAttributes.ContentState(formattedTime: "00:00", hexColor: Color.red.toHex()!)
      }
 }
 
