@@ -74,19 +74,20 @@
 			);
 			target = 1F9CAD802CF36ADB00A82D52 /* Pomodorini */;
 		};
-		1F140FB12D6B786000302FB7 /* Exceptions for "Pomodorini" folder in "PomodorinoTimerExtension" target */ = {
+		1F140FB82D6B7E4E00302FB7 /* Exceptions for "PomodorinoTimer" folder in "Pomodorini" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				PomodorinoTimerAttributes.swift,
+				PomodorinoTimerLiveActivity.swift,
+			);
+			target = 1F9CAD802CF36ADB00A82D52 /* Pomodorini */;
+		};
+		1F97E94D2D6B97FB00FE928D /* Exceptions for "Pomodorini" folder in "PomodorinoTimerExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Utilities/Extensions/ColorExtenisons.swift,
 			);
 			target = 1F140F932D6B67C600302FB7 /* PomodorinoTimerExtension */;
-		};
-		1F140FB82D6B7E4E00302FB7 /* Exceptions for "PomodorinoTimer" folder in "Pomodorini" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				PomodorinoTimerLiveActivity.swift,
-			);
-			target = 1F9CAD802CF36ADB00A82D52 /* Pomodorini */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -104,7 +105,7 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				1F140FAD2D6B686F00302FB7 /* Exceptions for "Pomodorini" folder in "Pomodorini" target */,
-				1F140FB12D6B786000302FB7 /* Exceptions for "Pomodorini" folder in "PomodorinoTimerExtension" target */,
+				1F97E94D2D6B97FB00FE928D /* Exceptions for "Pomodorini" folder in "PomodorinoTimerExtension" target */,
 			);
 			path = Pomodorini;
 			sourceTree = "<group>";

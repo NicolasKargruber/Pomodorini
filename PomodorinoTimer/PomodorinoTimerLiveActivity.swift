@@ -9,21 +9,6 @@ import ActivityKit
 import WidgetKit
 import SwiftUI
 
-struct PomodorinoTimerAttributes: ActivityAttributes {
-    public struct ContentState: Codable, Hashable {
-        // Dynamic (stateful) properties
-        // <--
-        var formattedTime: String
-        var hexColor: String
-        // -->
-    }
-
-    // Static (non-changing) properties
-    // <--
-    var taskLabel: String
-    // -->
-}
-
 struct PomodorinoTimerLiveActivity: Widget {
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: PomodorinoTimerAttributes.self) { context in
@@ -36,8 +21,8 @@ struct PomodorinoTimerLiveActivity: Widget {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .padding()
             .background(Color(hex:context.state.hexColor))
-            .activityBackgroundTint(Color.cyan)
-            .activitySystemActionForegroundColor(Color.black)
+            .activityBackgroundTint(Color.black)
+            .activitySystemActionForegroundColor(Color.primary)
 
         } dynamicIsland: { context in
             DynamicIsland {
@@ -64,24 +49,6 @@ struct PomodorinoTimerLiveActivity: Widget {
             .keylineTint(Color.red)
         }
     }
-}
-
-// Preview
-extension PomodorinoTimerAttributes {
-    fileprivate static var preview: PomodorinoTimerAttributes {
-        PomodorinoTimerAttributes(taskLabel: "Lernen")
-    }
-}
-
-// Preview
-extension PomodorinoTimerAttributes.ContentState {
-    fileprivate static var started: PomodorinoTimerAttributes.ContentState {
-        PomodorinoTimerAttributes.ContentState(formattedTime: "24:59", hexColor: Color.green.toHex()!)
-     }
-     
-     fileprivate static var ended: PomodorinoTimerAttributes.ContentState {
-         PomodorinoTimerAttributes.ContentState(formattedTime: "00:00", hexColor: Color.red.toHex()!)
-     }
 }
 
 // Preview
