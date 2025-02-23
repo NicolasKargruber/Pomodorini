@@ -5,6 +5,7 @@
 //  Created by Nicolas Kargruber on 17.11.24.
 //
 
+import ActivityKit
 import SwiftUI
 
 /// A view that represents a Pomodorino timer screen.
@@ -101,8 +102,21 @@ struct FocusView: View {
         }
     }
     
+    func startActivity()  {
+            do{
+                let staticAttributes = PomodorinoTimerAttributes(taskLabel: "Lernen")
+                let dynamicAttributes:PomodorinoTimerAttributes.ContentState = PomodorinoTimerAttributes.ContentState(formattedTime: "00:00", hexColor: Color.orange.toHex()!)
+                
+                _ = try Activity<PomodorinoTimerAttributes>.request(attributes: staticAttributes, content: .init(state: dynamicAttributes, staleDate: nil), pushType: nil)
+            }catch{
+                print("error")
+            }
+        }
+    
     private func startTimer() {
         vm.start()
+        
+        startActivity()
         
         // Notification - Focus
         NotificationManager.shared.scheduleNotification(
