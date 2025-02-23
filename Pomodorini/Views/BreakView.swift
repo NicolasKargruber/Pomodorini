@@ -76,7 +76,7 @@ struct BreakView: View {
         print("Stopped Timer")
         
         // Remove notifications when timer stops before
-        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [UUID().uuidString])
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
         print("Cancelled notifications")
    }
     
