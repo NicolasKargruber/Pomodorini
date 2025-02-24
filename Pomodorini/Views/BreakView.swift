@@ -40,8 +40,11 @@ struct BreakView: View {
                         
                         Spacer().frame(height: 24)
                     
-                        BreakButton(state: vm.timerState, onSkip: {}, onCollect: collectPomodorino)
-                        
+                    BreakButton(
+                        state: vm.timerState,
+                        onSkip: {collectPomodorino(skip: true)},
+                        onCollect: { collectPomodorino() }
+                    )
                     
                     TimerDisplay(formatedTime: vm.formattedTime, formatedOvertime: vm.formattedOvertime, showOvertime: vm.isCompleted)
                 }
@@ -88,11 +91,17 @@ struct BreakView: View {
         print("Cancelled notifications")
    }
     
-    private func collectPomodorino() {
+    private func collectPomodorino(skip: Bool? = nil) {
         vm.stop()
-        pomodorinoCount += 1
+        print("Stopped Timer")
+        
+        if(skip != true){
+            pomodorinoCount += 1
+            print("Increased Pomodorino Count")
+        }
+        
         shouldResetTimer = true
-        print("Send value of shouldResetTimer: \(shouldResetTimer)")
+        print("Dismiss Screen. Reset Timer: \(shouldResetTimer)")
         dismiss()
     }
 }

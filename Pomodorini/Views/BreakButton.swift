@@ -12,6 +12,9 @@ struct BreakButton: View {
     var state: PomodorinoTimerState
     var onSkip: () -> Void
     var onCollect: () -> Void
+    
+    // Marked Properties
+    @State private var showingConfirmation = false
 
     var body: some View {
         content
@@ -36,23 +39,12 @@ struct BreakButton: View {
         }
         .animation(.easeInOut(duration: 0.3), value: state) // ⬅️ Smooth transition
     }
-
-
-    private func handleAction() {
-        switch state {
-        case .notStarted:
-            break // Add behavior for notStarted if needed
-        case .running:
-            onSkip()
-        case .endable:
-            onCollect()
-        }
-    }
 }
 
 extension BreakButton {
+    
     private var skipButton: some View {
-        Button(action: onSkip) {
+        Button(action: { showingConfirmation.toggle() }) {
             Label("Skip", systemImage: "forward.end")
                 .font(.title)
                 .padding(.vertical, 4)
@@ -62,6 +54,12 @@ extension BreakButton {
         .tint(.primary)
         .cornerRadius(48)
         .transition(.opacity.combined(with: .scale))
+        .confirmationDialog("Skip Break", isPresented: $showingConfirmation) {
+            Button("Skip", role: .destructive) { onSkip() }
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("An UNRIPE Pomodorino won't be added to your count.\n\nSkip this break?")
+        }
     }
     
     private var collectButton: some View {
