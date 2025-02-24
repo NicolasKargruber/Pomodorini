@@ -33,8 +33,19 @@ struct BreakView: View {
             VStack(alignment: .trailing) {
                 PomodoriniButton()
                 
-                VStack(spacing: 30) {
-                    growingPomodorino
+                VStack(spacing: 12) {
+                    
+                        // SVGImage
+                        PomodorinoStageView(ripeness: vm.progress).frame(width: 120, height: 120)
+                        
+                        Spacer().frame(height: 24)
+                    
+                    BreakButton(
+                        state: vm.timerState,
+                        onSkip: {collectPomodorino(skip: true)},
+                        onCollect: { collectPomodorino() }
+                    )
+                    
                     TimerDisplay(formatedTime: vm.formattedTime, formatedOvertime: vm.formattedOvertime, showOvertime: vm.isCompleted)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -80,21 +91,19 @@ struct BreakView: View {
         print("Cancelled notifications")
    }
     
-    private func collectPomodorino() {
+    private func collectPomodorino(skip: Bool? = nil) {
         vm.stop()
-        pomodorinoCount += 1
+        print("Stopped Timer")
+        
+        if(skip != true){
+            pomodorinoCount += 1
+            print("Increased Pomodorino Count")
+        }
+        
         shouldResetTimer = true
-        print("Send value of shouldResetTimer: \(shouldResetTimer)")
+        print("Dismiss Screen. Reset Timer: \(shouldResetTimer)")
         dismiss()
     }
-}
-
-#Preview {
-    @Previewable @State var shouldResetTimer = false
-    BreakView(
-        durationInMinutes: 1,
-        shouldResetTimer: $shouldResetTimer
-    )
 }
 
 extension BreakView {
@@ -153,24 +162,12 @@ extension BreakView {
             }
         }
     }
-    
-    private var growingPomodorino: some View {
-        ZStack {
-            //Capsule().fill(Color(#colorLiteral(red: 0.5843137503, green: 0.8235294223, blue: 0.4196078479, alpha: 1))).opacity(0.2).frame(height: 260).padding(.horizontal)
-            
-            VStack (spacing: 30) {
-                // SVGImage
-                PomodorinoStageView(ripeness: vm.progress)
-                
-                // Collect Button
-                Button(action: collectPomodorino) {
-                    Text("Collect").font(.title)
-                }
-                .disabled(!vm.isCompleted)
-                .buttonStyle(.bordered)
-                .tint(.white)
-                
-            }.padding()
-        }
-    }
+}
+
+#Preview {
+    @Previewable @State var shouldResetTimer = false
+    BreakView(
+        durationInMinutes: 1,
+        shouldResetTimer: $shouldResetTimer
+    )
 }

@@ -12,9 +12,9 @@ struct PomodorinoGrowth {
     private static let growthStages: [(ripeness: Double, imageName: String, scale: CGFloat)] = [
         (0.00, "Pomodorino Unripe", 0.9),  // 0%
         (0.30, "Pomodorino Ripening", 1.1),  // 30%
-        (0.60, "Pomodorino Ripening", 1.3),// 60%
-        (0.96, "Pomodorino Ripe", 1.5),      // 96%
-        (1.04, "Pomodorino Going Bad", 1.4), // 120%
+        (0.60, "Pomodorino Almost Ripe", 1.3),// 60%
+        (0.92, "Pomodorino Ripe", 1.5),      // 96%
+        (1.08, "Pomodorino Going Bad", 1.4), // 120%
         (1.20, "Pomodorino Going Badder", 1.4),// 120%
         (1.40, "Pomodorino Going Even Badder", 1.4),// 140%
         (1.60, "Pomodorino Squished", 1.4),// 160%

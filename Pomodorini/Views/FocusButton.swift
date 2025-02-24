@@ -13,7 +13,7 @@ struct FocusButton: View {
     @Binding var pomodorinoCount: Int
     @Binding var shouldResetTimer: Bool
 
-    var state: TimerState
+    var state: PomodorinoTimerState
     var onStart: () -> Void
     var onEnd: () -> Void
     
@@ -99,41 +99,7 @@ struct FocusButton: View {
     }
 }
 
-#Preview {
-    @Previewable @State var pomodorinoCount = 0
-    @Previewable @State var shouldResetTimer = false
-    
-    FocusButton(
-        pomodorinoCount: $pomodorinoCount,
-        shouldResetTimer: $shouldResetTimer,
-        state: .notStarted, onStart: {}, onEnd: {})
-    
-    Spacer().frame(height: 48)
-    
-    FocusButton(
-        pomodorinoCount: $pomodorinoCount,
-        shouldResetTimer: $shouldResetTimer,
-        state: .running, onStart: {}, onEnd: {})
-    
-    Spacer().frame(height: 48)
-    
-    FocusButton(
-        pomodorinoCount: $pomodorinoCount,
-        shouldResetTimer: $shouldResetTimer,
-        state: .endable, onStart: {}, onEnd: {})
-}
-
 extension FocusButton {
-    
-    // TODO: Move to ViewModel in POM-83
-    enum TimerState {
-        case notStarted
-        case running
-        case endable
-        // TODO: Add if needed:
-        // case ended
-    }
-    
     private var invisibleView: some View {
         Circle().opacity(0.01)
             .onTapGesture {
@@ -161,4 +127,28 @@ extension FocusButton {
             Image(systemName: "apple.meditate").scaleEffect(1.5)
         }
     }
+}
+
+#Preview {
+    @Previewable @State var pomodorinoCount = 0
+    @Previewable @State var shouldResetTimer = false
+    
+    FocusButton(
+        pomodorinoCount: $pomodorinoCount,
+        shouldResetTimer: $shouldResetTimer,
+        state: .notStarted, onStart: {}, onEnd: {})
+    
+    Spacer().frame(height: 48)
+    
+    FocusButton(
+        pomodorinoCount: $pomodorinoCount,
+        shouldResetTimer: $shouldResetTimer,
+        state: .running, onStart: {}, onEnd: {})
+    
+    Spacer().frame(height: 48)
+    
+    FocusButton(
+        pomodorinoCount: $pomodorinoCount,
+        shouldResetTimer: $shouldResetTimer,
+        state: .endable, onStart: {}, onEnd: {})
 }
