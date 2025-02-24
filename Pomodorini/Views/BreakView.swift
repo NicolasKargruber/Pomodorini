@@ -33,8 +33,16 @@ struct BreakView: View {
             VStack(alignment: .trailing) {
                 PomodoriniButton()
                 
-                VStack(spacing: 30) {
-                    growingPomodorino
+                VStack(spacing: 12) {
+                    
+                        // SVGImage
+                        PomodorinoStageView(ripeness: vm.progress).frame(width: 120, height: 120)
+                        
+                        Spacer().frame(height: 24)
+                    
+                        BreakButton(state: vm.timerState, onSkip: {}, onCollect: collectPomodorino)
+                        
+                    
                     TimerDisplay(formatedTime: vm.formattedTime, formatedOvertime: vm.formattedOvertime, showOvertime: vm.isCompleted)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -144,17 +152,6 @@ extension BreakView {
                     .offset(x: -200, y: -460)
             }
         }
-    }
-    
-    // TODO: Refactor this View
-    private var growingPomodorino: some View {
-        VStack (spacing: 30) {
-            // SVGImage
-            PomodorinoStageView(ripeness: vm.progress)
-            
-            BreakButton(state: vm.timerState, onSkip: {}, onCollect: collectPomodorino)
-            
-        }.padding()
     }
 }
 

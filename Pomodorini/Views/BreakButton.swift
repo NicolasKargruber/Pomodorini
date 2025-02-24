@@ -13,40 +13,30 @@ struct BreakButton: View {
     var onSkip: () -> Void
     var onCollect: () -> Void
 
-    // Animation
-    @State private var buttonScale = 1.0
-    private let animationDuration: TimeInterval = 0.3
-
     var body: some View {
         content
     }
 
     @ViewBuilder
     private var content: some View {
-        switch state {
-        case .notStarted:
-            Button(action: {}) {
-                Text("Collect").font(.title)
+        ZStack {
+            if state == .notStarted {
+                Button(action: {}) {
+                    // Add if needed
+                }.disabled(true).buttonStyle(.bordered)
             }
-            .disabled(true)
-            .buttonStyle(.bordered)
-            .tint(.white)
-        case .running:
-            Button(action: onSkip) {
-                Text("Collect").font(.title)
+            
+            if state == .running {
+                skipButton
             }
-            .disabled(true)
-            .buttonStyle(.bordered)
-            .tint(.white)
-        case .endable:
-            Button(action: onCollect) {
-                Text("Collect").font(.title)
+
+            if state == .endable {
+                collectButton
             }
-            .disabled(false)
-            .buttonStyle(.bordered)
-            .tint(.white)
         }
+        .animation(.easeInOut(duration: 0.3), value: state) // ⬅️ Smooth transition
     }
+
 
     private func handleAction() {
         switch state {
@@ -58,24 +48,35 @@ struct BreakButton: View {
             onCollect()
         }
     }
+}
 
-    // Animation
-    private func updateScale() {
-        switch state {
-        case .notStarted:
-            buttonScale = 1.0
-        case .running:
-            buttonScale = 0.4
-        case .endable:
-            buttonScale = 1.4
+extension BreakButton {
+    private var skipButton: some View {
+        Button(action: onSkip) {
+            Label("Skip", systemImage: "forward.end")
+                .font(.title)
+                .padding(.vertical, 4)
+                .padding(.horizontal, 12)
         }
+        .buttonStyle(.bordered)
+        .tint(.primary)
+        .cornerRadius(48)
+        .transition(.opacity.combined(with: .scale))
+    }
+    
+    private var collectButton: some View {
+        Button(action: onCollect) {
+            Text("Collect")
+                .font(.largeTitle)
+                .padding(.vertical, 4)
+                .padding(.horizontal, 12)
+        }
+        .buttonStyle(.borderedProminent)
+        .transition(.opacity.combined(with: .scale))
     }
 }
 
 #Preview {
-    @Previewable @State var pomodorinoCount = 0
-    @Previewable @State var shouldResetTimer = false
-    
     BreakButton(
         state: .notStarted, onSkip: {}, onCollect: {})
     
