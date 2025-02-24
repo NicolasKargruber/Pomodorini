@@ -6,7 +6,20 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		1F140F972D6B67C600302FB7 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F140F962D6B67C600302FB7 /* WidgetKit.framework */; };
+		1F140F992D6B67C600302FB7 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F140F982D6B67C600302FB7 /* SwiftUI.framework */; };
+		1F140FA62D6B67C700302FB7 /* PomodorinoTimerExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 1F140F942D6B67C600302FB7 /* PomodorinoTimerExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
+		1F140FA42D6B67C700302FB7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1F9CAD792CF36ADB00A82D52 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1F140F932D6B67C600302FB7;
+			remoteInfo = PomodorinoTimerExtension;
+		};
 		1F9CAD942CF36ADC00A82D52 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1F9CAD792CF36ADB00A82D52 /* Project object */;
@@ -23,15 +36,77 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		1F140FA72D6B67C700302FB7 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				1F140FA62D6B67C700302FB7 /* PomodorinoTimerExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		1F140F942D6B67C600302FB7 /* PomodorinoTimerExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = PomodorinoTimerExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F140F962D6B67C600302FB7 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		1F140F982D6B67C600302FB7 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		1F9CAD812CF36ADB00A82D52 /* Pomodorini.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pomodorini.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F9CAD932CF36ADC00A82D52 /* PomodoriniTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PomodoriniTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F9CAD9D2CF36ADC00A82D52 /* PomodoriniUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PomodoriniUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		1F140FAA2D6B67C700302FB7 /* Exceptions for "PomodorinoTimer" folder in "PomodorinoTimerExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 1F140F932D6B67C600302FB7 /* PomodorinoTimerExtension */;
+		};
+		1F140FAD2D6B686F00302FB7 /* Exceptions for "Pomodorini" folder in "Pomodorini" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 1F9CAD802CF36ADB00A82D52 /* Pomodorini */;
+		};
+		1F140FB82D6B7E4E00302FB7 /* Exceptions for "PomodorinoTimer" folder in "Pomodorini" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				PomodorinoTimerAttributes.swift,
+				PomodorinoTimerLiveActivity.swift,
+			);
+			target = 1F9CAD802CF36ADB00A82D52 /* Pomodorini */;
+		};
+		1F97E94D2D6B97FB00FE928D /* Exceptions for "Pomodorini" folder in "PomodorinoTimerExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Utilities/Extensions/ColorExtenisons.swift,
+			);
+			target = 1F140F932D6B67C600302FB7 /* PomodorinoTimerExtension */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		1F140F9A2D6B67C600302FB7 /* PomodorinoTimer */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				1F140FB82D6B7E4E00302FB7 /* Exceptions for "PomodorinoTimer" folder in "Pomodorini" target */,
+				1F140FAA2D6B67C700302FB7 /* Exceptions for "PomodorinoTimer" folder in "PomodorinoTimerExtension" target */,
+			);
+			path = PomodorinoTimer;
+			sourceTree = "<group>";
+		};
 		1F9CAD832CF36ADB00A82D52 /* Pomodorini */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				1F140FAD2D6B686F00302FB7 /* Exceptions for "Pomodorini" folder in "Pomodorini" target */,
+				1F97E94D2D6B97FB00FE928D /* Exceptions for "Pomodorini" folder in "PomodorinoTimerExtension" target */,
+			);
 			path = Pomodorini;
 			sourceTree = "<group>";
 		};
@@ -48,6 +123,15 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		1F140F912D6B67C600302FB7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F140F992D6B67C600302FB7 /* SwiftUI.framework in Frameworks */,
+				1F140F972D6B67C600302FB7 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1F9CAD7E2CF36ADB00A82D52 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -72,12 +156,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1F140F952D6B67C600302FB7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1F140F962D6B67C600302FB7 /* WidgetKit.framework */,
+				1F140F982D6B67C600302FB7 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		1F9CAD782CF36ADB00A82D52 = {
 			isa = PBXGroup;
 			children = (
 				1F9CAD832CF36ADB00A82D52 /* Pomodorini */,
 				1F9CAD962CF36ADC00A82D52 /* PomodoriniTests */,
 				1F9CADA02CF36ADC00A82D52 /* PomodoriniUITests */,
+				1F140F9A2D6B67C600302FB7 /* PomodorinoTimer */,
+				1F140F952D6B67C600302FB7 /* Frameworks */,
 				1F9CAD822CF36ADB00A82D52 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -88,6 +183,7 @@
 				1F9CAD812CF36ADB00A82D52 /* Pomodorini.app */,
 				1F9CAD932CF36ADC00A82D52 /* PomodoriniTests.xctest */,
 				1F9CAD9D2CF36ADC00A82D52 /* PomodoriniUITests.xctest */,
+				1F140F942D6B67C600302FB7 /* PomodorinoTimerExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -95,6 +191,28 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		1F140F932D6B67C600302FB7 /* PomodorinoTimerExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1F140FAB2D6B67C700302FB7 /* Build configuration list for PBXNativeTarget "PomodorinoTimerExtension" */;
+			buildPhases = (
+				1F140F902D6B67C600302FB7 /* Sources */,
+				1F140F912D6B67C600302FB7 /* Frameworks */,
+				1F140F922D6B67C600302FB7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				1F140F9A2D6B67C600302FB7 /* PomodorinoTimer */,
+			);
+			name = PomodorinoTimerExtension;
+			packageProductDependencies = (
+			);
+			productName = PomodorinoTimerExtension;
+			productReference = 1F140F942D6B67C600302FB7 /* PomodorinoTimerExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		1F9CAD802CF36ADB00A82D52 /* Pomodorini */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1F9CADA72CF36ADC00A82D52 /* Build configuration list for PBXNativeTarget "Pomodorini" */;
@@ -102,10 +220,12 @@
 				1F9CAD7D2CF36ADB00A82D52 /* Sources */,
 				1F9CAD7E2CF36ADB00A82D52 /* Frameworks */,
 				1F9CAD7F2CF36ADB00A82D52 /* Resources */,
+				1F140FA72D6B67C700302FB7 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				1F140FA52D6B67C700302FB7 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				1F9CAD832CF36ADB00A82D52 /* Pomodorini */,
@@ -170,9 +290,12 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1610;
+				LastSwiftUpdateCheck = 1620;
 				LastUpgradeCheck = 1610;
 				TargetAttributes = {
+					1F140F932D6B67C600302FB7 = {
+						CreatedOnToolsVersion = 16.2;
+					};
 					1F9CAD802CF36ADB00A82D52 = {
 						CreatedOnToolsVersion = 16.1;
 					};
@@ -203,11 +326,19 @@
 				1F9CAD802CF36ADB00A82D52 /* Pomodorini */,
 				1F9CAD922CF36ADC00A82D52 /* PomodoriniTests */,
 				1F9CAD9C2CF36ADC00A82D52 /* PomodoriniUITests */,
+				1F140F932D6B67C600302FB7 /* PomodorinoTimerExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		1F140F922D6B67C600302FB7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1F9CAD7F2CF36ADB00A82D52 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -232,6 +363,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		1F140F902D6B67C600302FB7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1F9CAD7D2CF36ADB00A82D52 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -256,6 +394,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		1F140FA52D6B67C700302FB7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1F140F932D6B67C600302FB7 /* PomodorinoTimerExtension */;
+			targetProxy = 1F140FA42D6B67C700302FB7 /* PBXContainerItemProxy */;
+		};
 		1F9CAD952CF36ADC00A82D52 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 1F9CAD802CF36ADB00A82D52 /* Pomodorini */;
@@ -269,6 +412,64 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		1F140FA82D6B67C700302FB7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J83NG32859;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PomodorinoTimer/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = PomodorinoTimer;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 0.2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nicolasapps.Pomodorini.PomodorinoTimer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		1F140FA92D6B67C700302FB7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J83NG32859;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PomodorinoTimer/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = PomodorinoTimer;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 0.2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nicolasapps.Pomodorini.PomodorinoTimer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		1F9CADA52CF36ADC00A82D52 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -399,8 +600,10 @@
 				DEVELOPMENT_TEAM = J83NG32859;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Pomodorini/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Pomodorini;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -432,8 +635,10 @@
 				DEVELOPMENT_TEAM = J83NG32859;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Pomodorini/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Pomodorini;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -525,6 +730,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		1F140FAB2D6B67C700302FB7 /* Build configuration list for PBXNativeTarget "PomodorinoTimerExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1F140FA82D6B67C700302FB7 /* Debug */,
+				1F140FA92D6B67C700302FB7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		1F9CAD7C2CF36ADB00A82D52 /* Build configuration list for PBXProject "Pomodorini" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

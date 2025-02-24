@@ -5,6 +5,7 @@
 //  Created by Nicolas Kargruber on 17.11.24.
 //
 
+import ActivityKit
 import SwiftUI
 
 /// A view that represents a Pomodorino timer screen.
@@ -16,6 +17,9 @@ struct FocusView: View {
     @State var vm: TimerViewModel
     @State private var shouldResetTimer = false
     
+    // Live Activity
+    @State private var liveActivity: Activity<PomodorinoTimerAttributes>?
+    
     init(durationInMinutes: Int = 25) {
         NotificationManager.shared.requestAuthorization ()
         self.vm = TimerViewModel(totalMinutes: durationInMinutes)
@@ -24,10 +28,12 @@ struct FocusView: View {
     /// Determines the color of the Pomodorino based on its ripeness.
     private var pomodorinoColor: Color {
         do {
-            return try PomodorinoGradient.color(forRipeness: vm.progress)
+            let color = try PomodorinoGradient.color(forRipeness: vm.progress)
+            return color
         } catch {
-            print("Error determining color: \(error)")
-            return Color.black
+            print("Failed to determine Pomodorino color: \(error)")
+            print("Defaulting to black.")
+            return .black
         }
     }
 
@@ -85,13 +91,12 @@ struct FocusView: View {
         }
         .onChange(of: vm.progress) { _, newValue in
             print("Pomodorino ripeness: \(newValue)")
+            // Live Activity - Update
+            LiveActivityManager.shared.updateActivity(formattedTime: vm.formattedTime, pomdorinoColor: pomodorinoColor)
         }
         .onChange(of: vm.isCompletable, initial: false) { _, newValue in
             print("Pomodorino is now pickable: \(newValue)")
         }
-        /*.onChange(of: isRipe, initial: false) { _, newValue in
-            print("Pomodorino is now ripe: \(newValue)")
-        }*/
         .onChange(of: shouldResetTimer, initial: false) { _, newValue in
             print("Value changed of shouldResetTimer: \(shouldResetTimer)")
             if newValue {
@@ -103,6 +108,9 @@ struct FocusView: View {
     
     private func startTimer() {
         vm.start()
+        
+        // Live Activity - Start
+        LiveActivityManager.shared.startActivity(formattedTime: vm.formattedTime, pomdorinoColor: pomodorinoColor)
         
         // Notification - Focus
         NotificationManager.shared.scheduleNotification(
@@ -122,6 +130,9 @@ struct FocusView: View {
     private func stopTimer() {
         vm.stop()
         print("Stopped Timer")
+        
+        // Live Activity - End
+        LiveActivityManager.shared.endActivity(formattedTime: vm.formattedTime, pomdorinoColor: pomodorinoColor)
         
         // Remove notifications when timer stops before
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
