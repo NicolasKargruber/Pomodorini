@@ -18,7 +18,9 @@ struct PomodorinoTimerLiveActivity: Widget {
                 HStack {
                     Text(context.attributes.taskLabel)
                     Spacer()
-                    Text(context.state.formattedTime).font(.title.bold())
+                    Text(context.state.endDate ?? Date.now, style: .timer)
+                        .font(.title.bold()).multilineTextAlignment(.trailing)
+                    
                 }
             }.frame(maxWidth: .infinity, maxHeight: .infinity)
                 .padding()
@@ -44,7 +46,10 @@ struct PomodorinoTimerLiveActivity: Widget {
                 DynamicIslandExpandedRegion(.bottom) {
                     VStack {
                         Spacer()
-                        Text(context.state.formattedTime).font(.system(size: 48, weight: .black, design: .default)).foregroundColor(Color(hex:context.state.hexColor)).cornerRadius(24)
+                        Text(context.state.endDate ?? Date.now, style: .timer)
+                            .font(.system(size: 48, weight: .black, design: .default))
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(Color(hex:context.state.hexColor)).cornerRadius(24)
                         Spacer()
                     }
                 }
@@ -54,7 +59,8 @@ struct PomodorinoTimerLiveActivity: Widget {
                 Text(context.attributes.taskLabel).padding(4)
                     .foregroundColor(Color(hex:context.state.hexColor))
             } compactTrailing: {
-                Text(context.state.formattedTime).fontWeight(.heavy)
+                Text(context.state.endDate ?? Date.now, style: .timer).frame(width: 50)
+                    .fontWeight(.heavy).multilineTextAlignment(.center)
                     .foregroundColor(Color(hex:context.state.hexColor))
             }
             // #3 MINIMAL
@@ -72,27 +78,31 @@ struct PomodorinoTimerLiveActivity: Widget {
 #Preview("Banner", as: .content, using: PomodorinoTimerAttributes.preview) {
    PomodorinoTimerLiveActivity()
 } contentStates: {
-    PomodorinoTimerAttributes.ContentState.started
+    PomodorinoTimerAttributes.ContentState.countingDown
+    PomodorinoTimerAttributes.ContentState.overtime
     PomodorinoTimerAttributes.ContentState.ended
 }
 
 #Preview("Expanded", as: .dynamicIsland(.expanded), using: PomodorinoTimerAttributes.preview) {
    PomodorinoTimerLiveActivity()
 } contentStates: {
-    PomodorinoTimerAttributes.ContentState.started
+    PomodorinoTimerAttributes.ContentState.countingDown
+    PomodorinoTimerAttributes.ContentState.overtime
     PomodorinoTimerAttributes.ContentState.ended
 }
 
 #Preview("Compact", as: .dynamicIsland(.compact), using: PomodorinoTimerAttributes.preview) {
    PomodorinoTimerLiveActivity()
 } contentStates: {
-    PomodorinoTimerAttributes.ContentState.started
+    PomodorinoTimerAttributes.ContentState.countingDown
+    PomodorinoTimerAttributes.ContentState.overtime
     PomodorinoTimerAttributes.ContentState.ended
 }
 
 #Preview("Minimal", as: .dynamicIsland(.minimal), using: PomodorinoTimerAttributes.preview) {
    PomodorinoTimerLiveActivity()
 } contentStates: {
-    PomodorinoTimerAttributes.ContentState.started
+    PomodorinoTimerAttributes.ContentState.countingDown
+    PomodorinoTimerAttributes.ContentState.overtime
     PomodorinoTimerAttributes.ContentState.ended
 }
