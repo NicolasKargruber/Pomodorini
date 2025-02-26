@@ -32,7 +32,7 @@ struct FocusButton: View {
         .background(.primary.opacity(0.3))
         .clipShape(Circle())
         .padding(3)
-        .overlay(Circle().stroke(Color.white.opacity(0.3), lineWidth: 2))
+        .overlay(Circle().stroke(Color.primary.opacity(0.3), lineWidth: 2))
         .scaleEffect(buttonScale)
         .onChange(of: state) { _, _ in updateScale() }
         .animation(.bouncy(duration: animationDuration), value: buttonScale)
