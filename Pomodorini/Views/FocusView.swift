@@ -78,11 +78,6 @@ struct FocusView: View {
                 stopTimer()
             }
         }
-        .onChange(of: vm.progress) { _, newValue in
-            print("Pomodorino ripeness: \(newValue)")
-            // Live Activity - Update
-            LiveActivityManager.shared.updateActivity(endDate: vm.endTime, formattedTime: vm.formattedTime, pomdorinoColor: pomodorinoColor)
-        }
         .onChange(of: vm.isEndable, initial: false) { _, newValue in
             print("Pomodorino is now pickable: \(newValue)")
         }
@@ -97,9 +92,6 @@ struct FocusView: View {
     
     private func startTimer() {
         vm.start()
-        
-        // Live Activity - Start
-        LiveActivityManager.shared.startActivity(endDate: vm.endTime, formattedTime: vm.formattedTime, pomdorinoColor: pomodorinoColor)
         
         // Notification - Focus
         NotificationManager.shared.scheduleNotification(
@@ -119,9 +111,6 @@ struct FocusView: View {
     private func stopTimer() {
         vm.stop()
         print("Stopped Timer")
-        
-        // Live Activity - End
-        LiveActivityManager.shared.endActivity(endDate: vm.endTime, formattedTime: vm.formattedTime, pomdorinoColor: pomodorinoColor)
         
         // Remove notifications when timer stops before
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
