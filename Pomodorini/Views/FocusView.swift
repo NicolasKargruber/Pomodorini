@@ -9,13 +9,13 @@ import ActivityKit
 import SwiftUI
 
 /// A view that represents a Pomodorino timer screen.
-///
-/// This screen allows the user to track their Pomodoro progress, displaying the timer,
-/// a count of completed Pomodorini, and a button to manage the timer state.
 struct FocusView: View {
     @AppStorage("pomodorinoCount") var pomodorinoCount = 0
     @State var vm: TimerViewModel
     @State private var shouldResetTimer = false
+    
+    // Tarnsition Sheet
+    @State private var showingSheet = false
     
     // Live Activity
     @State private var liveActivity: Activity<PomodorinoTimerAttributes>?
@@ -73,9 +73,15 @@ struct FocusView: View {
                 UNUserNotificationCenter.current().setBadgeCount(0)
                 // Disable Screen Lock
                 UIApplication.shared.isIdleTimerDisabled = true
+                
+                
+                showingSheet.toggle()
             }
             .onDisappear {
                 stopTimer()
+            }
+            .sheet(isPresented: $showingSheet) {
+                TransitionSheetView()
             }
         }
         .onChange(of: vm.isEndable, initial: false) { _, newValue in
