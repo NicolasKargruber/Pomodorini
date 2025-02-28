@@ -13,4 +13,7 @@ struct PomodorinoTask : Identifiable, Hashable {
     var label: String
     var description: String
     var isDone: Bool = false
+    
+    static func newTask(named label: String) -> PomodorinoTask
+    { return PomodorinoTask(label: label, description: "") }
 }
