@@ -14,6 +14,6 @@ struct PomodoriniApp: App {
         WindowGroup {
             FocusView()
                 .environment(\.colorScheme, .dark) // Enforce Dark-Mode
-        }
+        }.modelContainer(for: [Pomodorino.self, PomodorinoTask.self])
     }
 }
