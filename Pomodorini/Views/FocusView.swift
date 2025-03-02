@@ -7,16 +7,26 @@
 
 import ActivityKit
 import SwiftUI
+import SwiftData
 
 /// A view that represents a Pomodorino timer screen.
 struct FocusView: View {
     @AppStorage("pomodorinoCount") var pomodorinoCount = 0
     
     @State private var shouldResetTimer = false
+
+    // Navigation
+    // TODO: Handle when task changes and when Ending
+    @State private var navigateToBreak: Bool = false
     
     // ViewModel
     @State var vm: TimerViewModel
+    
+    // SwiftData
+    @Environment(\.modelContext) var modelContext
     @State var pomodorino: Pomodorino
+    @Query var pomodorini: [Pomodorino]
+    
     
     // Tarnsition Sheet
     @State private var showingSheet = false
@@ -59,14 +69,18 @@ struct FocusView: View {
                             TimerDisplay(formatedTime: vm.formattedTime, formatedOvertime: vm.formattedOvertime, showOvertime: vm.isCompleted)
                         }
 
-                        // Timer Button
+                        // Focus Button
                         FocusButton(
-                            pomodorinoCount: $pomodorinoCount,
-                            shouldResetTimer: $shouldResetTimer,
                             state: vm.timerState,
                             onStart: { startTimer() },
-                            onEnd: { } // Won't respond due to NavigationLink
+                            onEnd: { endFocusSession() }
                         )
+                        // Navigation
+                        .navigationDestination(isPresented: $navigateToBreak) {
+                            BreakView(shouldResetTimer: $shouldResetTimer)
+                                .environment(\.colorScheme, .dark) // Enforce Dark-Mode
+                                .navigationBarBackButtonHidden(true)
+                        }
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
@@ -80,15 +94,14 @@ struct FocusView: View {
                 UIApplication.shared.isIdleTimerDisabled = true
             }
             .onDisappear {
-                stopTimer()
+                if(vm.isRunning) { endFocusSession() }
             }
             .sheet(isPresented: $showingSheet) {
                 TransitionSheetView(selectedTask: $pomodorino.task)
+                    .onDisappear{ navigateToBreak = vm.hasEnded } // Navigation
             }
         }
-        .onChange(of: vm.isEndable, initial: false) { _, newValue in
-            print("Pomodorino is now pickable: \(newValue)")
-        }
+        // TODO: Review - Reset View
         .onChange(of: shouldResetTimer, initial: false) { _, newValue in
             print("Value changed of shouldResetTimer: \(shouldResetTimer)")
             if newValue {
@@ -112,15 +125,20 @@ struct FocusView: View {
         NotificationCenter.default.addObserver(forName: UIApplication.willTerminateNotification, object: nil, queue: .main) { _ in
             // Terminating
             print("App died")
-            stopTimer()
+            endFocusSession()
         }
     }
     
-    private func stopTimer() {
+    private func endFocusSession() {
         vm.stop()
         print("Stopped Timer")
         
-        // Remove notifications when timer stops before
+        // Navigation
+        if(pomodorino.hasTask) { showingSheet.toggle() }
+        // TODO: Create with timerState.ended
+        else { navigateToBreak = vm.hasEnded }
+        
+        // Remove notifications
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
         print("Cancelled notifications")
     }

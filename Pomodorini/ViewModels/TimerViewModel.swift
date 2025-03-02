@@ -28,7 +28,8 @@ class TimerViewModel {
     /// - Parameters:
     ///   - totalMinutes: The total timer duration in minutes.
     ///   - threshold: The completion threshold (default 8%).
-    init(totalMinutes: Int, threshold: Double? = nil) {
+    // TODO: Remove threshold from here
+    init(totalMinutes: Int, threshold: Double? = 0.08) {
         let clampedMinutes = max(1, min(totalMinutes, 60)) // Ensure a valid duration
         
         // #Preview
@@ -50,7 +51,10 @@ class TimerViewModel {
     
     /// Determines the state of the pomodorino timer.
     var timerState: PomodorinoTimerState {
-        if isEndable {
+        if(hasEnded){
+            return .ended
+        }
+        else if isEndable {
             return .endable
         } else if isRunning {
             return .running
@@ -67,6 +71,11 @@ class TimerViewModel {
     /// Indicates whether the timer has completed.
     var isCompleted: Bool {
         _remainingTime <= 0
+    }
+    
+    /// Becomes true when the timer gets invalidated.
+    var hasEnded: Bool {
+        startTime != nil && endTime != nil && !isRunning
     }
     
     /// Indicates whether the timer is currently running.

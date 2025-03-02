@@ -30,6 +30,12 @@ class Pomodorino: Identifiable, Hashable {
         self.intervalDuration = setDuration
     }
     
+
+    /// Is linked to a task
+    var hasTask: Bool {
+        return task != nil
+    }
+    
     /// How far the timer actually progressed ( Smaller than 0  = finished early, greater than 0 = overtime)
     var progress: Double {
         guard let endTime else {
