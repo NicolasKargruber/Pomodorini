@@ -13,7 +13,7 @@ import Combine
 class TimerViewModel {
     // MARK: - Properties
     
-    private let totalDuration: TimeInterval  // Total duration in seconds
+    private let timerInterval: TimeInterval  // Total duration in seconds
     private var _remainingTime: TimeInterval // Remaining time in seconds
     var remainingTime: TimeInterval { _remainingTime }
     private var overtime: TimeInterval?      // Overtime in seconds
@@ -33,10 +33,10 @@ class TimerViewModel {
         
         // #Preview
         if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1"
-        { self.totalDuration = TimeInterval(30) }
-        else { self.totalDuration = TimeInterval(clampedMinutes * 60) }
+        { self.timerInterval = TimeInterval(30) }
+        else { self.timerInterval = TimeInterval(clampedMinutes * 60) }
         
-        self._remainingTime = self.totalDuration
+        self._remainingTime = self.timerInterval
         
         if let threshold, (0...1).contains(threshold) {
             self.threshold = threshold
@@ -76,8 +76,8 @@ class TimerViewModel {
     
     /// The timer's progress as a value from 0.0 to 1.0.
     var progress: Double {
-        let timeElapsed = totalDuration - _remainingTime + (overtime ?? 0)
-        return timeElapsed / totalDuration
+        let timeElapsed = timerInterval - _remainingTime + (overtime ?? 0)
+        return timeElapsed / timerInterval
     }
     
     /// A formatted string representation of the remaining time.
@@ -96,7 +96,7 @@ class TimerViewModel {
     func start() {
         guard timer == nil else { return } // Prevent multiple timers
         startTime = Date()
-        endTime = startTime?.addingTimeInterval(totalDuration)
+        endTime = startTime?.addingTimeInterval(timerInterval)
         
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
             self?.updateTime()
@@ -111,7 +111,7 @@ class TimerViewModel {
     
     /// Resets the timer to its initial state.
     func reset() {
-        _remainingTime = totalDuration
+        _remainingTime = timerInterval
         overtime = nil
         startTime = nil
         endTime = nil

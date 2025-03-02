@@ -9,13 +9,17 @@ import ActivityKit
 import SwiftUI
 
 /// A view that represents a Pomodorino timer screen.
-///
-/// This screen allows the user to track their Pomodoro progress, displaying the timer,
-/// a count of completed Pomodorini, and a button to manage the timer state.
 struct FocusView: View {
     @AppStorage("pomodorinoCount") var pomodorinoCount = 0
-    @State var vm: TimerViewModel
+    
     @State private var shouldResetTimer = false
+    
+    // ViewModel
+    @State var vm: TimerViewModel
+    @State var pomodorino: Pomodorino
+    
+    // Tarnsition Sheet
+    @State private var showingSheet = false
     
     // Live Activity
     @State private var liveActivity: Activity<PomodorinoTimerAttributes>?
@@ -23,8 +27,10 @@ struct FocusView: View {
     init(durationInMinutes: Int = 25) {
         NotificationManager.shared.requestAuthorization ()
         self.vm = TimerViewModel(totalMinutes: durationInMinutes)
+        pomodorino = Pomodorino.new(startTime: Date.now, setDuration: 25)
     }
 
+    // TODO: Replace with Pomodorino.color()
     /// Determines the color of the Pomodorino based on its ripeness.
     private var pomodorinoColor: Color {
         do {
@@ -46,13 +52,12 @@ struct FocusView: View {
                     PomodoriniButton()
                         .frame(maxWidth: .infinity, alignment: .leading)
 
-                    // TODO: Refactor to new View in [POM-69]
                     VStack(spacing: 72) {
-                        VStack(alignment: .trailing) {
-                            goalDisplay
+                        VStack(spacing: 8) {
+                            goalButton
+                            
                             TimerDisplay(formatedTime: vm.formattedTime, formatedOvertime: vm.formattedOvertime, showOvertime: vm.isCompleted)
                         }
-                        .frame(maxWidth: .infinity)
 
                         // Timer Button
                         FocusButton(
@@ -76,6 +81,9 @@ struct FocusView: View {
             }
             .onDisappear {
                 stopTimer()
+            }
+            .sheet(isPresented: $showingSheet) {
+                TransitionSheetView(selectedTask: $pomodorino.task)
             }
         }
         .onChange(of: vm.isEndable, initial: false) { _, newValue in
@@ -135,16 +143,23 @@ extension FocusView {
         }
     }
     
-    // TODO: Delete in POM-90
-    private var goalDisplay: some View {
-        Text("Goal: 25:00")
-            .font(.system(size: 24, weight: .regular))
-            .foregroundColor(.white)
-            .padding(.horizontal, 72)
+    private var goalButton: some View {
+        Button(action: { showingSheet.toggle() })
+        {
+            Text((pomodorino.task?.label ?? "Goal")).font(.title)
+                .padding(.horizontal, 8).padding(.vertical, 4)
+        }
+        .buttonBorderShape(.roundedRectangle).buttonStyle(.borderedProminent)
     }
 }
 
 #Preview {
     @Previewable @AppStorage("pomodorinoCount") var count = 0
-    FocusView(durationInMinutes: 1).onAppear { count = 3 }
+    do {
+        let previewer = try Previewer()
+        return FocusView(durationInMinutes: 1).onAppear { count = 3 }
+                .modelContainer(previewer.container)
+        } catch {
+            return Text("Failed to create preview: \(error.localizedDescription)")
+        }
 }
