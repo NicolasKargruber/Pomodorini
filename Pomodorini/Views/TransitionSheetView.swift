@@ -31,28 +31,40 @@ struct TransitionSheetView: View {
     }
 
     var body: some View {
-        Group {
-            if(!tasks.isEmpty) {
-                VStack (spacing: 24){
-                    HStack {
-                        menu
-                        Spacer()
+        VStack(alignment: .trailing) {
+            doneButton
+            ZStack {
+                Group {
+                    if(!tasks.isEmpty) {
+                        VStack (spacing: 24){
+                            HStack {
+                                menu
+                                Spacer()
+                            }
+                            textEditor
+                            // TODO: make toggleable, on click again do action
+                            pickUpToggleButtons
+                        }}
+                    
+                    else {
+                        addNewTaskButton
                     }
-                textEditor
-                // TODO: make toggleable, on click again do action
-                pickUpToggleButtons
-            }.padding()}
-            
-            else {
-                addNewTaskButton
+                }
+                
+                // Resize to MAX
+                Color.clear.ignoresSafeArea()
             }
-        }.onDisappear(){
+        }.padding().onDisappear(){
             updatePomodorinoTask()
         }
     }
 }
 
 extension TransitionSheetView {
+    
+    private var doneButton: some View {
+        Button("Done",role: .cancel ,action: { dismiss() }).tint(.blue).ignoresSafeArea()
+    }
     
     private var menu: some View {
         Menu (selectedTask?.label ?? "Select Task"){
