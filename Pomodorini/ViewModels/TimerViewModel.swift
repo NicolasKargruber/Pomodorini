@@ -49,6 +49,15 @@ class TimerViewModel {
     
     // MARK: - Computed Properties
     
+    /// Timer Interval for Live Activity.
+    var timerInterval: ClosedRange<Date> {
+        guard let start = startTime, let end = endTime else {
+            print("TimerViewModel | StartTime OR EndTime have no value. Return default value.")
+            let now = Date.now; return now...now
+        }
+        return start...end
+    }
+    
     /// Determines the state of the pomodorino timer.
     var timerState: PomodorinoTimerState {
         if(hasEnded){

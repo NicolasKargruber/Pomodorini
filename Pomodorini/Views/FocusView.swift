@@ -94,6 +94,10 @@ struct FocusView: View {
         vm.startTimer()
         print("FocusView | Started Timer")
         
+        // Live Activity - Start
+        LiveActivityManager.shared.startActivity(timerInterval: vm.timerInterval, taskLabel: pomodorino.task?.label ?? "")
+        print("FocusView | Started Live Activity")
+        
         // Notification - Focus
         NotificationManager.shared.scheduleNotification(
             title: "Pomodorino Ready!",
@@ -112,6 +116,9 @@ struct FocusView: View {
     private func endFocusSession() {
         vm.stopTimer()
         print("FocusView | Stopped Timer")
+        
+        // Live Activity - End
+        LiveActivityManager.shared.endActivity(timerInterval: vm.timerInterval)
         
         // Navigation
         // TODO: Can be handled better - Use .ended
