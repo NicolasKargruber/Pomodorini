@@ -1,5 +1,5 @@
 //
-//  TimerManager.swift
+//  TimerViewModel.swift
 //  Pomodorini
 //
 //  Created by Nicolas Kargruber on 05.12.24.
@@ -8,12 +8,13 @@
 
 import Foundation
 import Combine
+import SwiftUI
 
 @Observable
 class TimerViewModel {
-    // MARK: - Properties
+    // MARK: - Private Properties
     
-    private let timerInterval: TimeInterval  // Total duration in seconds
+    private let intervalDuration: TimeInterval  // Total duration in seconds
     private var _remainingTime: TimeInterval // Remaining time in seconds
     var remainingTime: TimeInterval { _remainingTime }
     private var overtime: TimeInterval?      // Overtime in seconds
@@ -28,21 +29,20 @@ class TimerViewModel {
     /// - Parameters:
     ///   - totalMinutes: The total timer duration in minutes.
     ///   - threshold: The completion threshold (default 8%).
-    // TODO: Remove threshold from here
-    init(totalMinutes: Int, threshold: Double? = 0.08) {
-        let clampedMinutes = max(1, min(totalMinutes, 60)) // Ensure a valid duration
+    init(intervalDuration: Int, threshold: Double? = nil) {
+        let clampedMinutes = max(1, min(intervalDuration, 60)) // Ensure a valid duration
         
         // #Preview
         if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1"
-        { self.timerInterval = TimeInterval(30) }
-        else { self.timerInterval = TimeInterval(clampedMinutes * 60) }
+        { self.intervalDuration = TimeInterval(30) }
+        else { self.intervalDuration = TimeInterval(clampedMinutes * 60) }
         
-        self._remainingTime = self.timerInterval
+        self._remainingTime = self.intervalDuration
         
         if let threshold, (0...1).contains(threshold) {
             self.threshold = threshold
         } else {
-            print("Invalid OR no threshold value provided. Set to default value.")
+            print("TimerViewModel | Invalid OR no threshold value provided. Set to default value.")
             self.threshold = 0.08 // Explicitly set the default
         }
     }
@@ -85,8 +85,8 @@ class TimerViewModel {
     
     /// The timer's progress as a value from 0.0 to 1.0.
     var progress: Double {
-        let timeElapsed = timerInterval - _remainingTime + (overtime ?? 0)
-        return timeElapsed / timerInterval
+        let timeElapsed = intervalDuration - _remainingTime + (overtime ?? 0)
+        return timeElapsed / intervalDuration
     }
     
     /// A formatted string representation of the remaining time.
@@ -99,13 +99,13 @@ class TimerViewModel {
         "+\(formatTime(overtime ?? 0))"
     }
     
-    // MARK: - Timer Controls
+    // MARK: - Public methods
     
     /// Starts the timer.
-    func start() {
+    func startTimer() {
         guard timer == nil else { return } // Prevent multiple timers
         startTime = Date()
-        endTime = startTime?.addingTimeInterval(timerInterval)
+        endTime = startTime?.addingTimeInterval(intervalDuration)
         
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
             self?.updateTime()
@@ -113,14 +113,14 @@ class TimerViewModel {
     }
     
     /// Stops the timer.
-    func stop() {
+    func stopTimer() {
         timer?.invalidate()
         timer = nil
     }
     
     /// Resets the timer to its initial state.
-    func reset() {
-        _remainingTime = timerInterval
+    func resetTimer() {
+        _remainingTime = intervalDuration
         overtime = nil
         startTime = nil
         endTime = nil
@@ -137,13 +137,11 @@ class TimerViewModel {
         if _remainingTime == 0 /*&& allowsOvertime*/ {
             overtime = abs(now.timeIntervalSince(endTime))
         } else if _remainingTime == 0 {
-            stop()
+            stopTimer()
         }
     }
     
     /// Formats a time interval into a "MM:SS" string.
-    /// - Parameter time: The time interval to format.
-    /// - Returns: A formatted string.
     private func formatTime(_ time: TimeInterval) -> String {
         let totalSeconds = Int(time.rounded())
         let minutes = totalSeconds / 60
