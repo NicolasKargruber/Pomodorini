@@ -78,7 +78,6 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				PomodorinoTimerAttributes.swift,
-				PomodorinoTimerLiveActivity.swift,
 			);
 			target = 1F9CAD802CF36ADB00A82D52 /* Pomodorini */;
 		};

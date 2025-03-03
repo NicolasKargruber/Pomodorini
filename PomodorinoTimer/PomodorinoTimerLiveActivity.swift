@@ -14,20 +14,21 @@ struct PomodorinoTimerLiveActivity: Widget {
         ActivityConfiguration(for: PomodorinoTimerAttributes.self) { context in
             // Lock screen/banner UI
             VStack {
-                Text("POMODORINI").frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading).font(.caption2)
+                Text("PoModoRInI 🍅").font(.caption2)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                 HStack {
                     Text(context.attributes.taskLabel)
                     Spacer()
-                    Text(context.state.endDate ?? Date.now, style: .timer)
+                    Text(timerInterval: context.state.timerInterval, countsDown: true)
                         .font(.title.bold()).multilineTextAlignment(.trailing)
                     
                 }
             }.frame(maxWidth: .infinity, maxHeight: .infinity)
                 .padding()
-                .foregroundColor(.white)
-                .background(Color(hex:context.state.hexColor).colorMultiply(Color.white))
-                .activityBackgroundTint(Color.black)
-                .activitySystemActionForegroundColor(Color.primary)
+                //.foregroundColor(.white)
+                //.background(Color(hex:context.state.hexColor).colorMultiply(Color.white))
+                //.activityBackgroundTint(Color.black)
+                //.activitySystemActionForegroundColor(Color.primary)
             
 
         } dynamicIsland: { context in
@@ -40,16 +41,19 @@ struct PomodorinoTimerLiveActivity: Widget {
                     //Text("Leading")
                 }
                 DynamicIslandExpandedRegion(.trailing) {
-                    Image(systemName: "apple.meditate")
-                        .fontWeight(.black).foregroundColor(Color(hex:context.state.hexColor)).padding(.horizontal, 8)
+                    Text("🍅")
+                        .font(.title2).fontWeight(.black)
+                        .padding(.horizontal, 8)
+                    //.foregroundColor(Color(hex:context.state.hexColor))
                 }
                 DynamicIslandExpandedRegion(.bottom) {
                     VStack {
                         Spacer()
-                        Text(context.state.endDate ?? Date.now, style: .timer)
+                        Text(timerInterval: context.state.timerInterval, countsDown: true)
                             .font(.system(size: 48, weight: .black, design: .default))
                             .multilineTextAlignment(.center)
-                            .foregroundColor(Color(hex:context.state.hexColor)).cornerRadius(24)
+                            .cornerRadius(24)
+                            //.foregroundColor(Color(hex:context.state.hexColor))
                         Spacer()
                     }
                 }
@@ -57,16 +61,15 @@ struct PomodorinoTimerLiveActivity: Widget {
             // #2 COMPACT
             compactLeading: {
                 Text(context.attributes.taskLabel).padding(4)
-                    .foregroundColor(Color(hex:context.state.hexColor))
+                    //.foregroundColor(Color(hex:context.state.hexColor))
             } compactTrailing: {
-                Text(context.state.endDate ?? Date.now, style: .timer).frame(width: 50)
-                    .fontWeight(.heavy).multilineTextAlignment(.center)
-                    .foregroundColor(Color(hex:context.state.hexColor))
+                Text(timerInterval: Date.now...Date.now.addingTimeInterval(10), countsDown: true)
+                    .frame(width: 50).fontWeight(.heavy).multilineTextAlignment(.center)
+                    //.foregroundColor(Color(hex:context.state.hexColor))
             }
             // #3 MINIMAL
             minimal: {
-                Image(systemName: "apple.meditate")
-                    .fontWeight(.black).foregroundColor(Color(hex:context.state.hexColor))
+                Text("🍅")
             }
             .widgetURL(URL(string: "http://www.apple.com"))
             .keylineTint(Color.red)
@@ -80,7 +83,6 @@ struct PomodorinoTimerLiveActivity: Widget {
 } contentStates: {
     PomodorinoTimerAttributes.ContentState.countingDown
     PomodorinoTimerAttributes.ContentState.overtime
-    PomodorinoTimerAttributes.ContentState.ended
 }
 
 #Preview("Expanded", as: .dynamicIsland(.expanded), using: PomodorinoTimerAttributes.preview) {
@@ -88,7 +90,6 @@ struct PomodorinoTimerLiveActivity: Widget {
 } contentStates: {
     PomodorinoTimerAttributes.ContentState.countingDown
     PomodorinoTimerAttributes.ContentState.overtime
-    PomodorinoTimerAttributes.ContentState.ended
 }
 
 #Preview("Compact", as: .dynamicIsland(.compact), using: PomodorinoTimerAttributes.preview) {
@@ -96,7 +97,6 @@ struct PomodorinoTimerLiveActivity: Widget {
 } contentStates: {
     PomodorinoTimerAttributes.ContentState.countingDown
     PomodorinoTimerAttributes.ContentState.overtime
-    PomodorinoTimerAttributes.ContentState.ended
 }
 
 #Preview("Minimal", as: .dynamicIsland(.minimal), using: PomodorinoTimerAttributes.preview) {
@@ -104,5 +104,4 @@ struct PomodorinoTimerLiveActivity: Widget {
 } contentStates: {
     PomodorinoTimerAttributes.ContentState.countingDown
     PomodorinoTimerAttributes.ContentState.overtime
-    PomodorinoTimerAttributes.ContentState.ended
 }

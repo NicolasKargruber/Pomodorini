@@ -17,13 +17,13 @@ class LiveActivityManager {
     private init() {}
     
     // Start Live Activity
-    func startActivity(endDate: Date?, /*formattedTime: String,*/ pomdorinoColor: Color)  {
+    func startActivity(timerInterval: ClosedRange<Date>/*, formattedTime: String, pomdorinoColor: Color*/, taskLabel: String) {
             print("LiveActivityManager | Start Live Activity")
             do{
-                let hexColor = pomdorinoColor.toHex() ?? "000000"
+                //let hexColor = pomdorinoColor.toHex() ?? "000000"
                 
-                let staticAttributes = PomodorinoTimerAttributes(taskLabel: "Lernen")
-                let initialState:PomodorinoTimerAttributes.ContentState = PomodorinoTimerAttributes.ContentState(endDate: endDate, hexColor: hexColor)
+                let staticAttributes = PomodorinoTimerAttributes(taskLabel: taskLabel)
+                let initialState = PomodorinoTimerAttributes.ContentState(timerInterval: timerInterval)
 
                 activity = try Activity<PomodorinoTimerAttributes>.request(
                     attributes: staticAttributes,
@@ -38,13 +38,13 @@ class LiveActivityManager {
         }
     
     // Update Live Activity
-    func updateActivity(endDate: Date?, /*formattedTime: String,*/ pomdorinoColor: Color) {
+    func updateActivity(timerInterval: ClosedRange<Date>/*, formattedTime: String, pomdorinoColor: Color*/) {
         guard let activity = activity else { return }
         
-        guard let hexColor = pomdorinoColor.toHex()
-        else { return print("LiveActivityManager | No valid color from hex string") }
+        /*guard let hexColor = pomdorinoColor.toHex()
+        else { return print("LiveActivityManager | No valid color from hex string") }*/
         
-        let updatedState = PomodorinoTimerAttributes.ContentState(endDate: endDate, hexColor: hexColor)
+        let updatedState = PomodorinoTimerAttributes.ContentState(timerInterval: timerInterval)
         
         Task {
             await activity.update(ActivityContent<PomodorinoTimerAttributes.ContentState>(state: updatedState, staleDate: nil))
@@ -52,15 +52,15 @@ class LiveActivityManager {
     }
     
     // End Live Activity
-    func endActivity(endDate: Date?, /*formattedTime: String,*/ pomdorinoColor: Color) {
+    func endActivity(timerInterval: ClosedRange<Date>/*, formattedTime: String, pomdorinoColor: Color*/) {
         guard let activity = activity else { return }
         
         print("LiveActivityManager | End Live Activity")
         
-        guard let hexColor = pomdorinoColor.toHex()
-        else { return print("LiveActivityManager | No valid color from hex string") }
+        /*guard let hexColor = pomdorinoColor.toHex()
+        else { return print("LiveActivityManager | No valid color from hex string") }*/
         
-        let finalState = PomodorinoTimerAttributes.ContentState(endDate: endDate, hexColor: hexColor)
+        let finalState = PomodorinoTimerAttributes.ContentState(timerInterval: timerInterval)
         
         Task {
             await activity.end(ActivityContent(state: finalState, staleDate: nil), dismissalPolicy: .immediate)
