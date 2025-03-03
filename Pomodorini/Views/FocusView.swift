@@ -7,16 +7,24 @@
 
 import ActivityKit
 import SwiftUI
+import SwiftData
 
 /// A view that represents a Pomodorino timer screen.
 struct FocusView: View {
     @AppStorage("pomodorinoCount") var pomodorinoCount = 0
-    
-    @State private var shouldResetTimer = false
+
+    // Navigation
+    // TODO: Handle when task changes and when Ending
+    @State private var navigateToBreak: Bool = false
+    @State private var doResetFocus = false
     
     // ViewModel
     @State var vm: TimerViewModel
+    
+    // SwiftData
+    @Environment(\.modelContext) var modelContext
     @State var pomodorino: Pomodorino
+    @Query var pomodorini: [Pomodorino]
     
     // Tarnsition Sheet
     @State private var showingSheet = false
@@ -26,21 +34,8 @@ struct FocusView: View {
     
     init(durationInMinutes: Int = 25) {
         NotificationManager.shared.requestAuthorization ()
-        self.vm = TimerViewModel(totalMinutes: durationInMinutes)
+        self.vm = TimerViewModel(intervalDuration: durationInMinutes)
         pomodorino = Pomodorino.new(startTime: Date.now, setDuration: 25)
-    }
-
-    // TODO: Replace with Pomodorino.color()
-    /// Determines the color of the Pomodorino based on its ripeness.
-    private var pomodorinoColor: Color {
-        do {
-            let color = try PomodorinoGradient.color(forRipeness: vm.progress)
-            return color
-        } catch {
-            print("Failed to determine Pomodorino color: \(error)")
-            print("Defaulting to black.")
-            return .black
-        }
     }
 
     var body: some View {
@@ -53,20 +48,24 @@ struct FocusView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
 
                     VStack(spacing: 72) {
-                        VStack(spacing: 8) {
+                        VStack(spacing: 12) {
                             goalButton
                             
                             TimerDisplay(formatedTime: vm.formattedTime, formatedOvertime: vm.formattedOvertime, showOvertime: vm.isCompleted)
                         }
 
-                        // Timer Button
+                        // Focus Button
                         FocusButton(
-                            pomodorinoCount: $pomodorinoCount,
-                            shouldResetTimer: $shouldResetTimer,
                             state: vm.timerState,
-                            onStart: { startTimer() },
-                            onEnd: { } // Won't respond due to NavigationLink
+                            onStart: { startFocusSession() },
+                            onEnd: { endFocusSession() }
                         )
+                        // Navigation
+                        .navigationDestination(isPresented: $navigateToBreak) {
+                            BreakView(shouldResetTimer: $doResetFocus)
+                                .environment(\.colorScheme, .dark) // Enforce Dark-Mode
+                                .navigationBarBackButtonHidden(true)
+                        }
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
@@ -80,26 +79,20 @@ struct FocusView: View {
                 UIApplication.shared.isIdleTimerDisabled = true
             }
             .onDisappear {
-                stopTimer()
+                if(vm.isRunning) { endFocusSession() }
             }
             .sheet(isPresented: $showingSheet) {
                 TransitionSheetView(selectedTask: $pomodorino.task)
+                    .onDisappear{ navigateToBreak = vm.hasEnded } // Navigation
             }
         }
-        .onChange(of: vm.isEndable, initial: false) { _, newValue in
-            print("Pomodorino is now pickable: \(newValue)")
-        }
-        .onChange(of: shouldResetTimer, initial: false) { _, newValue in
-            print("Value changed of shouldResetTimer: \(shouldResetTimer)")
-            if newValue {
-                vm.reset()
-                shouldResetTimer = false
-            }
-        }
+        // Reset FocusView
+        .onChange(of: doResetFocus, initial: false) { _, newValue in resetFocusSession() }
     }
     
-    private func startTimer() {
-        vm.start()
+    private func startFocusSession() {
+        vm.startTimer()
+        print("FocusView | Started Timer")
         
         // Notification - Focus
         NotificationManager.shared.scheduleNotification(
@@ -111,45 +104,46 @@ struct FocusView: View {
         // Cancel Notifications when app dies
         NotificationCenter.default.addObserver(forName: UIApplication.willTerminateNotification, object: nil, queue: .main) { _ in
             // Terminating
-            print("App died")
-            stopTimer()
+            print("FocusView | App died")
+            endFocusSession()
         }
     }
     
-    private func stopTimer() {
-        vm.stop()
-        print("Stopped Timer")
+    private func endFocusSession() {
+        vm.stopTimer()
+        print("FocusView | Stopped Timer")
         
-        // Remove notifications when timer stops before
+        // Navigation
+        // TODO: Can be handled better - Use .ended
+        if(pomodorino.hasTask) { showingSheet.toggle() }
+        else { navigateToBreak = vm.hasEnded }
+        
+        // Remove notifications
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
-        print("Cancelled notifications")
+        print("FocusView | Cancelled notifications")
+    }
+    
+    private func resetFocusSession() {
+        vm.resetTimer()
+        print("FocusView | Resetted Timer")
+        doResetFocus = false
     }
 }
 
 extension FocusView {
     private var background: some View {
-        LinearGradient(
-            gradient: Gradient(colors: [
-                pomodorinoColor,
-                pomodorinoColor.mix(with: Color.black, by: 0.35)
-            ]),
-            startPoint: .topTrailing,
-            endPoint: .bottomLeading
-        )
+        // Background Color
+        PomodorinoGradient.gradient(forRipeness: vm.progress)
         .ignoresSafeArea()
-        .overlay {
-            Image("Pomodorini_Hat")
-                .offset(x: 90, y: -320)
-        }
+        // Pomodorini Hat
+        .overlay { Image("Pomodorini_Hat") .offset(x: 90, y: -320) }
     }
     
     private var goalButton: some View {
-        Button(action: { showingSheet.toggle() })
-        {
-            Text((pomodorino.task?.label ?? "Goal")).font(.title)
+        Button(action: { showingSheet.toggle() }){
+            Text((pomodorino.task?.label ?? "Goal")).font(.title).fontWeight(.semibold)
                 .padding(.horizontal, 8).padding(.vertical, 4)
-        }
-        .buttonBorderShape(.roundedRectangle).buttonStyle(.borderedProminent)
+        }.buttonBorderShape(.roundedRectangle).buttonStyle(.bordered).tint(.primary)
     }
 }
 

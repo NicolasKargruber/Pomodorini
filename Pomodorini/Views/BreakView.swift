@@ -23,7 +23,7 @@ struct BreakView: View {
 
     init(durationInMinutes: Int = 5, shouldResetTimer: Binding<Bool>) {
         _shouldResetTimer = shouldResetTimer
-        self.vm = TimerViewModel(totalMinutes: durationInMinutes)
+        self.vm = TimerViewModel(intervalDuration: durationInMinutes)
     }
 
     var body: some View {
@@ -65,7 +65,7 @@ struct BreakView: View {
     }
     
     func startTimer() {
-        vm.start()
+        vm.startTimer()
         
         // Notification - Break
         NotificationManager.shared.scheduleNotification(
@@ -83,7 +83,7 @@ struct BreakView: View {
     }
 
     func stopTimer() {
-        vm.stop()
+        vm.stopTimer()
         print("Stopped Timer")
         
         // Remove notifications when timer stops before
@@ -92,7 +92,7 @@ struct BreakView: View {
    }
     
     private func collectPomodorino(skip: Bool? = nil) {
-        vm.stop()
+        vm.stopTimer()
         print("Stopped Timer")
         
         if(skip != true){

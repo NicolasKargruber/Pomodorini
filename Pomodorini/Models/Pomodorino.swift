@@ -30,8 +30,14 @@ class Pomodorino: Identifiable, Hashable {
         self.intervalDuration = setDuration
     }
     
-    /// How far the timer actually progressed ( Smaller than 0  = finished early, greater than 0 = overtime)
-    var progress: Double {
+    /// How far the timer actually progressed
+    /// ( Smaller than 0  = finished early, greater than 0 = overtime)
+    var hasTask: Bool {
+        return task != nil
+    }
+    
+    /// Final progress value of Pomodorino
+    var ripeness: Double {
         guard let endTime else {
             print("Pomodorino | endTime is negative! Defaulting to '0'.")
             return 0
@@ -40,18 +46,11 @@ class Pomodorino: Identifiable, Hashable {
         return elapsedTime / Double(intervalDuration)
     }
 
-    /// Color based on ripeness (e.g., green → red → brown)
-    var color: Color {
-        do {
-            return try PomodorinoGradient.color(forRipeness: progress)
-        } catch {
-            print("Pomodorino | Failed to determine Pomodorino color: \(error)")
-            print("Pomodorino | Defaulting to '.black'.")
-            return .black
-        }
-    }
+    /// Color based on ripeness
+    /// (e.g., green → red → brown, ERROR → black)
+    var color: Color { PomodorinoGradient.color(forRipeness: ripeness) }
     
-    // TODO: Remove !
+    // TODO: Remove -> '!'
     static func new(startTime: Date, setDuration: Int) -> Pomodorino
     { return try! Pomodorino(startTime: startTime, setDuration: setDuration) }
 }

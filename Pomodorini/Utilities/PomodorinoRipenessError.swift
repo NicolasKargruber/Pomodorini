@@ -14,7 +14,7 @@ enum PomodorinoRipenessError: Error {
         case .outOfRange(let value):
             return "Invalid ripeness value: \(value). It must be between 0.0 and 2.0."
         case .noMatchingElement(let value):
-            return "No matching image for progress value: \(value)"
+            return "No matching element for ripeness value: \(value)"
         }
     }
 }

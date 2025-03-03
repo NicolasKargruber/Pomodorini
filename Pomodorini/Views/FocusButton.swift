@@ -9,10 +9,6 @@
 import SwiftUI
 
 struct FocusButton: View {
-    // TODO: Fix with @AppStorage in -> POM-30
-    @Binding var pomodorinoCount: Int
-    @Binding var shouldResetTimer: Bool
-
     var state: PomodorinoTimerState
     var onStart: () -> Void
     var onEnd: () -> Void
@@ -51,17 +47,19 @@ struct FocusButton: View {
                 else { invisibleView }
             case .endable:
                 navigationButton
+            case .ended:
+                navigationButton
             }
         } // Handle Long Press
         .onLongPressGesture(minimumDuration: 3, perform: {}, onPressingChanged: { (isPressed) in
             let impactHeavy = UIImpactFeedbackGenerator(style: .heavy)
                 impactHeavy.impactOccurred()
             if(isPressed){
-                print("Focus Button long pressed")
+                print("Focus Button | long press")
                 isLongPressed = true
                 updateScale()
             } else {
-                print("Focus Button is let go of after long pressed")
+                print("Focus Button | is let go")
                 isLongPressed = false
                 updateScale()
             }
@@ -80,13 +78,17 @@ struct FocusButton: View {
         case .running:
             break // Add behavior for running if needed
         case .endable:
-            onEnd()
+            // onEnd() -> // Handled in Button Content
+            break
+        case .ended:
+            // onEnd() -> // Handled in Button Content
+            break
         }
     }
 
     // Animation
     private func updateScale() {
-        if(isLongPressed) { return buttonScale = 1.4 }
+        if(isLongPressed) { return buttonScale = 1.2 }
         switch state {
         case .notStarted:
             buttonScale = 1.0
@@ -94,6 +96,8 @@ struct FocusButton: View {
             if(isTapped) { buttonScale = 1.4 }
             else { buttonScale = 0.4 }
         case .endable:
+            buttonScale = 1.4
+        case .ended:
             buttonScale = 1.4
         }
     }
@@ -103,7 +107,7 @@ extension FocusButton {
     private var invisibleView: some View {
         Circle().opacity(0.01)
             .onTapGesture {
-                print("Focus Button was tapped")
+                print("Focus Button | was tapped")
                 isTapped = true
                 updateScale()
            }
@@ -117,15 +121,8 @@ extension FocusButton {
     }
     
     private var navigationButton: some View {
-        // Navigation + Destination
-        NavigationLink(
-            destination: BreakView(shouldResetTimer: $shouldResetTimer)
-            .navigationBarBackButtonHidden(true)
-            .environment(\.colorScheme, .dark)) // Enforce Dark-Mode
-        {
-            // Button Content
-            Image(systemName: "apple.meditate").scaleEffect(1.5)
-        }
+        Image(systemName: "apple.meditate").scaleEffect(1.5)
+            .onTapGesture{ onEnd() }
     }
 }
 
@@ -134,21 +131,15 @@ extension FocusButton {
     @Previewable @State var shouldResetTimer = false
     
     FocusButton(
-        pomodorinoCount: $pomodorinoCount,
-        shouldResetTimer: $shouldResetTimer,
         state: .notStarted, onStart: {}, onEnd: {})
     
     Spacer().frame(height: 48)
     
     FocusButton(
-        pomodorinoCount: $pomodorinoCount,
-        shouldResetTimer: $shouldResetTimer,
         state: .running, onStart: {}, onEnd: {})
     
     Spacer().frame(height: 48)
     
     FocusButton(
-        pomodorinoCount: $pomodorinoCount,
-        shouldResetTimer: $shouldResetTimer,
         state: .endable, onStart: {}, onEnd: {})
 }

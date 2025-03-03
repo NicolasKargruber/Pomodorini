@@ -10,6 +10,5 @@ enum PomodorinoTimerState {
         case notStarted
         case running
         case endable
-        // TODO: Add if needed:
-        // case ended
+        case ended
     }
