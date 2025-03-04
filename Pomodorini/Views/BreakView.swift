@@ -31,7 +31,12 @@ struct BreakView: View {
             Background()
             
             VStack(alignment: .trailing) {
-                PomodoriniButton()
+                HStack {
+                    // Navigation to History
+                    HistoryView.navigationButton
+                    Spacer()
+                    PomodoriniButton()
+                }
                 
                 VStack(spacing: 12) {
                     

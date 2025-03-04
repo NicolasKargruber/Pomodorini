@@ -44,8 +44,12 @@ struct FocusView: View {
                 background
 
                 VStack {
-                    PomodoriniButton()
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                    HStack {
+                        PomodoriniButton()
+                        Spacer()
+                        // Navigation to History
+                        HistoryView.navigationButton
+                    }
 
                     VStack(spacing: 72) {
                         VStack(spacing: 12) {
@@ -78,9 +82,10 @@ struct FocusView: View {
                 // Disable Screen Lock
                 UIApplication.shared.isIdleTimerDisabled = true
             }
-            .onDisappear {
+            // Not working with HistoryView
+            /*.onDisappear {
                 if(vm.isRunning) { endFocusSession() }
-            }
+            }*/
             .sheet(isPresented: $showingSheet) {
                 TransitionSheetView(selectedTask: $pomodorino.task)
                     .onDisappear{ navigateToBreak = vm.hasEnded } // Navigation
@@ -150,7 +155,7 @@ extension FocusView {
         Button(action: { showingSheet.toggle() }){
             Text((pomodorino.task?.label ?? "Goal")).font(.title).fontWeight(.semibold)
                 .padding(.horizontal, 8).padding(.vertical, 4)
-        }.buttonBorderShape(.roundedRectangle).buttonStyle(.bordered).tint(.primary)
+        }.buttonBorderShape(.roundedRectangle).buttonStyle(.bordered).tint(.white)
     }
 }
 

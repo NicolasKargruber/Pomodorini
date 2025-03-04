@@ -32,6 +32,7 @@ struct PomodorinoItem: View {
                 Text(duration).font(.title2).fontWeight(.semibold)
             }
         }
+        .foregroundColor(.white)
         .padding()
         .background(pomodorino.color)
         .frame(maxWidth: .infinity, maxHeight: .infinity).cornerRadius(12)

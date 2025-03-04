@@ -38,29 +38,39 @@ struct HistoryView : View {
             
             Divider().background(Color.primary)
             
-            scrollView
+            if(pomodoriniOfThisMonth.isEmpty){
+                Spacer()
+                Text("No Pomodorini yet! 😴 ")
+                Spacer()
+            }
+            else {scrollPomodorini}
         }
     }
 }
 
 extension HistoryView {
-    private var scrollView: some View {
+    private var scrollPomodorini: some View {
         ScrollView {
-            if(pomodorini.isEmpty){
-                Text("No Pomodorini yet! 😴 ")
-            }
-            else {
-                LazyVStack {
-                    ForEach(pomodoriniOfThisMonth, id: \.self) { pomodorino in
-                        PomodorinoItem(pomodorino: pomodorino)
-                    }
+            LazyVStack {
+                ForEach(pomodoriniOfThisMonth, id: \.self) { pomodorino in
+                    PomodorinoItem(pomodorino: pomodorino)
                 }
             }
         }
     }
+    
+    static var navigationButton: some View {
+        NavigationLink(destination: HistoryView().navigationTitle(Text("History")))
+        {
+            // Button Content
+            Label("History", systemImage: "clock.arrow.trianglehead.counterclockwise.rotate.90")
+                .font(.title2).foregroundColor(.white)
+                .padding(8).background(.white.opacity(0.2)).clipShape(.buttonBorder)
+        }
+    }
 }
 
-#Preview {
+#Preview("HistoryView", body: {
     let pomodorinoTask = PomodorinoTask.newTask(named: "Geoguessr 🌍")
     
     do {
@@ -70,5 +80,14 @@ extension HistoryView {
     } catch {
         return Text("Failed to create preview: \(error.localizedDescription)")
     }
-}
+})
+
+
+#Preview("NavigationButton", body:  {
+    ZStack {
+        Color.black.ignoresSafeArea()
+        HistoryView.navigationButton
+    }
+})
+
 
