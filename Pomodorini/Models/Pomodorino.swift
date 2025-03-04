@@ -19,8 +19,18 @@ class Pomodorino: Identifiable, Hashable {
     enum PomodorinoError: Error {
         case invalidEndTime
     }
-
-    init(task: PomodorinoTask? = nil, startTime: Date, endTime: Date? = nil, setDuration: Int) throws {
+    
+    init(task: PomodorinoTask? = nil, startTime: Date, endTime: Date, setDuration: Int) throws {
+        if endTime <= startTime {
+            throw PomodorinoError.invalidEndTime
+        }
+        self.task = task
+        self.startTime = startTime
+        self.endTime = endTime
+        self.intervalDuration = setDuration
+    }
+    
+    private init(task: PomodorinoTask? = nil, startTime: Date, endTime: Date? = nil, setDuration: Int) throws {
         if let endTime, endTime <= startTime {
             throw PomodorinoError.invalidEndTime
         }
@@ -49,6 +59,18 @@ class Pomodorino: Identifiable, Hashable {
     /// Color based on ripeness
     /// (e.g., green → red → brown, ERROR → black)
     var color: Color { PomodorinoGradient.color(forRipeness: ripeness) }
+    
+    /// TimeIntervall between start end end time
+    var elapsedTime: TimeInterval {
+        do{
+            if let endTime = endTime, endTime > startTime {
+                return endTime.timeIntervalSince(startTime)
+            }
+            else { throw PomodorinoError.invalidEndTime }
+        } catch {
+             return startTime.timeIntervalSinceNow
+        }
+    }
     
     // TODO: Remove -> '!'
     static func new(startTime: Date, setDuration: Int) -> Pomodorino
