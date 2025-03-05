@@ -35,6 +35,7 @@ struct FocusView: View {
     init(durationInMinutes: Int = 25) {
         NotificationManager.shared.requestAuthorization ()
         self.vm = TimerViewModel(intervalDuration: durationInMinutes)
+        // Add Pomdorino
         pomodorino = Pomodorino.new(startTime: Date.now, setDuration: 25)
     }
 
@@ -114,13 +115,24 @@ struct FocusView: View {
         NotificationCenter.default.addObserver(forName: UIApplication.willTerminateNotification, object: nil, queue: .main) { _ in
             // Terminating
             print("FocusView | App died")
-            endFocusSession()
+            endFocusSession(savePomodorino: false)
         }
     }
     
-    private func endFocusSession() {
+    private func endFocusSession(savePomodorino: Bool = true) {
         vm.stopTimer()
         print("FocusView | Stopped Timer")
+        
+        if(savePomodorino) {
+            // Save Pomodorino
+            pomodorino.endTime = vm.endTime
+            print("FocusView | Saved Pomodorino EndTime")
+        }
+        else {
+            // Remove Pomodorino
+            modelContext.delete(pomodorino)
+            print("FocusView | Removed Pomodorino")
+        }
         
         // Live Activity - End
         LiveActivityManager.shared.endActivity(timerInterval: vm.timerInterval)

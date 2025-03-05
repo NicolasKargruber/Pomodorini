@@ -48,12 +48,15 @@ class Pomodorino: Identifiable, Hashable {
     
     /// Final progress value of Pomodorino
     var ripeness: Double {
-        guard let endTime else {
-            print("Pomodorino | endTime is negative! Defaulting to '0'.")
+        do{
+            if let endTime = endTime, endTime > startTime {
+                let elapsedTime = endTime.timeIntervalSince(startTime) / 60 // Convert to minutes
+                return elapsedTime / Double(intervalDuration)
+            } else { throw PomodorinoError.invalidEndTime }
+        } catch {
+            print("Pomodorino | endTime is nil! Defaulting to '0'.", error)
             return 0
         }
-        let elapsedTime = endTime.timeIntervalSince(startTime) / 60 // Convert to minutes
-        return elapsedTime / Double(intervalDuration)
     }
 
     /// Color based on ripeness
@@ -68,7 +71,8 @@ class Pomodorino: Identifiable, Hashable {
             }
             else { throw PomodorinoError.invalidEndTime }
         } catch {
-             return startTime.timeIntervalSinceNow
+            print("PomodorinoGradient | Error occured. Return timeInterval since now.", error)
+            return startTime.timeIntervalSinceNow
         }
     }
     
