@@ -19,7 +19,6 @@ class TimerViewModel {
     var remainingTime: TimeInterval { _remainingTime }
     private var overtime: TimeInterval?      // Overtime in seconds
     private var startTime: Date?             // Start time of the timer
-    var endTime: Date?               // End time of the timer
     private var timer: Timer?                // Timer object
     private var threshold: Double = 0.079    // Completion threshold (percentage: 0.0 - 1.0)
 
@@ -49,9 +48,24 @@ class TimerViewModel {
     
     // MARK: - Computed Properties
     
+    /// Predicted time when user will end Timer
+    var predictedEndTime: Date?  {
+        guard let start = startTime else {
+            print("TimerViewModel | Cannot predict EndTime. StartTime not defined.")
+            return nil
+        }
+        return start.addingTimeInterval(intervalDuration)
+    }
+    
+    /// Actual time when Timer stopped
+    var endTime: Date?  {
+        guard let predicted = predictedEndTime else { return nil }
+        return predicted.addingTimeInterval(-_remainingTime)
+    }
+    
     /// Timer Interval for Live Activity.
     var timerInterval: ClosedRange<Date> {
-        guard let start = startTime, let end = endTime else {
+        guard let start = startTime, let end = predictedEndTime else {
             print("TimerViewModel | StartTime OR EndTime have no value. Return default value.")
             let now = Date.now; return now...now
         }
@@ -84,7 +98,7 @@ class TimerViewModel {
     
     /// Becomes true when the timer gets invalidated.
     var hasEnded: Bool {
-        startTime != nil && endTime != nil && !isRunning
+        startTime != nil && predictedEndTime != nil && !isRunning
     }
     
     /// Indicates whether the timer is currently running.
@@ -113,9 +127,7 @@ class TimerViewModel {
     /// Starts the timer.
     func startTimer() {
         guard timer == nil else { return } // Prevent multiple timers
-        startTime = Date()
-        endTime = startTime?.addingTimeInterval(intervalDuration)
-        
+        startTime = Date.now
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
             self?.updateTime()
         }
@@ -132,19 +144,18 @@ class TimerViewModel {
         _remainingTime = intervalDuration
         overtime = nil
         startTime = nil
-        endTime = nil
     }
     
     // MARK: - Private Methods
     
     /// Updates the remaining time and handles timer completion.
     private func updateTime() {
-        guard let endTime = endTime else { return }
+        guard let predicted = predictedEndTime else { return }
         let now = Date()
         
-        _remainingTime = max(endTime.timeIntervalSince(now), 0)
+        _remainingTime = max(predicted.timeIntervalSince(now), 0)
         if _remainingTime == 0 /*&& allowsOvertime*/ {
-            overtime = abs(now.timeIntervalSince(endTime))
+            overtime = abs(now.timeIntervalSince(predicted))
         } else if _remainingTime == 0 {
             stopTimer()
         }

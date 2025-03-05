@@ -35,6 +35,7 @@ struct FocusView: View {
     init(durationInMinutes: Int = 25) {
         NotificationManager.shared.requestAuthorization ()
         self.vm = TimerViewModel(intervalDuration: durationInMinutes)
+        // Add Pomdorino
         pomodorino = Pomodorino.new(startTime: Date.now, setDuration: 25)
     }
 
@@ -44,8 +45,12 @@ struct FocusView: View {
                 background
 
                 VStack {
-                    PomodoriniButton()
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                    HStack {
+                        PomodoriniButton()
+                        Spacer()
+                        // Navigation to History
+                        HistoryView.navigationButton
+                    }
 
                     VStack(spacing: 72) {
                         VStack(spacing: 12) {
@@ -78,9 +83,10 @@ struct FocusView: View {
                 // Disable Screen Lock
                 UIApplication.shared.isIdleTimerDisabled = true
             }
-            .onDisappear {
+            // Not working with HistoryView
+            /*.onDisappear {
                 if(vm.isRunning) { endFocusSession() }
-            }
+            }*/
             .sheet(isPresented: $showingSheet) {
                 TransitionSheetView(selectedTask: $pomodorino.task)
                     .onDisappear{ navigateToBreak = vm.hasEnded } // Navigation
@@ -91,8 +97,16 @@ struct FocusView: View {
     }
     
     private func startFocusSession() {
+        // TODO: Delete - Remove pomodorini without endTime
+        try! modelContext.delete(model: Pomodorino.self, where: #Predicate { $0.endTime == nil })
+        
         vm.startTimer()
         print("FocusView | Started Timer")
+        
+        // ADD Pomodorino
+        modelContext.insert(pomodorino)
+        print("FocusView | Added new Pomodorino")
+        
         
         // Live Activity - Start
         LiveActivityManager.shared.startActivity(timerInterval: vm.timerInterval, taskLabel: pomodorino.task?.label ?? "")
@@ -109,13 +123,24 @@ struct FocusView: View {
         NotificationCenter.default.addObserver(forName: UIApplication.willTerminateNotification, object: nil, queue: .main) { _ in
             // Terminating
             print("FocusView | App died")
-            endFocusSession()
+            endFocusSession(savePomodorino: false)
         }
     }
     
-    private func endFocusSession() {
+    private func endFocusSession(savePomodorino: Bool = true) {
         vm.stopTimer()
         print("FocusView | Stopped Timer")
+        
+        if(savePomodorino) {
+            // Save Pomodorino
+            pomodorino.endTime = vm.endTime
+            print("FocusView | Saved Pomodorino EndTime")
+        }
+        else {
+            // Remove Pomodorino
+            modelContext.delete(pomodorino)
+            print("FocusView | Removed Pomodorino")
+        }
         
         // Live Activity - End
         LiveActivityManager.shared.endActivity(timerInterval: vm.timerInterval)
@@ -150,7 +175,7 @@ extension FocusView {
         Button(action: { showingSheet.toggle() }){
             Text((pomodorino.task?.label ?? "Goal")).font(.title).fontWeight(.semibold)
                 .padding(.horizontal, 8).padding(.vertical, 4)
-        }.buttonBorderShape(.roundedRectangle).buttonStyle(.bordered).tint(.primary)
+        }.buttonBorderShape(.roundedRectangle).buttonStyle(.bordered).tint(.white)
     }
 }
 

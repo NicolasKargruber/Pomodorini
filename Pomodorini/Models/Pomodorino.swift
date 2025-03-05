@@ -19,8 +19,18 @@ class Pomodorino: Identifiable, Hashable {
     enum PomodorinoError: Error {
         case invalidEndTime
     }
-
-    init(task: PomodorinoTask? = nil, startTime: Date, endTime: Date? = nil, setDuration: Int) throws {
+    
+    init(task: PomodorinoTask? = nil, startTime: Date, endTime: Date, setDuration: Int) throws {
+        if endTime <= startTime {
+            throw PomodorinoError.invalidEndTime
+        }
+        self.task = task
+        self.startTime = startTime
+        self.endTime = endTime
+        self.intervalDuration = setDuration
+    }
+    
+    private init(task: PomodorinoTask? = nil, startTime: Date, endTime: Date? = nil, setDuration: Int) throws {
         if let endTime, endTime <= startTime {
             throw PomodorinoError.invalidEndTime
         }
@@ -38,17 +48,33 @@ class Pomodorino: Identifiable, Hashable {
     
     /// Final progress value of Pomodorino
     var ripeness: Double {
-        guard let endTime else {
-            print("Pomodorino | endTime is negative! Defaulting to '0'.")
+        do{
+            if let endTime = endTime, endTime > startTime {
+                let elapsedTime = endTime.timeIntervalSince(startTime) / 60 // Convert to minutes
+                return elapsedTime / Double(intervalDuration)
+            } else { throw PomodorinoError.invalidEndTime }
+        } catch {
+            print("Pomodorino | endTime is nil! Defaulting to '0'.", error)
             return 0
         }
-        let elapsedTime = endTime.timeIntervalSince(startTime) / 60 // Convert to minutes
-        return elapsedTime / Double(intervalDuration)
     }
 
     /// Color based on ripeness
     /// (e.g., green → red → brown, ERROR → black)
     var color: Color { PomodorinoGradient.color(forRipeness: ripeness) }
+    
+    /// TimeIntervall between start end end time
+    var elapsedTime: TimeInterval {
+        do{
+            if let endTime = endTime, endTime > startTime {
+                return endTime.timeIntervalSince(startTime)
+            }
+            else { throw PomodorinoError.invalidEndTime }
+        } catch {
+            print("PomodorinoGradient | Error occured. Return timeInterval since now.", error)
+            return startTime.timeIntervalSinceNow
+        }
+    }
     
     // TODO: Remove -> '!'
     static func new(startTime: Date, setDuration: Int) -> Pomodorino

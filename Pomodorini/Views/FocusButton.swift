@@ -24,11 +24,11 @@ struct FocusButton: View {
     var body: some View {
         Button(action: { handleAction() }) { content }
         .frame(width: 70, height: 70)
-        .foregroundColor(.primary)
-        .background(.primary.opacity(0.3))
+        .foregroundColor(.white)
+        .background(.white.opacity(0.3))
         .clipShape(Circle())
         .padding(3)
-        .overlay(Circle().stroke(Color.primary.opacity(0.3), lineWidth: 2))
+        .overlay(Circle().stroke(Color.white.opacity(0.3), lineWidth: 2))
         .scaleEffect(buttonScale)
         .onChange(of: state) { _, _ in updateScale() }
         .animation(.bouncy(duration: animationDuration), value: buttonScale)
@@ -130,16 +130,22 @@ extension FocusButton {
     @Previewable @State var pomodorinoCount = 0
     @Previewable @State var shouldResetTimer = false
     
-    FocusButton(
-        state: .notStarted, onStart: {}, onEnd: {})
-    
-    Spacer().frame(height: 48)
-    
-    FocusButton(
-        state: .running, onStart: {}, onEnd: {})
-    
-    Spacer().frame(height: 48)
-    
-    FocusButton(
-        state: .endable, onStart: {}, onEnd: {})
+    ZStack {
+        Color.black.frame(width: .infinity, height: .infinity).ignoresSafeArea()
+        
+        VStack {
+            FocusButton(
+                state: .notStarted, onStart: {}, onEnd: {})
+            
+            Spacer().frame(height: 48)
+            
+            FocusButton(
+                state: .running, onStart: {}, onEnd: {})
+            
+            Spacer().frame(height: 48)
+            
+            FocusButton(
+                state: .endable, onStart: {}, onEnd: {})
+        }
+    }
 }

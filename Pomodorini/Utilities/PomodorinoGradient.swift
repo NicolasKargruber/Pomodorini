@@ -44,9 +44,6 @@ struct PomodorinoGradient {
             let factor = endStop.ripeness - startStop.ripeness != 0 ?
                 (ripeness - startStop.ripeness) / (endStop.ripeness - startStop.ripeness) : 0.0
             
-            // TODO: Delete
-            // print(position, startStop.position, endStop.position, factor)
-            
             // Interpolated color
             return Color.interpolate(from: startStop.color, to: endStop.color, interpolationFactor: factor)
         } catch {
