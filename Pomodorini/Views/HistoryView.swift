@@ -16,8 +16,14 @@ struct HistoryView : View {
     
     @Query var pomodorini: [Pomodorino]
     
-    var pomodoriniOfThisMonth: [Pomodorino] {
+    var pomodoriniWithEndTime: [Pomodorino] {
         let pomodorini = self.pomodorini
+        
+        return pomodorini.filter { $0.endTime != nil }
+    }
+    
+    var pomodoriniOfThisMonth: [Pomodorino] {
+        let pomodorini = self.pomodoriniWithEndTime
         
         return pomodorini.filter {
             Calendar.current.dateComponents([.day], from: $0.startTime).day == Calendar.current.dateComponents([.day], from: date).day

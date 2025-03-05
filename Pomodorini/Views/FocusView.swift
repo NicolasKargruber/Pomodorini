@@ -97,8 +97,16 @@ struct FocusView: View {
     }
     
     private func startFocusSession() {
+        // TODO: Delete - Remove pomodorini without endTime
+        try! modelContext.delete(model: Pomodorino.self, where: #Predicate { $0.endTime == nil })
+        
         vm.startTimer()
         print("FocusView | Started Timer")
+        
+        // ADD Pomodorino
+        modelContext.insert(pomodorino)
+        print("FocusView | Added new Pomodorino")
+        
         
         // Live Activity - Start
         LiveActivityManager.shared.startActivity(timerInterval: vm.timerInterval, taskLabel: pomodorino.task?.label ?? "")
