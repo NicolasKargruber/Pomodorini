@@ -90,7 +90,7 @@ struct FocusView: View {
                 if(vm.isRunning) { endFocusSession() }
             }*/
             .sheet(isPresented: $showingSheet) {
-                TransitionSheetView(selectedTask: $pomodorino.task)
+                TransitionSheetView(selectedTask: $pomodorino.task, timerState: vm.timerState)
                     .onDisappear{ navigateToBreak = vm.hasEnded } // Navigation
             }
         }
