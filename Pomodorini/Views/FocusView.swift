@@ -35,8 +35,10 @@ struct FocusView: View {
     init(durationInMinutes: Int = 25) {
         NotificationManager.shared.requestAuthorization ()
         self.vm = TimerViewModel(intervalDuration: durationInMinutes)
-        // Add Pomdorino
-        pomodorino = Pomodorino.new(startTime: Date.now, setDuration: 25)
+        
+        // Create new Pomdorino
+        pomodorino = Pomodorino.new(startTime: Date.now, setDuration: durationInMinutes)
+        print("FocusView | Create  new Pomodorino")
     }
 
     var body: some View {
@@ -158,6 +160,11 @@ struct FocusView: View {
     private func resetFocusSession() {
         vm.resetTimer()
         print("FocusView | Resetted Timer")
+        
+        // Create new Pomodorino
+        pomodorino = Pomodorino.new(startTime: Date.now, setDuration: 25)
+        print("FocusView | Resetted with new Pomodorino")
+        
         doResetFocus = false
     }
 }
