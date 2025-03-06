@@ -17,6 +17,13 @@ struct TransitionSheetView: View {
     
     @Query var tasks: [PomodorinoTask]
     
+    var activeTasks: [PomodorinoTask] {
+        let tasks = self.tasks
+        
+        return tasks.filter { !$0.isDone }
+    }
+    
+    
     @Binding private var selectedTask: PomodorinoTask?
     @State private var description: String
     @State private var isChecked: Bool = false
@@ -39,7 +46,7 @@ struct TransitionSheetView: View {
             doneButton
             ZStack {
                 Group {
-                    if(!tasks.isEmpty) {
+                    if(!activeTasks.isEmpty) {
                         VStack (spacing: 24){
                             HStack {
                                 menu
@@ -60,8 +67,11 @@ struct TransitionSheetView: View {
                 // Resize to MAX
                 Color.clear.ignoresSafeArea()
             }
-        }.padding().onDisappear(){
+        }
+        .padding()
+        .onDisappear(){
             updateTaskLabel()
+            updateTaskIsDone()
         }
     }
 }
@@ -75,12 +85,13 @@ extension TransitionSheetView {
     private var menu: some View {
         Menu (selectedTask?.label ?? "Select Task"){
             // Tasks
-            ForEach(tasks){ task in
+            ForEach(activeTasks){ task in
                 Button(task.label, action: { selectPomodorinoTask(task) })
             }
             // Add Task
             Button("Add Task", systemImage: "plus", action: {showingAlert.toggle()})
         }
+        .disabled(timerState == .ended)
         .font(.title2).fontWeight(.semibold)
         .tint(.primary).buttonStyle(.bordered)
         .alert("Enter Task title", isPresented: $showingAlert) {
@@ -133,10 +144,7 @@ extension TransitionSheetView {
     // TODO: make toggleable, on click again do action
     private var checkTaskToggleButtons: some View {
         Toggle("Mark as done", isOn: $isChecked)
-            .toggleStyle(.switch).disabled(selectedTask == nil)
-            .onChange(of: isChecked, initial: false) { _, isFocused in
-                updateTaskIsCompleted()
-              }
+            .toggleStyle(.switch)
         /*HStack (spacing: 12) {
             Text("Mark as")
                 .font(.title2)
@@ -186,7 +194,7 @@ extension TransitionSheetView {
         print("Updated Task Label: " + (selectedTask?.label ?? ""))
     }
     
-    func updateTaskIsCompleted() {
+    func updateTaskIsDone() {
         print("Checked: \(isChecked)")
         selectedTask?.isDone = isChecked
         print("Updated Task is Done: \(String(describing: selectedTask?.isDone))")
@@ -221,10 +229,12 @@ extension TransitionSheetView {
 
 #Preview("Task - End Focus", body: {
     @Previewable @State var showingSheet = true
+    @Previewable @State var pomodorinoTask: PomodorinoTask? =
+    PomodorinoTask(label: "Pomodorino 🍅", details: "Such a cool app")
     
     do {
-        let previewer = try Previewer()
-        return Spacer().sheet(isPresented: $showingSheet) { TransitionSheetView(selectedTask: .constant(nil), timerState: .ended) }
+        let previewer = try Previewer(pomodorinoTask: pomodorinoTask)
+        return Spacer().sheet(isPresented: $showingSheet) { TransitionSheetView(selectedTask: $pomodorinoTask, timerState: .ended) }
                 .modelContainer(previewer.container)
         } catch {
             return Text("Failed to create preview: \(error.localizedDescription)")
