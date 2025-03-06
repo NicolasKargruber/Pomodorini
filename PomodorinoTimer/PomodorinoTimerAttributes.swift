@@ -19,7 +19,7 @@ struct PomodorinoTimerAttributes: ActivityAttributes {
 
     // Static (non-changing) properties
     //var timerInterval: TimeInterval
-    var taskLabel: String
+    var taskLabel: String?
 }
 
 // Preview

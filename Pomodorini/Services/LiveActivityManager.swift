@@ -17,7 +17,7 @@ class LiveActivityManager {
     private init() {}
     
     // Start Live Activity
-    func startActivity(timerInterval: ClosedRange<Date>/*, formattedTime: String, pomdorinoColor: Color*/, taskLabel: String) {
+    func startActivity(timerInterval: ClosedRange<Date>/*, formattedTime: String, pomdorinoColor: Color*/, taskLabel: String?) {
             print("LiveActivityManager | Start Live Activity")
             do{
                 //let hexColor = pomdorinoColor.toHex() ?? "000000"

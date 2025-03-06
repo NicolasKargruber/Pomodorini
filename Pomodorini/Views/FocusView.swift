@@ -111,7 +111,8 @@ struct FocusView: View {
         
         
         // Live Activity - Start
-        LiveActivityManager.shared.startActivity(timerInterval: vm.timerInterval, taskLabel: pomodorino.task?.label ?? "")
+        LiveActivityManager.shared
+            .startActivity(timerInterval: vm.timerInterval, taskLabel: pomodorino.task?.label)
         print("FocusView | Started Live Activity")
         
         // Notification - Focus
