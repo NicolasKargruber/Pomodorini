@@ -17,7 +17,7 @@ struct PomodorinoTimerLiveActivity: Widget {
                 Text("PoModoRInI 🍅").font(.caption2)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                 HStack {
-                    Text(context.attributes.taskLabel)
+                    Text(context.attributes.taskLabel ?? "")
                     Spacer()
                     Text(timerInterval: context.state.timerInterval, countsDown: true)
                         .font(.title.bold()).multilineTextAlignment(.trailing)
@@ -35,7 +35,7 @@ struct PomodorinoTimerLiveActivity: Widget {
             DynamicIsland {
                 // #1 EXPANDED
                 DynamicIslandExpandedRegion(.center) {
-                    Text(context.attributes.taskLabel).font(.title)
+                    Text(context.attributes.taskLabel ?? "").font(.title)
                 }
                 DynamicIslandExpandedRegion(.leading) {
                     //Text("Leading")
@@ -60,10 +60,10 @@ struct PomodorinoTimerLiveActivity: Widget {
             }
             // #2 COMPACT
             compactLeading: {
-                Text(context.attributes.taskLabel).padding(4)
+                Text(context.attributes.taskLabel ?? "").padding(4)
                     //.foregroundColor(Color(hex:context.state.hexColor))
             } compactTrailing: {
-                Text(timerInterval: Date.now...Date.now.addingTimeInterval(10), countsDown: true)
+                Text(timerInterval: context.state.timerInterval, countsDown: true)
                     .frame(width: 50).fontWeight(.heavy).multilineTextAlignment(.center)
                     //.foregroundColor(Color(hex:context.state.hexColor))
             }
