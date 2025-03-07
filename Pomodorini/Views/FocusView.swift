@@ -25,6 +25,9 @@ struct FocusView: View {
     @Environment(\.modelContext) var modelContext
     @State var pomodorino: Pomodorino
     @Query var pomodorini: [Pomodorino]
+    var lastPomodorino: Pomodorino? {
+        return pomodorini.sorted(by: {$0.startTime < $1.startTime}).last
+    }
     
     // Tarnsition Sheet
     @State private var showingSheet = false
@@ -38,6 +41,8 @@ struct FocusView: View {
         
         // Create new Pomdorino
         pomodorino = Pomodorino.new(startTime: Date.now, intervalDuration: durationInMinutes)
+        // TODO: will not work on App open, Fix in POM-114
+        //pomodorino.task = lastPomodorino?.task
         print("FocusView | Create  new Pomodorino")
     }
 
@@ -162,7 +167,12 @@ struct FocusView: View {
         
         // Create new Pomodorino
         pomodorino = Pomodorino.new(startTime: Date.now, intervalDuration: 25)
+        pomodorino.task = lastPomodorino?.task
         print("FocusView | Resetted with new Pomodorino")
+        
+        if(pomodorino.hasTask) {
+            showingSheet = true
+        }
         
         doResetFocus = false
     }
@@ -187,8 +197,10 @@ extension FocusView {
 
 #Preview {
     @Previewable @AppStorage("pomodorinoCount") var count = 0
+    let pomodorinoTask = PomodorinoTask.newTask(named: "Geoguessr 🌍")
+    
     do {
-        let previewer = try Previewer()
+        let previewer = try Previewer(pomodorinoTask: pomodorinoTask)
         return FocusView(durationInMinutes: 1).onAppear { count = 3 }
                 .modelContainer(previewer.container)
         } catch {
