@@ -130,7 +130,7 @@ struct FocusView: View {
         vm.stopTimer()
         print("FocusView | Stopped Timer")
         
-        if(savePomodorino) {
+        if(savePomodorino && vm.ranMoreThan10Seconds) {
             // Save Pomodorino
             pomodorino.endTime = vm.endTime
             print("FocusView | Saved Pomodorino EndTime")
