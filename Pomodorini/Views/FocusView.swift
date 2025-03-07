@@ -80,6 +80,8 @@ struct FocusView: View {
                 .padding()
             }
             .onAppear    {
+                // Remove local Notificaions
+                UNUserNotificationCenter.current().removeAllDeliveredNotifications()
                 // Reset Badge Count
                 UNUserNotificationCenter.current().setBadgeCount(0)
                 // Disable Screen Lock
