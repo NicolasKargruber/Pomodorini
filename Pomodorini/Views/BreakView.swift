@@ -17,13 +17,22 @@ struct BreakView: View {
     
     @AppStorage("pomodorinoCount") var pomodorinoCount = 0
 
-    @Binding var shouldResetTimer: Bool
+    @Binding var doResetFocus: Bool
 
     @State private var vm: TimerViewModel
 
-    init(durationInMinutes: Int = 5, shouldResetTimer: Binding<Bool>) {
-        _shouldResetTimer = shouldResetTimer
-        self.vm = TimerViewModel(intervalDuration: durationInMinutes)
+    init(doResetFocus: Binding<Bool>) {
+        _doResetFocus = doResetFocus
+        
+        // TODO: Put into BreakManager
+        let pomodorinoCount = UserDefaults.standard.integer(forKey: "pomodorinoCount")
+        
+        let breakInMinutes: Int
+        if(pomodorinoCount % 4 == 0) { breakInMinutes = 15 }
+        else { breakInMinutes = 5 }
+        
+        // ViewModel
+        self.vm = TimerViewModel(intervalDuration: breakInMinutes)
     }
 
     var body: some View {
@@ -105,8 +114,8 @@ struct BreakView: View {
             print("Increased Pomodorino Count")
         }
         
-        shouldResetTimer = true
-        print("Dismiss Screen. Reset Timer: \(shouldResetTimer)")
+        doResetFocus = true
+        print("Dismiss Screen. Reset Timer: \(doResetFocus)")
         dismiss()
     }
 }
@@ -170,9 +179,6 @@ extension BreakView {
 }
 
 #Preview {
-    @Previewable @State var shouldResetTimer = false
-    BreakView(
-        durationInMinutes: 1,
-        shouldResetTimer: $shouldResetTimer
-    )
+    @Previewable @State var doResetFocus = false
+    BreakView(doResetFocus: $doResetFocus)
 }

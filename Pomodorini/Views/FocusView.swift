@@ -1,5 +1,5 @@
 //
-//  TimerView.swift
+//  FocusView.swift
 //  Pomodorini
 //
 //  Created by Nicolas Kargruber on 17.11.24.
@@ -37,7 +37,7 @@ struct FocusView: View {
         self.vm = TimerViewModel(intervalDuration: durationInMinutes)
         
         // Create new Pomdorino
-        pomodorino = Pomodorino.new(startTime: Date.now, setDuration: durationInMinutes)
+        pomodorino = Pomodorino.new(startTime: Date.now, intervalDuration: durationInMinutes)
         print("FocusView | Create  new Pomodorino")
     }
 
@@ -67,9 +67,9 @@ struct FocusView: View {
                             onStart: { startFocusSession() },
                             onEnd: { endFocusSession() }
                         )
-                        // Navigation
+                        // Navigation to BREAK VIEW
                         .navigationDestination(isPresented: $navigateToBreak) {
-                            BreakView(shouldResetTimer: $doResetFocus)
+                            BreakView(doResetFocus: $doResetFocus)
                                 .environment(\.colorScheme, .dark) // Enforce Dark-Mode
                                 .navigationBarBackButtonHidden(true)
                         }
@@ -85,13 +85,9 @@ struct FocusView: View {
                 // Disable Screen Lock
                 UIApplication.shared.isIdleTimerDisabled = true
             }
-            // Not working with HistoryView
-            /*.onDisappear {
-                if(vm.isRunning) { endFocusSession() }
-            }*/
             .sheet(isPresented: $showingSheet) {
                 TransitionSheetView(selectedTask: $pomodorino.task, timerState: vm.timerState)
-                    .onDisappear{ navigateToBreak = vm.hasEnded } // Navigation
+                    .onDisappear{ navigateToBreak = vm.hasEnded } // Navigation to BREAK VIEW
             }
         }
         // Reset FocusView
@@ -100,7 +96,7 @@ struct FocusView: View {
     
     private func startFocusSession() {
         // TODO: Delete - Remove pomodorini without endTime
-        try! modelContext.delete(model: Pomodorino.self, where: #Predicate { $0.endTime == nil })
+        //try! modelContext.delete(model: Pomodorino.self, where: #Predicate { $0.endTime == nil })
         
         vm.startTimer()
         print("FocusView | Started Timer")
@@ -134,7 +130,7 @@ struct FocusView: View {
         vm.stopTimer()
         print("FocusView | Stopped Timer")
         
-        if(savePomodorino) {
+        if(savePomodorino && vm.ranMoreThan10Seconds) {
             // Save Pomodorino
             pomodorino.endTime = vm.endTime
             print("FocusView | Saved Pomodorino EndTime")
@@ -163,7 +159,7 @@ struct FocusView: View {
         print("FocusView | Resetted Timer")
         
         // Create new Pomodorino
-        pomodorino = Pomodorino.new(startTime: Date.now, setDuration: 25)
+        pomodorino = Pomodorino.new(startTime: Date.now, intervalDuration: 25)
         print("FocusView | Resetted with new Pomodorino")
         
         doResetFocus = false

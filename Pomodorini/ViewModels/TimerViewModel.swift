@@ -72,6 +72,16 @@ class TimerViewModel {
         return start...end
     }
     
+    /// Indicates whether the timer ran more than 10 sedonds
+    var ranMoreThan10Seconds: Bool {
+        intervalDuration - _remainingTime >= 10
+    }
+    
+    /*/// Indicates whether the timer ran longer than half the threshold
+    var ranLongEnough: Bool {
+        progress - threshold/2 > 0
+    }*/
+    
     /// Determines the state of the pomodorino timer.
     var timerState: PomodorinoTimerState {
         if(hasEnded){
