@@ -24,7 +24,7 @@ struct Previewer {
         
         // Pomodorini
         //if(pomodorinoTask != nil) { container.mainContext.insert(pomodorinoTask!) }
-        container.mainContext.insert(try Pomodorino(task: pomodorinoTask, startTime: Date.now, endTime: Date.now.addingTimeInterval(1350), setDuration: 25))
-        container.mainContext.insert(try Pomodorino(task: pomodorinoTask, startTime: Date.now.addingTimeInterval(1400), endTime: Date.now.addingTimeInterval(3600), setDuration: 25))
+        container.mainContext.insert(try Pomodorino(task: pomodorinoTask, startTime: Date.now.addingTimeInterval(-5000), endTime: Date.now.addingTimeInterval(-3550), setDuration: 25))
+        container.mainContext.insert(try Pomodorino(task: pomodorinoTask, startTime: Date.now.addingTimeInterval(-3600), endTime: Date.now.addingTimeInterval(-1400), setDuration: 25))
     }
 }
