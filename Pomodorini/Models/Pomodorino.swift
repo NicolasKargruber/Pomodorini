@@ -77,6 +77,6 @@ class Pomodorino: Identifiable, Hashable {
     }
     
     // TODO: Remove -> '!'
-    static func new(startTime: Date, setDuration: Int) -> Pomodorino
-    { return try! Pomodorino(startTime: startTime, setDuration: setDuration) }
+    static func new(startTime: Date, intervalDuration: Int) -> Pomodorino
+    { return try! Pomodorino(startTime: startTime, setDuration: intervalDuration) }
 }
