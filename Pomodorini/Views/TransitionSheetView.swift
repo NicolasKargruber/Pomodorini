@@ -163,7 +163,6 @@ extension TransitionSheetView {
     
     private var addNewTaskButton: some View {
         VStack(spacing: 0) {
-            Text("Add NEW Task !!!").font(.title).padding()
             Button("Add Task", systemImage: "plus", action: {
                 showingAlert.toggle()
             }).font(.largeTitle).labelStyle(.iconOnly)
@@ -173,6 +172,9 @@ extension TransitionSheetView {
                     Button("OK", action: { addPomodorinoTask() })
                     Button("Cancel", role: .cancel, action: {})
                         } message: { Text("This title must be unique to your task.") }
+            
+            Text("Add NEW Task").font(.title).padding()
+            Text("Looks there are no tasks here! 🙃").padding()
         }
     }
     
