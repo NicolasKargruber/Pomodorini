@@ -21,9 +21,17 @@ struct BreakView: View {
 
     @State private var vm: TimerViewModel
 
-    init(durationInMinutes: Int = 5, shouldResetTimer: Binding<Bool>) {
+    init(shouldResetTimer: Binding<Bool>) {
         _shouldResetTimer = shouldResetTimer
-        self.vm = TimerViewModel(intervalDuration: durationInMinutes)
+        
+        // TODO: Put into BreakManager
+        let pomodorinoCount = UserDefaults.standard.integer(forKey: "pomodorinoCount")
+        if(pomodorinoCount % 4 == 0) {
+            self.vm = TimerViewModel(intervalDuration: 15)
+        }
+        else {
+            self.vm = TimerViewModel(intervalDuration: 5)
+        }
     }
 
     var body: some View {
@@ -171,8 +179,5 @@ extension BreakView {
 
 #Preview {
     @Previewable @State var shouldResetTimer = false
-    BreakView(
-        durationInMinutes: 1,
-        shouldResetTimer: $shouldResetTimer
-    )
+    BreakView( shouldResetTimer: $shouldResetTimer)
 }

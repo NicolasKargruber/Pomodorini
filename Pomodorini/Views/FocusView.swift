@@ -1,5 +1,5 @@
 //
-//  TimerView.swift
+//  FocusView.swift
 //  Pomodorini
 //
 //  Created by Nicolas Kargruber on 17.11.24.
@@ -100,7 +100,7 @@ struct FocusView: View {
     
     private func startFocusSession() {
         // TODO: Delete - Remove pomodorini without endTime
-        try! modelContext.delete(model: Pomodorino.self, where: #Predicate { $0.endTime == nil })
+        //try! modelContext.delete(model: Pomodorino.self, where: #Predicate { $0.endTime == nil })
         
         vm.startTimer()
         print("FocusView | Started Timer")
