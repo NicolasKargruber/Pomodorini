@@ -28,7 +28,7 @@ struct BreakView: View {
         let pomodorinoCount = UserDefaults.standard.integer(forKey: "pomodorinoCount")
         
         let breakInMinutes: Int
-        if(pomodorinoCount % 4 == 0) { breakInMinutes = 15 }
+        if(pomodorinoCount % 4 == 3) { breakInMinutes = 15 }
         else { breakInMinutes = 5 }
         
         // ViewModel
