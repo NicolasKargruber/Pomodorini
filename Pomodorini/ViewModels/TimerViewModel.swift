@@ -20,15 +20,11 @@ class TimerViewModel {
     private var overtime: TimeInterval?      // Overtime in seconds
     private var startTime: Date?             // Start time of the timer
     private var timer: Timer?                // Timer object
-    private var threshold: Double = 0.079    // Completion threshold (percentage: 0.0 - 1.0)
+    private var threshold: Double = 0.079    // Completion threshold 8%
 
     // MARK: - Initializer
     
-    /// Initializes a new TimerManager with the specified configuration.
-    /// - Parameters:
-    ///   - totalMinutes: The total timer duration in minutes.
-    ///   - threshold: The completion threshold (default 8%).
-    init(intervalDuration: Int, threshold: Double? = nil) {
+    init(intervalDuration: Int) {
         let clampedMinutes = max(1, min(intervalDuration, 60)) // Ensure a valid duration
         
         // #Preview
@@ -37,13 +33,6 @@ class TimerViewModel {
         else { self.intervalDuration = TimeInterval(clampedMinutes * 60) }
         
         self._remainingTime = self.intervalDuration
-        
-        if let threshold, (0...1).contains(threshold) {
-            self.threshold = threshold
-        } else {
-            print("TimerViewModel | Invalid OR no threshold value provided. Set to default value.")
-            self.threshold = 0.08 // Explicitly set the default
-        }
     }
     
     // MARK: - Computed Properties

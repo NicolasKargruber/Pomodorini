@@ -53,49 +53,57 @@ struct TransitionSheetView: View {
     var body: some View {
         VStack(alignment: .trailing) {
             doneButton
+            
+            // Content
             ZStack {
-                Group {
                     if(!activeTasks.isEmpty) {
-                        VStack (spacing: 24){
-                            HStack {
-                                menu
-                                if(selectedTask != nil) {
-                                    Button("Clear", systemImage: "xmark.circle.fill", action: {selectPomodorinoTask(nil)}).tint(.gray).font(.title2).labelStyle(.iconOnly)
-                                }
-                                Spacer()
-                            }
-                            textEditor
-                            // Bottom Views
-                            if (timerState == .ended) {
-                                 checkTaskToggleButtons
-                            } else if(isNewTask) {
-                                Text("Break down your task in the field above 🔨")
-                            } else {
-                                CustomToggleButton(isOn: $useOldDescription) {
-                                    if(useOldDescription) {
-                                        description = selectedTask?.details ?? ""
-                                    } else { description = "" }
-                                }
-                            }
-                        }}
-                    else {
-                        addNewTaskButton
-                    }
+                    editTaskContent
+                } else {
+                    addNewTaskContent
                 }
-                
+            
                 // Resize to MAX
                 Color.clear.ignoresSafeArea()
             }
         }
         .padding()
+        .alert("Enter Task title", isPresented: $showingAlert) {
+            TextField("Enter your title", text: $taskLabel)
+            Button("OK", action: { addPomodorinoTask() })
+            Button("Cancel", role: .cancel, action: {})
+                } message: { Text("This title must be unique to your task.") }
         .onDisappear(){
-            updateTaskLabel()
+            // Save Task
+            updateTaskDescription()
             updateTaskIsDone()
         }
     }
 }
 
 extension TransitionSheetView {
+    
+    private var editTaskContent: some View {
+        VStack (spacing: 24){
+            HStack {
+                menu
+                if(selectedTask != nil) { clearButton }
+                Spacer()
+            }
+            textEditor
+            // Bottom Views
+            if (timerState == .ended) {
+                 checkTaskToggleButtons
+            } else if(isNewTask) {
+                newTaskText
+            } else {
+                CustomToggleButton(isOn: $useOldDescription) {
+                    if(useOldDescription) {
+                        description = selectedTask?.details ?? ""
+                    } else { description = "" }
+                }
+            }
+        }
+    }
     
     private var doneButton: some View {
         Button("Done",role: .cancel ,action: { dismiss() }).tint(.blue).ignoresSafeArea()
@@ -113,13 +121,10 @@ extension TransitionSheetView {
         .disabled(timerState == .ended)
         .font(.title2).fontWeight(.semibold)
         .tint(.primary).buttonStyle(.bordered)
-        .alert("Enter Task title", isPresented: $showingAlert) {
-            TextField("Enter your title", text: $taskLabel)
-            Button("OK", action: {
-                addPomodorinoTask()
-            })
-            Button("Cancel", role: .cancel, action: {})
-                } message: { Text("This title must be unique to your task.") }
+    }
+    
+    private var clearButton: some View {
+        Button("Clear", systemImage: "xmark.circle.fill", action: {selectPomodorinoTask(nil)}).tint(.gray).font(.title2).labelStyle(.iconOnly)
     }
     
     private var textEditor: some View {
@@ -141,17 +146,17 @@ extension TransitionSheetView {
             .toggleStyle(.switch)
     }
     
-    private var addNewTaskButton: some View {
+    private var newTaskText: some View {
+        Text("Break down your task in the field above 🔨")
+    }
+    
+    private var addNewTaskContent: some View {
         VStack(spacing: 0) {
             Button("Add Task", systemImage: "plus", action: {
                 showingAlert.toggle()
-            }).font(.largeTitle).labelStyle(.iconOnly)
-                .buttonBorderShape(.roundedRectangle).buttonStyle(.bordered).tint(.primary)
-                .alert("Enter Task title", isPresented: $showingAlert) {
-                    TextField("Enter your title", text: $taskLabel)
-                    Button("OK", action: { addPomodorinoTask() })
-                    Button("Cancel", role: .cancel, action: {})
-                        } message: { Text("This title must be unique to your task.") }
+            })
+            .font(.largeTitle).labelStyle(.iconOnly)
+            .buttonBorderShape(.roundedRectangle).buttonStyle(.bordered).tint(.primary)
             
             Text("Add NEW Task").font(.title).padding()
             Text("Looks like there are no tasks here! 🫥").padding()
@@ -172,29 +177,29 @@ extension TransitionSheetView {
         selectedTask = task
         description = selectedTask?.details ?? ""
         useOldDescription = true
-        print("Selected Task: \(String(describing: task?.label))")
+        print("TransitionSheetView | Selected Task: \(String(describing: task?.label))")
     }
     
-    func updateTaskLabel() {
+    // TODO: Move to ViewModel
+    func updateTaskDescription() {
         selectedTask?.details = description
-        print("Updated Task Label: " + (selectedTask?.label ?? ""))
+        print("TransitionSheetView | Updated Task Label: " + (selectedTask?.label ?? ""))
     }
     
+    // TODO: Move to ViewModel
     func updateTaskIsDone() {
-        print("Checked: \(isChecked)")
         selectedTask?.isDone = isChecked
-        print("Updated Task is Done: \(String(describing: selectedTask?.isDone))")
+        print("TransitionSheetView | Updated Task is Done: \(String(describing: selectedTask?.isDone))")
     }
 }
 
 #Preview("Task - Selected", body: {
-    @Previewable @State var showingSheet = true
     @Previewable @State var pomodorinoTask: PomodorinoTask? =
     PomodorinoTask(label: "Pomodorino 🍅", details: "Such a cool app")
     
     do {
         let previewer = try Previewer(pomodorinoTask: pomodorinoTask)
-        return Spacer().sheet(isPresented: $showingSheet) { TransitionSheetView(selectedTask: $pomodorinoTask, timerState: .notStarted) }
+        return Spacer().sheet(isPresented: .constant(true)) { TransitionSheetView(selectedTask: $pomodorinoTask, timerState: .notStarted) }
                 .modelContainer(previewer.container)
         } catch {
             return Text("Failed to create preview: \(error.localizedDescription)")
@@ -202,11 +207,9 @@ extension TransitionSheetView {
 })
 
 #Preview("Task - Unselected", body: {
-    @Previewable @State var showingSheet = true
-    
     do {
         let previewer = try Previewer()
-        return Spacer().sheet(isPresented: $showingSheet) { TransitionSheetView(selectedTask: .constant(nil), timerState: .notStarted) }
+        return Spacer().sheet(isPresented: .constant(true)) { TransitionSheetView(selectedTask: .constant(nil), timerState: .notStarted) }
                 .modelContainer(previewer.container)
         } catch {
             return Text("Failed to create preview: \(error.localizedDescription)")
@@ -214,13 +217,12 @@ extension TransitionSheetView {
 })
 
 #Preview("Task - End Focus", body: {
-    @Previewable @State var showingSheet = true
     @Previewable @State var pomodorinoTask: PomodorinoTask? =
     PomodorinoTask(label: "Pomodorino 🍅", details: "Such a cool app")
     
     do {
         let previewer = try Previewer(pomodorinoTask: pomodorinoTask)
-        return Spacer().sheet(isPresented: $showingSheet) { TransitionSheetView(selectedTask: $pomodorinoTask, timerState: .ended) }
+        return Spacer().sheet(isPresented: .constant(true)) { TransitionSheetView(selectedTask: $pomodorinoTask, timerState: .ended) }
                 .modelContainer(previewer.container)
         } catch {
             return Text("Failed to create preview: \(error.localizedDescription)")
@@ -228,13 +230,12 @@ extension TransitionSheetView {
 })
 
 #Preview("Task - Selected- End Focus", body: {
-    @Previewable @State var showingSheet = true
     @Previewable @State var pomodorinoTask: PomodorinoTask? =
     PomodorinoTask(label: "Pomodorino 🍅", details: "Such a cool app")
     
     do {
         let previewer = try Previewer(pomodorinoTask: pomodorinoTask)
-        return Spacer().sheet(isPresented: $showingSheet) { TransitionSheetView(selectedTask: $pomodorinoTask, timerState: .ended) }
+        return Spacer().sheet(isPresented: .constant(true)) { TransitionSheetView(selectedTask: $pomodorinoTask, timerState: .ended) }
                 .modelContainer(previewer.container)
         } catch {
             return Text("Failed to create preview: \(error.localizedDescription)")
@@ -242,9 +243,8 @@ extension TransitionSheetView {
 })
 
 #Preview("No Task", body: {
-    @Previewable @State var showingSheet = true
     @Previewable @State var pomodorinoTask: PomodorinoTask? = nil
     
-    Spacer().sheet(isPresented: $showingSheet) { TransitionSheetView(selectedTask: $pomodorinoTask, timerState: .notStarted) }
+    Spacer().sheet(isPresented: .constant(true)) { TransitionSheetView(selectedTask: $pomodorinoTask, timerState: .notStarted) }
 })
 
