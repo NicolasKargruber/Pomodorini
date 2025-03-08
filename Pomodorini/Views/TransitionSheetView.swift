@@ -28,10 +28,13 @@ struct TransitionSheetView: View {
         return addedTasks.contains(selected)
     }
     
-    
+    // Model Content
     @Binding private var selectedTask: PomodorinoTask?
     @State private var addedTasks: [PomodorinoTask] = []
+    
+    // Animation
     @State private var description: String
+    @State private var useOldDescription: Bool = true
     @State private var isChecked: Bool = false
     
     // Alert Dialog
@@ -65,10 +68,14 @@ struct TransitionSheetView: View {
                             // Bottom Views
                             if (timerState == .ended) {
                                  checkTaskToggleButtons
-                            } else if(isNewTask || description.isEmpty) {
+                            } else if(isNewTask) {
                                 Text("Break down your task in the field above 🔨")
                             } else {
-                                pickUpToggleButtons
+                                CustomToggleButton(isOn: $useOldDescription) {
+                                    if(useOldDescription) {
+                                        description = selectedTask?.details ?? ""
+                                    } else { description = "" }
+                                }
                             }
                         }}
                     else {
@@ -96,11 +103,11 @@ extension TransitionSheetView {
     
     private var menu: some View {
         Menu (selectedTask?.label ?? "Select Task"){
-            // Tasks
+            // Active Tasks
             ForEach(activeTasks){ task in
                 Button(task.label, action: { selectPomodorinoTask(task) })
             }
-            // Add Task
+            // + Add Task
             Button("Add Task", systemImage: "plus", action: {showingAlert.toggle()})
         }
         .disabled(timerState == .ended)
@@ -129,44 +136,9 @@ extension TransitionSheetView {
         }
     }
     
-    // TODO: make toggleable, on click again do action
-    private var pickUpToggleButtons: some View {
-        VStack (spacing: 4) {
-            Text("Pick up where you left off?")
-                .font(.title2)
-                .padding(.horizontal, 18).padding(.vertical, 12)
-            
-            // ToggleButtons
-            HStack(spacing: 24){
-                Button("YES", action: {
-                    
-                }).font(.title)
-                    .buttonStyle(.borderedProminent)
-                
-                Button("NO", action: { dismiss() })
-                    .buttonStyle(.bordered).tint(.blue).font(.title)
-            }
-        }
-    }
-    
-    // TODO: make toggleable, on click again do action
     private var checkTaskToggleButtons: some View {
         Toggle("Mark as done", isOn: $isChecked)
             .toggleStyle(.switch)
-        /*HStack (spacing: 12) {
-            Text("Mark as")
-                .font(.title2)
-            
-            // ToggleButtons
-            HStack(spacing: 24){
-                Button("DONE", action: {
-                    
-                }).font(.title)
-                    .buttonStyle(.borderedProminent)
-                
-                //Button("NO", action: { dismiss() }).buttonStyle(.bordered).tint(.blue).font(.title)
-            }
-        }*/
     }
     
     private var addNewTaskButton: some View {
@@ -195,8 +167,11 @@ extension TransitionSheetView {
     }
     
     func selectPomodorinoTask(_ task:PomodorinoTask?) {
+        guard task != selectedTask else { return }
+        
         selectedTask = task
         description = selectedTask?.details ?? ""
+        useOldDescription = true
         print("Selected Task: \(String(describing: task?.label))")
     }
     
