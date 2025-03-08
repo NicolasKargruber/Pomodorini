@@ -73,9 +73,6 @@ struct BreakView: View {
             UNUserNotificationCenter.current().setBadgeCount(0)
             startTimer()
         }
-        .onDisappear {
-            stopTimer()
-        }
     }
     
     func startTimer() {
@@ -98,24 +95,24 @@ struct BreakView: View {
 
     func stopTimer() {
         vm.stopTimer()
-        print("Stopped Timer")
+        print("BreakView | Stopped Timer")
         
         // Remove notifications when timer stops before
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
-        print("Cancelled notifications")
+        print("BreakView | Cancelled notifications")
    }
     
     private func collectPomodorino(skip: Bool? = nil) {
         vm.stopTimer()
-        print("Stopped Timer")
+        print("BreakView | Stopped Timer")
         
         if(skip != true){
             pomodorinoCount += 1
-            print("Increased Pomodorino Count")
+            print("BreakView | Increased Pomodorino Count")
         }
         
         doResetFocus = true
-        print("Dismiss Screen. Reset Timer: \(doResetFocus)")
+        print("BreakView | Dismiss Screen. Reset Focus: \(doResetFocus)")
         dismiss()
     }
 }
