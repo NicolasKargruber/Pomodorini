@@ -23,8 +23,14 @@ struct TransitionSheetView: View {
         return tasks.filter { !$0.isDone }
     }
     
+    var isNewTask: Bool {
+        guard let selected = selectedTask else { return true }
+        return addedTasks.contains(selected)
+    }
+    
     
     @Binding private var selectedTask: PomodorinoTask?
+    @State private var addedTasks: [PomodorinoTask] = []
     @State private var description: String
     @State private var isChecked: Bool = false
     
@@ -33,7 +39,7 @@ struct TransitionSheetView: View {
     @State private var taskLabel: String = ""
     
     // TextEditor
-    @FocusState private var isFocused: Bool
+    //@FocusState private var isFocused: Bool
     
     init(selectedTask: Binding<PomodorinoTask?>?, timerState: PomodorinoTimerState) {
         self._selectedTask = selectedTask ?? .constant(nil)
@@ -50,11 +56,17 @@ struct TransitionSheetView: View {
                         VStack (spacing: 24){
                             HStack {
                                 menu
+                                if(selectedTask != nil) {
+                                    Button("Clear", systemImage: "xmark.circle.fill", action: {selectPomodorinoTask(nil)}).tint(.gray).font(.title2).labelStyle(.iconOnly)
+                                }
                                 Spacer()
                             }
                             textEditor
-                             if (timerState == .ended) {
+                            // Bottom Views
+                            if (timerState == .ended) {
                                  checkTaskToggleButtons
+                            } else if(isNewTask || description.isEmpty) {
+                                Text("Break down your task in the field above 🔨")
                             } else {
                                 pickUpToggleButtons
                             }
@@ -114,10 +126,6 @@ extension TransitionSheetView {
                 .scrollContentBackground(.hidden)
                 .background(.ultraThickMaterial).cornerRadius(24)
                 .disabled(selectedTask == nil)
-                .focused($isFocused)
-                .onChange(of: isFocused, initial: true) { _, isFocused in
-                    updateTaskLabel()
-                  }
         }
     }
     
@@ -174,21 +182,22 @@ extension TransitionSheetView {
                         } message: { Text("This title must be unique to your task.") }
             
             Text("Add NEW Task").font(.title).padding()
-            Text("Looks there are no tasks here! 🙃").padding()
+            Text("Looks like there are no tasks here! 🫥").padding()
         }
     }
     
     func addPomodorinoTask() {
         let newTask = PomodorinoTask.newTask(named: taskLabel)
         modelContext.insert(newTask)
+        addedTasks.append(newTask)
         selectPomodorinoTask(newTask)
         print("Added Task: " + newTask.label)
     }
     
-    func selectPomodorinoTask(_ task:PomodorinoTask) {
+    func selectPomodorinoTask(_ task:PomodorinoTask?) {
         selectedTask = task
         description = selectedTask?.details ?? ""
-        print("Selected Task: " + task.label)
+        print("Selected Task: \(String(describing: task?.label))")
     }
     
     func updateTaskLabel() {
