@@ -28,28 +28,29 @@ struct TransitionSheetView: View {
         return addedTasks.contains(selected)
     }
     
+    // TODO: Fix in POM-124
+    //@State private var useOldDescription: Bool = true
+    
     // Model Content
     @Binding private var selectedTask: PomodorinoTask?
     @State private var addedTasks: [PomodorinoTask] = []
     
     // Animation
     @State private var description: String
-    @State private var useOldDescription: Bool = true
     @State private var isChecked: Bool = false
     
     // Alert Dialog
     @State private var showingAlert = false
     @State private var taskLabel: String = ""
     
-    // TextEditor
-    //@FocusState private var isFocused: Bool
-    
+    // MARK: - Init
     init(selectedTask: Binding<PomodorinoTask?>?, timerState: PomodorinoTimerState) {
         self._selectedTask = selectedTask ?? .constant(nil)
         self.description = selectedTask?.wrappedValue?.details ?? ""
         self.timerState = timerState
     }
-
+    
+    // MARK: - Body
     var body: some View {
         VStack(alignment: .trailing) {
             doneButton
@@ -80,8 +81,8 @@ struct TransitionSheetView: View {
     }
 }
 
+// MARK: - Extension
 extension TransitionSheetView {
-    
     private var editTaskContent: some View {
         VStack (spacing: 24){
             HStack {
@@ -93,15 +94,16 @@ extension TransitionSheetView {
             // Bottom Views
             if (timerState == .ended) {
                  checkTaskToggleButtons
-            } else if(isNewTask) {
+            } else /*if(isNewTask) */{
                 newTaskText
-            } else {
+                // TODO: Fix in POM-124
+            }/* else {
                 CustomToggleButton(isOn: $useOldDescription) {
                     if(useOldDescription) {
                         description = selectedTask?.details ?? ""
                     } else { description = "" }
                 }
-            }
+            }*/
         }
     }
     
@@ -176,7 +178,7 @@ extension TransitionSheetView {
         
         selectedTask = task
         description = selectedTask?.details ?? ""
-        useOldDescription = true
+        //useOldDescription = true // TODO: Fix in POM-124
         print("TransitionSheetView | Selected Task: \(String(describing: task?.label))")
     }
     
@@ -193,6 +195,8 @@ extension TransitionSheetView {
     }
 }
 
+
+// MARK: - Previews
 #Preview("Task - Selected", body: {
     @Previewable @State var pomodorinoTask: PomodorinoTask? =
     PomodorinoTask(label: "Pomodorino 🍅", details: "Such a cool app")
