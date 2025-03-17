@@ -169,11 +169,17 @@ struct FocusView: View {
         
         // Create new Pomodorino
         pomodorino = Pomodorino.new(startTime: Date.now, intervalDuration: 25)
-        pomodorino.task = lastPomodorino?.task
         print("FocusView | Resetted with new Pomodorino")
+        
+        // Find previous Task
+        let previousTask = lastPomodorino?.task
+        if(previousTask != nil && !previousTask!.isDone) {
+            pomodorino.task = lastPomodorino?.task
+        }
         
         if(pomodorino.hasTask) {
             showingSheet = true
+            print("FocusView | Updated with previous Task: \(pomodorino.task?.label ?? "")")
         }
         
         doResetFocus = false
