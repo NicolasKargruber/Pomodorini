@@ -197,54 +197,38 @@ extension TransitionSheetView {
     @Previewable @State var pomodorinoTask: PomodorinoTask? =
     PomodorinoTask(label: "Pomodorino 🍅", details: "Such a cool app")
     
-    do {
-        let previewer = try Previewer(pomodorinoTask: pomodorinoTask)
-        return Spacer().sheet(isPresented: .constant(true)) { TransitionSheetView(selectedTask: $pomodorinoTask, timerState: .notStarted) }
-                .modelContainer(previewer.container)
-        } catch {
-            return Text("Failed to create preview: \(error.localizedDescription)")
-        }
+    Spacer()
+        // Sheet
+        .sheet(isPresented: .constant(true))
+        { TransitionSheetView(selectedTask: $pomodorinoTask, timerState: .notStarted) }
+        // ModelContainer
+        .attachPreviewContainerWith(pomodorini: [], pomodorinoTasks: [pomodorinoTask!])
 })
 
 #Preview("Task - Unselected", body: {
-    do {
-        let previewer = try Previewer()
-        return Spacer().sheet(isPresented: .constant(true)) { TransitionSheetView(selectedTask: .constant(nil), timerState: .notStarted) }
-                .modelContainer(previewer.container)
-        } catch {
-            return Text("Failed to create preview: \(error.localizedDescription)")
-        }
+    Spacer()
+        // Sheet
+        .sheet(isPresented: .constant(true))
+        { TransitionSheetView(selectedTask: .constant(nil), timerState: .notStarted) }
+        // ModelContainer
+        .attachPreviewContainer()
 })
 
 #Preview("Task - End Focus", body: {
     @Previewable @State var pomodorinoTask: PomodorinoTask? =
     PomodorinoTask(label: "Pomodorino 🍅", details: "Such a cool app")
     
-    do {
-        let previewer = try Previewer(pomodorinoTask: pomodorinoTask)
-        return Spacer().sheet(isPresented: .constant(true)) { TransitionSheetView(selectedTask: $pomodorinoTask, timerState: .ended) }
-                .modelContainer(previewer.container)
-        } catch {
-            return Text("Failed to create preview: \(error.localizedDescription)")
-        }
-})
-
-#Preview("Task - Selected- End Focus", body: {
-    @Previewable @State var pomodorinoTask: PomodorinoTask? =
-    PomodorinoTask(label: "Pomodorino 🍅", details: "Such a cool app")
-    
-    do {
-        let previewer = try Previewer(pomodorinoTask: pomodorinoTask)
-        return Spacer().sheet(isPresented: .constant(true)) { TransitionSheetView(selectedTask: $pomodorinoTask, timerState: .ended) }
-                .modelContainer(previewer.container)
-        } catch {
-            return Text("Failed to create preview: \(error.localizedDescription)")
-        }
+    Spacer()
+        // Sheet
+        .sheet(isPresented: .constant(true))
+        { TransitionSheetView(selectedTask: $pomodorinoTask, timerState: .ended) }
+        // ModelContainer
+        .attachPreviewContainerWith(pomodorinoTasks: [pomodorinoTask])
 })
 
 #Preview("No Task", body: {
     @Previewable @State var pomodorinoTask: PomodorinoTask? = nil
     
-    Spacer().sheet(isPresented: .constant(true)) { TransitionSheetView(selectedTask: $pomodorinoTask, timerState: .notStarted) }
+    Spacer().sheet(isPresented: .constant(true))
+    { TransitionSheetView(selectedTask: $pomodorinoTask, timerState: .notStarted) }
 })
-

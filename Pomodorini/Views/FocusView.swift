@@ -199,11 +199,6 @@ extension FocusView {
     @Previewable @AppStorage("pomodorinoCount") var count = 0
     let pomodorinoTask = PomodorinoTask.newTask(named: "Geoguessr 🌍")
     
-    do {
-        let previewer = try Previewer(pomodorinoTask: pomodorinoTask)
-        return FocusView(durationInMinutes: 1).onAppear { count = 3 }
-                .modelContainer(previewer.container)
-        } catch {
-            return Text("Failed to create preview: \(error.localizedDescription)")
-        }
+    FocusView(durationInMinutes: 1).onAppear { count = 3 }
+            .attachPreviewContainerWith(pomodorinoTasks: [pomodorinoTask])
 }
