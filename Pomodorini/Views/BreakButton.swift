@@ -51,7 +51,7 @@ extension BreakButton {
                 .padding(.horizontal, 12)
         }
         .buttonStyle(.bordered)
-        .tint(.primary)
+        .tint(.white)
         .cornerRadius(48)
         .transition(.opacity.combined(with: .scale))
         .confirmationDialog("Skip Break", isPresented: $showingConfirmation) {
@@ -75,16 +75,22 @@ extension BreakButton {
 }
 
 #Preview {
-    BreakButton(
-        state: .notStarted, onSkip: {}, onCollect: {})
-    
-    Spacer().frame(height: 48)
-    
-    BreakButton(
-        state: .running, onSkip: {}, onCollect: {})
-    
-    Spacer().frame(height: 48)
-    
-    BreakButton(
-        state: .endable, onSkip: {}, onCollect: {})
+    ZStack {
+        Color.black.frame(width: .infinity, height: .infinity).ignoresSafeArea()
+        
+        VStack {
+            BreakButton(
+                state: .notStarted, onSkip: {}, onCollect: {})
+            
+            Spacer().frame(height: 48)
+            
+            BreakButton(
+                state: .running, onSkip: {}, onCollect: {})
+            
+            Spacer().frame(height: 48)
+            
+            BreakButton(
+                state: .endable, onSkip: {}, onCollect: {})
+        }
+    }
 }

@@ -35,6 +35,7 @@ struct FocusView: View {
     // Live Activity
     @State private var liveActivity: Activity<PomodorinoTimerAttributes>?
     
+    // MARK: - Init
     init(durationInMinutes: Int = 25) {
         NotificationManager.shared.requestAuthorization ()
         self.vm = TimerViewModel(intervalDuration: durationInMinutes)
@@ -46,6 +47,7 @@ struct FocusView: View {
         print("FocusView | Create  new Pomodorino")
     }
 
+    // MARK: - Body
     var body: some View {
         NavigationStack {
             ZStack(alignment: .top) {
@@ -186,6 +188,7 @@ struct FocusView: View {
     }
 }
 
+// MARK: - Extension
 extension FocusView {
     private var background: some View {
         // Background Color
@@ -203,6 +206,7 @@ extension FocusView {
     }
 }
 
+// MARK: - Preview
 #Preview {
     @Previewable @AppStorage("pomodorinoCount") var count = 0
     let pomodorinoTask = PomodorinoTask.newTask(named: "Geoguessr 🌍")
