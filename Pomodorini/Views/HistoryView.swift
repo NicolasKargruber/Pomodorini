@@ -79,13 +79,8 @@ extension HistoryView {
 #Preview("HistoryView", body: {
     let pomodorinoTask = PomodorinoTask.newTask(named: "Geoguessr 🌍")
     
-    do {
-        let previewer = try Previewer(pomodorinoTask: pomodorinoTask)
-        return HistoryView()
-            .modelContainer(previewer.container)
-    } catch {
-        return Text("Failed to create preview: \(error.localizedDescription)")
-    }
+    HistoryView()
+        .attachPreviewContainerWith(pomodorinoTasks: [pomodorinoTask])
 })
 
 
