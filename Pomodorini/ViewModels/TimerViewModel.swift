@@ -18,7 +18,7 @@ class TimerViewModel {
     private var _remainingTime: TimeInterval // Remaining time in seconds
     var remainingTime: TimeInterval { _remainingTime }
     private var overtime: TimeInterval?      // Overtime in seconds
-    private var startTime: Date?             // Start time of the timer
+    private(set) var startTime: Date?             // Start time of the timer
     private var timer: Timer?                // Timer object
     private var threshold: Double = 0.079    // Completion threshold 8%
 
