@@ -109,6 +109,7 @@ struct FocusView: View {
         print("FocusView | Started Timer")
         
         // ADD Pomodorino
+        pomodorino.startTime = vm.startTime ?? Date.now
         modelContext.insert(pomodorino)
         print("FocusView | Added new Pomodorino")
         
@@ -139,6 +140,7 @@ struct FocusView: View {
         
         if(savePomodorino && vm.ranMoreThan10Seconds) {
             // Save Pomodorino
+            // pomodorino.startTime = vm.startTime ?? Date.now // Is redundant
             pomodorino.endTime = vm.endTime
             print("FocusView | Saved Pomodorino EndTime")
         }
