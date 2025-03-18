@@ -61,11 +61,12 @@ struct FocusView: View {
                         HistoryView.navigationButton
                     }
 
-                    VStack(spacing: 72) {
+                    VStack(spacing: 60) {
                         VStack(spacing: 12) {
                             goalButton
                             
                             TimerDisplay(formatedTime: vm.formattedTime, formatedOvertime: vm.formattedOvertime, showOvertime: vm.isCompleted)
+                                .scaleEffect(pomodorino.hasTask ? 0.8 : 1)
                         }
 
                         // Focus Button
@@ -104,9 +105,6 @@ struct FocusView: View {
     }
     
     private func startFocusSession() {
-        // TODO: Delete - Remove pomodorini without endTime
-        //try! modelContext.delete(model: Pomodorino.self, where: #Predicate { $0.endTime == nil })
-        
         vm.startTimer()
         print("FocusView | Started Timer")
         
@@ -203,6 +201,7 @@ extension FocusView {
             Text((pomodorino.task?.label ?? "Goal")).font(.title).fontWeight(.semibold)
                 .padding(.horizontal, 8).padding(.vertical, 4)
         }.buttonBorderShape(.roundedRectangle).buttonStyle(.bordered).tint(.white)
+            .scaleEffect(pomodorino.hasTask ? 1.2 : 1)
     }
 }
 
