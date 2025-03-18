@@ -20,7 +20,8 @@ struct BreakView: View {
     @Binding var doResetFocus: Bool
 
     @State private var vm: TimerViewModel
-
+    
+    // MARK: - Init
     init(doResetFocus: Binding<Bool>) {
         _doResetFocus = doResetFocus
         
@@ -34,7 +35,8 @@ struct BreakView: View {
         // ViewModel
         self.vm = TimerViewModel(intervalDuration: breakInMinutes)
     }
-
+    
+    // MARK: - Body
     var body: some View {
         ZStack {
             Background()
@@ -49,10 +51,10 @@ struct BreakView: View {
                 
                 VStack(spacing: 12) {
                     
-                        // SVGImage
-                        PomodorinoStageView(ripeness: vm.progress).frame(width: 120, height: 120)
+                    // SVGImage
+                    PomodorinoStageView(ripeness: vm.progress).frame(width: 120, height: 120)
                         
-                        Spacer().frame(height: 24)
+                    Spacer().frame(height: 24)
                     
                     BreakButton(
                         state: vm.timerState,
@@ -71,11 +73,11 @@ struct BreakView: View {
         }
         .onAppear {
             UNUserNotificationCenter.current().setBadgeCount(0)
-            startTimer()
+            startBreak()
         }
     }
     
-    func startTimer() {
+    func startBreak() {
         vm.startTimer()
         
         // Notification - Break
@@ -89,11 +91,11 @@ struct BreakView: View {
         NotificationCenter.default.addObserver(forName: UIApplication.willTerminateNotification, object: nil, queue: .main) { _ in
             // Terminating
             print("App died")
-            stopTimer()
+            endBreak()
         }
     }
 
-    func stopTimer() {
+    func endBreak() {
         vm.stopTimer()
         print("BreakView | Stopped Timer")
         
@@ -117,8 +119,8 @@ struct BreakView: View {
     }
 }
 
+// MARK: - Extension
 extension BreakView {
-    
     struct Background: View {
         @State private var isAnimating = false
         
@@ -175,6 +177,7 @@ extension BreakView {
     }
 }
 
+// MARK: - Preview
 #Preview {
     @Previewable @State var doResetFocus = false
     BreakView(doResetFocus: $doResetFocus)
