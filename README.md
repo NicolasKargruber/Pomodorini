@@ -1,21 +1,18 @@
-## 🍅 Pomodorini 🍅 - The Hyperfocus Breaker  
+# 🆙 Pomodorini v0.4.1 🆙
+### 🍅 Pomodorini 🍅 - The Hyperfocus Breaker 
+A Swift app promoting Time Awareness using a semi-flexible approach—perfect for people with ADHD. 🌱
+- Why the diminutive? Because they're smaller than real tomatoes! 🧐
+- Why the plural? Because we’ll grow many! 🍅🍅🍅
 
-**A Swift app to help manage focus and avoid the hyperfocus trap, designed for people with ADHD. 🌱**  
+### 🧠 Why Pomodorini?
+Many fellow ADHD friends struggle with Time Blindness, Hyperfocus, or Task Switching, making it harder to stay productive—especially for complex projects. Maintaining a balance between focus and breaks is essential for both productivity and well-being.
 
----
+### 🚀 Features
+- Grow virtual Pomodorini as you work. 🍅💦
+- Train time awareness with mindful breaks and let your Pomodorino thrive. 🌱
+- Ease task transitions and improve workflow. 🌈
+- Break the hyperfocus cycle to prevent burnout. ✂️
+- Enjoy stimulating breaks that refresh your mind. 🎢 ⏰
+- Maintain a healthy work-rest balance for sustained focus. ⚖️
 
-### 🧠 Why Pomodorini?  
-Balancing focus and breaks is essential for productivity and healthier habits.  
-
----
-
-### 🚀 Key Features  
-- Grow virtual "Pomodorini" (tomatoes) as you work. 🍅💦  
-- Take study breaks and let your Pomodorino-Plants thrive. 🌱  
-- Balance work and rest for better focus. ⚖️  
-- Break the hyperfocus cycle and recharge. ✂️  
-
----
-
-**Find your flow, grow your focus, and break free from hyperfocus! 🍅🕒**  
-
+### ➡️ Find your ideal flow, grow your own Pomodorino, and break free from hyperfocus! 🍅🕒 ⬅️
