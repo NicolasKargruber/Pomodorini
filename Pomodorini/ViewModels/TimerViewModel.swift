@@ -14,12 +14,12 @@ import SwiftUI
 class TimerViewModel {
     // MARK: - Private Properties
     
-    private let intervalDuration: TimeInterval  // Total duration in seconds
-    private(set) var remainingTime: TimeInterval // Remaining time in seconds
-    private var overtime: TimeInterval?      // Overtime in seconds
-    private(set) var startTime: Date?             // Start time of the timer
-    private var timer: Timer?                // Timer object
-    private var threshold: Double = 0.079    // Completion threshold 8%
+    private let intervalDuration: TimeInterval              // Total duration in seconds
+    private(set) var remainingTime: TimeInterval            // Remaining time in seconds
+    private var overtime: TimeInterval = TimeInterval(0)  // Overtime in seconds
+    private(set) var startTime: Date?                       // Start time of the timer
+    private var timer: Timer?                               // Timer object
+    private var threshold: Double = 0.079                   // Completion threshold 8%
 
     // MARK: - Initializer
     
@@ -48,7 +48,7 @@ class TimerViewModel {
     /// Actual time when Timer stopped
     var endTime: Date?  {
         guard let predicted = predictedEndTime else { return nil }
-        return predicted.addingTimeInterval(-remainingTime)
+        return predicted.addingTimeInterval(-remainingTime).addingTimeInterval(+overtime)
     }
     
     /// Timer Interval for Live Activity.
@@ -95,12 +95,12 @@ class TimerViewModel {
     
     /// Indicates whether it is time to show a friendly reminder
     var isTimeForAwareness: Bool {
-        return ranMoreThan1Minute && Int(remainingTime / 60) % 5 == 4 && isRunning
+        ranMoreThan1Minute && Int((remainingTime + overtime) / 60) % 5 == 4 && isRunning
     }
     
     /// The timer's progress as a value from 0.0 to 1.0.
     var progress: Double {
-        let timeElapsed = intervalDuration - remainingTime + (overtime ?? 0)
+        let timeElapsed = intervalDuration - remainingTime + overtime
         return timeElapsed / intervalDuration
     }
     
@@ -111,7 +111,7 @@ class TimerViewModel {
     
     /// A formatted string representation of the overtime.
     var formattedOvertime: String {
-        "+\(formatTime(overtime ?? 0))"
+        "+\(formatTime(overtime))"
     }
     
     // MARK: - Public methods
@@ -134,7 +134,7 @@ class TimerViewModel {
     /// Resets the timer to its initial state.
     func resetTimer() {
         remainingTime = intervalDuration
-        overtime = nil
+        overtime = TimeInterval(0)
         startTime = nil
     }
     

@@ -227,7 +227,7 @@ extension TransitionSheetView {
         .sheet(isPresented: .constant(true))
         { TransitionSheetView(selectedTask: $pomodorinoTask, timerState: .ended) }
         // ModelContainer
-        .attachPreviewContainerWith(pomodorinoTasks: [pomodorinoTask])
+        .attachPreviewContainerWith(pomodorinoTasks: [pomodorinoTask!])
 })
 
 #Preview("No Task", body: {

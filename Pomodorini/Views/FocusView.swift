@@ -234,7 +234,8 @@ extension FocusView {
 #Preview {
     @Previewable @AppStorage("pomodorinoCount") var count = 0
     let pomodorinoTask = PomodorinoTask.newTask(named: "Geoguessr 🌍")
+    let durationInSeconds = 302
     
-    FocusView(durationInMinutes: 5*60).onAppear { count = 3 }
+    FocusView(durationInMinutes: durationInSeconds).onAppear { count = 3 }
             .attachPreviewContainerWith(pomodorinoTasks: [pomodorinoTask])
 }
