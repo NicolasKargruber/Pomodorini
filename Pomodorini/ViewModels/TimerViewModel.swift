@@ -15,8 +15,7 @@ class TimerViewModel {
     // MARK: - Private Properties
     
     private let intervalDuration: TimeInterval  // Total duration in seconds
-    private var _remainingTime: TimeInterval // Remaining time in seconds
-    var remainingTime: TimeInterval { _remainingTime }
+    private(set) var remainingTime: TimeInterval // Remaining time in seconds
     private var overtime: TimeInterval?      // Overtime in seconds
     private(set) var startTime: Date?             // Start time of the timer
     private var timer: Timer?                // Timer object
@@ -29,10 +28,10 @@ class TimerViewModel {
         
         // #Preview
         if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1"
-        { self.intervalDuration = TimeInterval(30) }
+        { self.intervalDuration = TimeInterval(intervalDuration) }
         else { self.intervalDuration = TimeInterval(clampedMinutes * 60) }
         
-        self._remainingTime = self.intervalDuration
+        self.remainingTime = self.intervalDuration
     }
     
     // MARK: - Computed Properties
@@ -49,7 +48,7 @@ class TimerViewModel {
     /// Actual time when Timer stopped
     var endTime: Date?  {
         guard let predicted = predictedEndTime else { return nil }
-        return predicted.addingTimeInterval(-_remainingTime)
+        return predicted.addingTimeInterval(-remainingTime)
     }
     
     /// Timer Interval for Live Activity.
@@ -61,28 +60,17 @@ class TimerViewModel {
         return start...end
     }
     
-    /// Indicates whether the timer ran more than 10 sedonds
-    var ranMoreThan10Seconds: Bool {
-        intervalDuration - _remainingTime >= 10
+    /// Indicates whether the timer ran more than 1 minute
+    var ranMoreThan1Minute: Bool {
+        intervalDuration - remainingTime >= 60
     }
-    
-    /*/// Indicates whether the timer ran longer than half the threshold
-    var ranLongEnough: Bool {
-        progress - threshold/2 > 0
-    }*/
     
     /// Determines the state of the pomodorino timer.
     var timerState: PomodorinoTimerState {
-        if(hasEnded){
-            return .ended
-        }
-        else if isEndable {
-            return .endable
-        } else if isRunning {
-            return .running
-        } else {
-            return .notStarted
-        }
+        if(hasEnded){ return .ended }
+        else if isEndable { return .endable }
+        else if isRunning { return .running }
+        else { return .notStarted }
     }
     
     /// Indicates whether the timer is in the "completable" phase.
@@ -92,7 +80,7 @@ class TimerViewModel {
     
     /// Indicates whether the timer has completed.
     var isCompleted: Bool {
-        _remainingTime <= 0
+        remainingTime <= 0
     }
     
     /// Becomes true when the timer gets invalidated.
@@ -105,15 +93,20 @@ class TimerViewModel {
         timer?.isValid ?? false
     }
     
+    /// Indicates whether it is time to show a friendly reminder
+    var isTimeForAwareness: Bool {
+        return ranMoreThan1Minute && Int(remainingTime / 60) % 5 == 4 && isRunning
+    }
+    
     /// The timer's progress as a value from 0.0 to 1.0.
     var progress: Double {
-        let timeElapsed = intervalDuration - _remainingTime + (overtime ?? 0)
+        let timeElapsed = intervalDuration - remainingTime + (overtime ?? 0)
         return timeElapsed / intervalDuration
     }
     
     /// A formatted string representation of the remaining time.
     var formattedTime: String {
-        formatTime(_remainingTime)
+        formatTime(remainingTime)
     }
     
     /// A formatted string representation of the overtime.
@@ -140,7 +133,7 @@ class TimerViewModel {
     
     /// Resets the timer to its initial state.
     func resetTimer() {
-        _remainingTime = intervalDuration
+        remainingTime = intervalDuration
         overtime = nil
         startTime = nil
     }
@@ -152,10 +145,10 @@ class TimerViewModel {
         guard let predicted = predictedEndTime else { return }
         let now = Date()
         
-        _remainingTime = max(predicted.timeIntervalSince(now), 0)
-        if _remainingTime == 0 /*&& allowsOvertime*/ {
+        remainingTime = max(predicted.timeIntervalSince(now), 0)
+        if remainingTime == 0 /*&& allowsOvertime*/ {
             overtime = abs(now.timeIntervalSince(predicted))
-        } else if _remainingTime == 0 {
+        } else if remainingTime == 0 {
             stopTimer()
         }
     }
