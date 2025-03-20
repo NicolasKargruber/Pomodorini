@@ -29,8 +29,9 @@ struct FocusView: View {
         return pomodorini.sorted(by: {$0.startTime < $1.startTime}).last
     }
     
-    // Awareness Text
+    // Awareness Message
     @State private var showFriendlyReminder: Bool = false
+    @State private var awarenessMessage: String = AwarenessMessage.random()
     
     // Tarnsition Sheet
     @State private var showingSheet = false
@@ -70,11 +71,11 @@ struct FocusView: View {
                         VStack(spacing: 12) {
                             goalButton
                             
-                            TimerDisplay(formatedTime: vm.formattedTime, formatedOvertime: vm.formattedOvertime, showOvertime: vm.isCompleted)
-                                .scaleEffect(pomodorino.hasTask ? 0.8 : 1)
-                                .onTapGesture{withAnimation {
-                                    showFriendlyReminder.toggle()}
-                                }
+                            TimerDisplay(
+                                formatedTime: vm.formattedTime,
+                                formatedOvertime: vm.formattedOvertime,
+                                showOvertime: vm.isCompleted
+                            ).scaleEffect(pomodorino.hasTask ? 0.8 : 1)
                         }
 
                         // Focus Button
@@ -92,13 +93,7 @@ struct FocusView: View {
                         
                         Spacer()
                         
-                        if showFriendlyReminder {
-                            Text(AwarenessMessage.random())
-                                .font(.title2).multilineTextAlignment(.center)
-                                .foregroundColor(.white)
-                                .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
-                                .padding(.horizontal, 36)
-                        }
+                        if showFriendlyReminder { awarenessMessageView }
                         
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -121,10 +116,11 @@ struct FocusView: View {
         }
         // Reset FocusView
         .onChange(of: doResetFocus, initial: false) { _, newValue in resetFocusSession() }
-        // Show Awareness Reminder
+        // Toggle Awareness Messages
         .onChange(of: vm.isTimeForAwareness) { _, newValue in
             withAnimation {
                 showFriendlyReminder = newValue
+                awarenessMessage = AwarenessMessage.random()
             }
         }
     }
@@ -151,7 +147,7 @@ struct FocusView: View {
             timeInterval: vm.remainingTime
         )
         
-        // Cancel Notifications when app dies
+        // Cancel Notifications when App dies
         NotificationCenter.default.addObserver(forName: UIApplication.willTerminateNotification, object: nil, queue: .main) { _ in
             // Terminating
             print("FocusView | App died")
@@ -228,13 +224,21 @@ extension FocusView {
         }.buttonBorderShape(.roundedRectangle).buttonStyle(.bordered).tint(.white)
             .scaleEffect(pomodorino.hasTask ? 1.2 : 1)
     }
+    
+    private var awarenessMessageView: some View {
+        Text(awarenessMessage)
+            .font(.title2).multilineTextAlignment(.center)
+            .foregroundColor(PomodorinoGradient.color(forRipeness: vm.progress).mix(with: .white, by: 0.6))
+            .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
+            .padding(.horizontal, 36)
+    }
 }
 
 // MARK: - Preview
 #Preview {
     @Previewable @AppStorage("pomodorinoCount") var count = 0
     let pomodorinoTask = PomodorinoTask.newTask(named: "Geoguessr 🌍")
-    let durationInSeconds = 302
+    let durationInSeconds = 30
     
     FocusView(durationInMinutes: durationInSeconds).onAppear { count = 3 }
             .attachPreviewContainerWith(pomodorinoTasks: [pomodorinoTask])

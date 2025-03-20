@@ -8,12 +8,15 @@
 struct AwarenessMessage {
     private static let messages = [
             "Still doing well? Getting Stuck?\nNeed a break?",
-            "Scribble down your last thoughts to take of right where you left of.",
+            "Scribble down your last thoughts before your break.",
+            "Your Pomodorini History is waiting for you.",
+            "Your Pomodorino's Goal is never your timer!",
+            "Update the Goal's steps before starting your Pomodorino.",
             "Break your goal into chunks. Get as many done as possible.",
-            "You may use an AI Tools to help you break down your Goal.",
+            "Use AI Tools to help break down your Goal.",
             "Awareness - remember you may stop the Timer any time.",
-            "Breaks are essential and your friend against Hyperfocus",
-            "Reset the Pomodorini Counter by long pressing it"
+            "Breaks are your friend against Hyperfocus",
+            "Long press the Pomodorini counter to reset it."
         ]
     
     static func random() -> String {
