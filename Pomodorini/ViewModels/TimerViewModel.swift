@@ -148,7 +148,10 @@ class TimerViewModel {
         remainingTime = max(predicted.timeIntervalSince(now), 0)
         if remainingTime == 0 /*&& allowsOvertime*/ {
             overtime = abs(now.timeIntervalSince(predicted))
-        } else if remainingTime == 0 {
+        }
+        
+        // Stop overtime at 59:59 hour
+        if overtime >= (60 * 60) - 1 {
             stopTimer()
         }
     }
