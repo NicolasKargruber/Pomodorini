@@ -30,10 +30,13 @@ struct FocusView: View {
     }
     
     // Awareness Message
-    @State private var showFriendlyReminder: Bool = false
+    @State private var showingFriendlyReminder: Bool = false
     @State private var awarenessMessage: String = AwarenessMessage.random()
     
-    // Tarnsition Sheet
+    // Confirmation Dialog
+    @State private var showingConfirmation: Bool = false
+    
+    // Transition Sheet
     @State private var showingSheet = false
     
     // Live Activity
@@ -79,21 +82,11 @@ struct FocusView: View {
                         }
 
                         // Focus Button
-                        FocusButton(
-                            state: vm.timerState,
-                            onStart: { startFocusSession() },
-                            onEnd: { endFocusSession() }
-                        )
-                        // Navigation to BREAK VIEW
-                        .navigationDestination(isPresented: $navigateToBreak) {
-                            BreakView(doResetFocus: $doResetFocus)
-                                .environment(\.colorScheme, .dark) // Enforce Dark-Mode
-                                .navigationBarBackButtonHidden(true)
-                        }
+                        focusButton
                         
                         Spacer()
                         
-                        if showFriendlyReminder { awarenessMessageView }
+                        if showingFriendlyReminder { awarenessMessageView }
                         
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -119,7 +112,7 @@ struct FocusView: View {
         // Toggle Awareness Messages
         .onChange(of: vm.isTimeForAwareness) { _, newValue in
             withAnimation {
-                showFriendlyReminder = newValue
+                showingFriendlyReminder = newValue
                 awarenessMessage = AwarenessMessage.random()
             }
         }
@@ -223,6 +216,30 @@ extension FocusView {
                 .padding(.horizontal, 8).padding(.vertical, 4)
         }.buttonBorderShape(.roundedRectangle).buttonStyle(.bordered).tint(.white)
             .scaleEffect(pomodorino.hasTask ? 1.2 : 1)
+    }
+    
+    private var focusButton: some View {
+        FocusButton(
+            state: vm.timerState,
+            onStart: { startFocusSession() },
+            onEnd: {
+                if(vm.ranMoreThan1Minute) { endFocusSession() }
+                else { showingConfirmation = true }
+            }
+        )
+        // Confirmation
+        .confirmationDialog("End Focus", isPresented: $showingConfirmation) {
+            Button("End", role: .destructive) { endFocusSession() }
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("Focus Sessions under 1 Minute will not\nshow in your History.\n\nEnd Pomodorino?")
+        }
+        // Navigation to BREAK VIEW
+        .navigationDestination(isPresented: $navigateToBreak) {
+            BreakView(doResetFocus: $doResetFocus)
+                .environment(\.colorScheme, .dark) // Enforce Dark-Mode
+                .navigationBarBackButtonHidden(true)
+        }
     }
     
     private var awarenessMessageView: some View {
