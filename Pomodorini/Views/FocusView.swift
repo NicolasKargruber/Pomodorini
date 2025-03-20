@@ -29,7 +29,14 @@ struct FocusView: View {
         return pomodorini.sorted(by: {$0.startTime < $1.startTime}).last
     }
     
-    // Tarnsition Sheet
+    // Awareness Message
+    @State private var showingFriendlyReminder: Bool = false
+    @State private var awarenessMessage: String = AwarenessMessage.random()
+    
+    // Confirmation Dialog
+    @State private var showingConfirmation: Bool = false
+    
+    // Transition Sheet
     @State private var showingSheet = false
     
     // Live Activity
@@ -61,25 +68,26 @@ struct FocusView: View {
                         HistoryView.navigationButton
                     }
 
-                    VStack(spacing: 72) {
+                    VStack(spacing: 48) {
+                        Spacer().frame(height: 140)
+                        
                         VStack(spacing: 12) {
                             goalButton
                             
-                            TimerDisplay(formatedTime: vm.formattedTime, formatedOvertime: vm.formattedOvertime, showOvertime: vm.isCompleted)
+                            TimerDisplay(
+                                formatedTime: vm.formattedTime,
+                                formatedOvertime: vm.formattedOvertime,
+                                showOvertime: vm.isCompleted
+                            ).scaleEffect(pomodorino.hasTask ? 0.8 : 1)
                         }
 
                         // Focus Button
-                        FocusButton(
-                            state: vm.timerState,
-                            onStart: { startFocusSession() },
-                            onEnd: { endFocusSession() }
-                        )
-                        // Navigation to BREAK VIEW
-                        .navigationDestination(isPresented: $navigateToBreak) {
-                            BreakView(doResetFocus: $doResetFocus)
-                                .environment(\.colorScheme, .dark) // Enforce Dark-Mode
-                                .navigationBarBackButtonHidden(true)
-                        }
+                        focusButton
+                        
+                        Spacer()
+                        
+                        if showingFriendlyReminder { awarenessMessageView }
+                        
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
@@ -101,12 +109,16 @@ struct FocusView: View {
         }
         // Reset FocusView
         .onChange(of: doResetFocus, initial: false) { _, newValue in resetFocusSession() }
+        // Toggle Awareness Messages
+        .onChange(of: vm.isTimeForAwareness) { _, newValue in
+            withAnimation {
+                showingFriendlyReminder = newValue
+                awarenessMessage = AwarenessMessage.random()
+            }
+        }
     }
     
     private func startFocusSession() {
-        // TODO: Delete - Remove pomodorini without endTime
-        //try! modelContext.delete(model: Pomodorino.self, where: #Predicate { $0.endTime == nil })
-        
         vm.startTimer()
         print("FocusView | Started Timer")
         
@@ -128,7 +140,7 @@ struct FocusView: View {
             timeInterval: vm.remainingTime
         )
         
-        // Cancel Notifications when app dies
+        // Cancel Notifications when App dies
         NotificationCenter.default.addObserver(forName: UIApplication.willTerminateNotification, object: nil, queue: .main) { _ in
             // Terminating
             print("FocusView | App died")
@@ -140,7 +152,7 @@ struct FocusView: View {
         vm.stopTimer()
         print("FocusView | Stopped Timer")
         
-        if(savePomodorino && vm.ranMoreThan10Seconds) {
+        if(savePomodorino && vm.ranMoreThan1Minute) {
             // Save Pomodorino
             // pomodorino.startTime = vm.startTime ?? Date.now // Is redundant
             pomodorino.endTime = vm.endTime
@@ -203,6 +215,39 @@ extension FocusView {
             Text((pomodorino.task?.label ?? "Goal")).font(.title).fontWeight(.semibold)
                 .padding(.horizontal, 8).padding(.vertical, 4)
         }.buttonBorderShape(.roundedRectangle).buttonStyle(.bordered).tint(.white)
+            .scaleEffect(pomodorino.hasTask ? 1.2 : 1)
+    }
+    
+    private var focusButton: some View {
+        FocusButton(
+            state: vm.timerState,
+            onStart: { startFocusSession() },
+            onEnd: {
+                if(vm.ranMoreThan1Minute) { endFocusSession() }
+                else { showingConfirmation = true }
+            }
+        )
+        // Confirmation
+        .confirmationDialog("End Focus", isPresented: $showingConfirmation) {
+            Button("End", role: .destructive) { endFocusSession() }
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("Focus Sessions under 1 Minute will not\nshow in your History.\n\nEnd Pomodorino?")
+        }
+        // Navigation to BREAK VIEW
+        .navigationDestination(isPresented: $navigateToBreak) {
+            BreakView(doResetFocus: $doResetFocus)
+                .environment(\.colorScheme, .dark) // Enforce Dark-Mode
+                .navigationBarBackButtonHidden(true)
+        }
+    }
+    
+    private var awarenessMessageView: some View {
+        Text(awarenessMessage)
+            .font(.title2).multilineTextAlignment(.center)
+            .foregroundColor(PomodorinoGradient.color(forRipeness: vm.progress).mix(with: .white, by: 0.6))
+            .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
+            .padding(.horizontal, 36)
     }
 }
 
@@ -210,7 +255,8 @@ extension FocusView {
 #Preview {
     @Previewable @AppStorage("pomodorinoCount") var count = 0
     let pomodorinoTask = PomodorinoTask.newTask(named: "Geoguessr 🌍")
+    let durationInSeconds = 30
     
-    FocusView(durationInMinutes: 1).onAppear { count = 3 }
+    FocusView(durationInMinutes: durationInSeconds).onAppear { count = 3 }
             .attachPreviewContainerWith(pomodorinoTasks: [pomodorinoTask])
 }

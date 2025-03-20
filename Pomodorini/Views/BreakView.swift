@@ -105,8 +105,7 @@ struct BreakView: View {
    }
     
     private func collectPomodorino(skip: Bool? = nil) {
-        vm.stopTimer()
-        print("BreakView | Stopped Timer")
+        endBreak()
         
         if(skip != true){
             pomodorinoCount += 1

@@ -14,13 +14,13 @@ import Foundation
 struct Previewer {
     let container: ModelContainer
 
-    init(pomodorini: [Pomodorino] = [], pomodorinoTasks: [PomodorinoTask?] = [], inMemory: Bool = true) throws {
+    init(pomodorini: [Pomodorino] = [], pomodorinoTasks: [PomodorinoTask] = [], inMemory: Bool = true) throws {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         container = try ModelContainer(for: Pomodorino.self, PomodorinoTask.self, configurations: config)
         
         // PomodorinoTasks
         for(pomodorinoTask) in pomodorinoTasks {
-            if(pomodorinoTask != nil) { container.mainContext.insert(pomodorinoTask!) }
+            container.mainContext.insert(pomodorinoTask)
         }
         container.mainContext.insert(PomodorinoTask.newTask(named: "Lernen 📚"))
         container.mainContext.insert(PomodorinoTask.newTask(named: "Haushalt 🧹"))
@@ -40,7 +40,7 @@ extension View {
         attachPreviewContainerWith()
     }
     
-    func attachPreviewContainerWith(pomodorini: [Pomodorino] = [], pomodorinoTasks: [PomodorinoTask?] = []) -> AnyView {
+    func attachPreviewContainerWith(pomodorini: [Pomodorino] = [], pomodorinoTasks: [PomodorinoTask] = []) -> AnyView {
         do {
             let previewer = try Previewer(pomodorini: pomodorini, pomodorinoTasks: pomodorinoTasks)
             return AnyView(self.modelContainer(previewer.container))
