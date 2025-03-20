@@ -36,6 +36,9 @@ struct BreakView: View {
         self.vm = TimerViewModel(intervalDuration: breakInMinutes)
     }
     
+    // Chores
+    @State private var selectedChore = "None selected"
+    
     // MARK: - Body
     var body: some View {
         ZStack {
@@ -51,10 +54,19 @@ struct BreakView: View {
                 
                 VStack(spacing: 12) {
                     
+                    VStack(spacing: 4) {
+                        Text("Choose a Chore").font(.title3).foregroundStyle(.white)
+                        Picker("Please choose a color", selection: $selectedChore) {
+                            ForEach(Chores.items, id: \.self) { Text($0) }
+                        }.scaleEffect(1.4)
+                    }
+                    
+                    Spacer().frame(height: 24)
+                    
                     // SVGImage
                     PomodorinoStageView(ripeness: vm.progress).frame(width: 120, height: 120)
-                        
-                    Spacer().frame(height: 24)
+                    
+                    Spacer().frame(height: 4)
                     
                     BreakButton(
                         state: vm.timerState,
