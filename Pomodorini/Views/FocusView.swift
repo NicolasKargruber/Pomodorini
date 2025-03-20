@@ -127,7 +127,6 @@ struct FocusView: View {
         modelContext.insert(pomodorino)
         print("FocusView | Added new Pomodorino")
         
-        
         // Live Activity - Start
         LiveActivityManager.shared
             .startActivity(timerInterval: vm.timerInterval, taskLabel: pomodorino.task?.label)
