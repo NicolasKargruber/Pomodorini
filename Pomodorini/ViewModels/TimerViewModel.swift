@@ -133,6 +133,7 @@ class TimerViewModel {
     
     /// Resets the timer to its initial state.
     func resetTimer() {
+        if(isRunning) { stopTimer() }
         remainingTime = intervalDuration
         overtime = TimeInterval(0)
         startTime = nil
