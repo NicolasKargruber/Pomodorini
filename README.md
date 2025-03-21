@@ -1,4 +1,6 @@
-# 🆙 Pomodorini v0.4.1 🆙
+# 🆙 Pomodorini v0.5.0 🆙
+![Media Preview _ Pomodorini_media_preview_github](https://github.com/user-attachments/assets/1be20436-28bb-4140-9748-0c2cfce86fd6)
+
 ### 🍅 Pomodorini 🍅 - The Hyperfocus Breaker 
 A Swift app promoting Time Awareness using a semi-flexible approach—perfect for people with ADHD. 🌱
 - Why the diminutive? Because they're smaller than real tomatoes! 🧐
