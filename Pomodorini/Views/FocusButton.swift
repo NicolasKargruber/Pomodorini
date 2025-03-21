@@ -14,7 +14,7 @@ struct FocusButton: View {
     var onEnd: () -> Void
     var onReset: () -> Void
     
-    // Animation
+    // Tap - Animation
     @State var isTapped: Bool = false
     @State var isLongPressed: Bool = false
 
@@ -58,17 +58,15 @@ struct FocusButton: View {
         // Content
         Group {
             switch state {
-            case .notStarted:
-                Text("Start")
-            case .running:
-                if(isTapped){
-                        navigationButton.task(delayShrink)
-                     }
-                else { invisibleView }
-            case .endable:
-                navigationButton
-            case .ended:
-                navigationButton
+                case .notStarted:
+                    Text("Start")
+                case .running:
+                    if(isTapped){ navigationButton.task(delayShrink) }
+                    else { invisibleView }
+                case .endable:
+                    navigationButton
+                case .ended:
+                    navigationButton
             }
         } // Handle Long Press
         .onLongPressGesture(minimumDuration: 3, perform: {}, onPressingChanged: { (isPressed) in
@@ -110,15 +108,15 @@ struct FocusButton: View {
     private func updateScale() {
         if(isLongPressed) { return buttonScale = 1.2 }
         switch state {
-        case .notStarted:
-            buttonScale = 1.0
-        case .running:
-            if(isTapped) { buttonScale = 1.4 }
-            else { buttonScale = 0.4 }
-        case .endable:
-            buttonScale = 1.4
-        case .ended:
-            buttonScale = 1.4
+            case .notStarted:
+                buttonScale = 1.0
+            case .running:
+                if(isTapped) { buttonScale = 1.4 }
+                else { buttonScale = 0.4 }
+            case .endable:
+                buttonScale = 1.4
+            case .ended:
+                buttonScale = 1.4
         }
     }
 }
@@ -154,22 +152,13 @@ extension FocusButton {
     @Previewable @State var pomodorinoCount = 0
     @Previewable @State var shouldResetTimer = false
     
-    ZStack {
-        Color.black.frame(width: .infinity, height: .infinity).ignoresSafeArea()
-        
-        VStack {
-            FocusButton(
-                state: .notStarted, onStart: {}, onEnd: {}, onReset: {})
+    Color.black.ignoresSafeArea().overlay{
+        VStack(spacing: 48) {
+            FocusButton(state: .notStarted, onStart: {}, onEnd: {}, onReset: {})
             
-            Spacer().frame(height: 48)
+            FocusButton(state: .running, onStart: {}, onEnd: {}, onReset: {})
             
-            FocusButton(
-                state: .running, onStart: {}, onEnd: {}, onReset: {})
-            
-            Spacer().frame(height: 48)
-            
-            FocusButton(
-                state: .endable, onStart: {}, onEnd: {}, onReset: {})
+            FocusButton(state: .endable, onStart: {}, onEnd: {}, onReset: {})
         }
     }
 }
