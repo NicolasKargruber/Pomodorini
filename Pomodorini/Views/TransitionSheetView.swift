@@ -70,9 +70,10 @@ struct TransitionSheetView: View {
         .padding()
         .alert("Enter Task title", isPresented: $showingAlert) {
             TextField("Enter your title", text: $taskLabel)
+                .limitInputLength(value: $taskLabel, length: 19)
             Button("OK", action: { addPomodorinoTask() })
             Button("Cancel", role: .cancel, action: {})
-                } message: { Text("This title must be unique to your task.") }
+        } message: { Text("This title must be unique to your task.") }
         .onDisappear(){
             // Save Task
             updateTaskDescription()
