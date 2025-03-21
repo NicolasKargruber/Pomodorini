@@ -12,6 +12,7 @@ struct FocusButton: View {
     var state: PomodorinoTimerState
     var onStart: () -> Void
     var onEnd: () -> Void
+    var onReset: () -> Void
     
     // Animation
     @State var isTapped: Bool = false
@@ -20,18 +21,35 @@ struct FocusButton: View {
     // Animation
     @State private var buttonScale = 1.0
     private let animationDuration: TimeInterval = 0.3
+    
+    // Fix onReset() Bug
+    @State var updateScaleOnTaskEnd: Bool = false
 
     var body: some View {
-        Button(action: { handleAction() }) { content }
-        .frame(width: 70, height: 70)
-        .foregroundColor(.white)
-        .background(.white.opacity(0.3))
-        .clipShape(Circle())
-        .padding(3)
-        .overlay(Circle().stroke(Color.white.opacity(0.3), lineWidth: 2))
-        .scaleEffect(buttonScale)
-        .onChange(of: state) { _, _ in updateScale() }
-        .animation(.bouncy(duration: animationDuration), value: buttonScale)
+        VStack(spacing: 24) {
+            // Focus
+            Button(action: { handleAction() }) { content }
+                .frame(width: 70, height: 70)
+                .foregroundColor(.white)
+                .background(.white.opacity(0.3))
+                .clipShape(Circle())
+                .padding(3)
+                .overlay(Circle().stroke(Color.white.opacity(0.3), lineWidth: 2))
+                .scaleEffect(buttonScale)
+                .onChange(of: state) { _, _ in
+                    updateScale()
+                    updateScaleOnTaskEnd = false
+                }
+                .animation(.bouncy(duration: animationDuration), value: buttonScale)
+            
+            // Reset
+            if(isTapped) {
+                Button(action: onReset){ Image(systemName: "arrow.counterclockwise") }
+                .frame(width: 48, height: 48)
+                .foregroundColor(.white).background(.white.opacity(0.3)).clipShape(Circle())
+                .transition(.move(edge: .top))
+            }
+        }.frame(height: 132, alignment: .top)
         .onAppear(){ updateScale() } // For Preview
     }
 
@@ -43,7 +61,9 @@ struct FocusButton: View {
             case .notStarted:
                 Text("Start")
             case .running:
-                if(isTapped){ navigationButton.task(delayShrink) }
+                if(isTapped){
+                        navigationButton.task(delayShrink)
+                     }
                 else { invisibleView }
             case .endable:
                 navigationButton
@@ -108,16 +128,20 @@ extension FocusButton {
         Circle().opacity(0.01)
             .onTapGesture {
                 print("Focus Button | was tapped")
-                isTapped = true
+                withAnimation{
+                    isTapped = true
+                }
                 updateScale()
            }
     }
     
     // Shrinks button back down after X seconds
     @Sendable private func delayShrink() async {
+        updateScaleOnTaskEnd = true
         try? await Task.sleep(for: .seconds(4))
         isTapped = false
-        updateScale()
+        // Update if state unchanged
+        if(updateScaleOnTaskEnd) { updateScale() }
     }
     
     private var navigationButton: some View {
@@ -135,17 +159,17 @@ extension FocusButton {
         
         VStack {
             FocusButton(
-                state: .notStarted, onStart: {}, onEnd: {})
+                state: .notStarted, onStart: {}, onEnd: {}, onReset: {})
             
             Spacer().frame(height: 48)
             
             FocusButton(
-                state: .running, onStart: {}, onEnd: {})
+                state: .running, onStart: {}, onEnd: {}, onReset: {})
             
             Spacer().frame(height: 48)
             
             FocusButton(
-                state: .endable, onStart: {}, onEnd: {})
+                state: .endable, onStart: {}, onEnd: {}, onReset: {})
         }
     }
 }

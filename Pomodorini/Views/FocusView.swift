@@ -176,7 +176,7 @@ struct FocusView: View {
         print("FocusView | Cancelled notifications")
     }
     
-    private func resetFocusSession() {
+    private func resetFocusSession(showSheet: Bool = true) {
         vm.resetTimer()
         print("FocusView | Resetted Timer")
         
@@ -184,13 +184,13 @@ struct FocusView: View {
         pomodorino = Pomodorino.new(startTime: Date.now, intervalDuration: 25)
         print("FocusView | Resetted with new Pomodorino")
         
-        // Find previous Task
-        let previousTask = lastPomodorino?.task
-        if(previousTask != nil && !previousTask!.isDone) {
+        // Update with previous Task
+        if let previousTask = lastPomodorino?.task, !previousTask.isDone {
             pomodorino.task = lastPomodorino?.task
         }
         
-        if(pomodorino.hasTask) {
+        // Sheet
+        if(showSheet && pomodorino.hasTask) {
             showingSheet = true
             print("FocusView | Updated with previous Task: \(pomodorino.task?.label ?? "")")
         }
@@ -224,7 +224,8 @@ extension FocusView {
             onEnd: {
                 if(vm.ranMoreThan1Minute) { endFocusSession() }
                 else { showingConfirmation = true }
-            }
+            },
+            onReset: { resetFocusSession(showSheet: false) }
         )
         // Confirmation
         .confirmationDialog("End Focus", isPresented: $showingConfirmation) {
