@@ -16,9 +16,12 @@ struct BreakView: View {
     @Environment(\.dismiss) private var dismiss
     
     @AppStorage("pomodorinoCount") var pomodorinoCount = 0
-
+    
+    // Collect Pomodorino
+    @State var collected: Bool = false
     @Binding var doResetFocus: Bool
 
+    // ViewModel
     @State private var vm: TimerViewModel
     
     // MARK: - Init
@@ -116,22 +119,35 @@ struct BreakView: View {
         print("BreakView | Cancelled notifications")
    }
     
-    private func collectPomodorino(skip: Bool? = nil) {
+    private func collectPomodorino(skip: Bool = false) {
         endBreak()
         
-        if(skip != true){
+        guard !collected else { return }
+        
+        if(!skip){
             pomodorinoCount += 1
-            print("BreakView | Increased Pomodorino Count")
+            collected = true
+            print("BreakView | Collected one Pomodorino")
         }
         
-        doResetFocus = true
-        print("BreakView | Dismiss Screen. Reset Focus: \(doResetFocus)")
-        dismiss()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            doResetFocus = true
+            print("BreakView | Dismiss Screen. Reset Focus: \(doResetFocus)")
+            
+            dismiss()
+        }
     }
 }
 
 // MARK: - Extension
 extension BreakView {
+    
+    private mutating func upPomodorini() {
+        pomodorinoCount += 1
+        collected = true
+        print("BreakView | Collected one Pomodorino")
+    }
+    
     struct Background: View {
         @State private var isAnimating = false
         

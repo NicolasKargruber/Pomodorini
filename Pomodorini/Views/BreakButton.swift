@@ -27,13 +27,9 @@ struct BreakButton: View {
                 Button(action: {}) {
                     // Add if needed
                 }.disabled(true).buttonStyle(.bordered)
-            }
-            
-            if state == .running {
+            } else if state == .running {
                 skipButton
-            }
-
-            if state == .endable {
+            } else {
                 collectButton
             }
         }
@@ -78,16 +74,12 @@ extension BreakButton {
     ZStack {
         Color.black.frame(width: .infinity, height: .infinity).ignoresSafeArea()
         
-        VStack {
+        VStack(spacing: 48) {
             BreakButton(
                 state: .notStarted, onSkip: {}, onCollect: {})
             
-            Spacer().frame(height: 48)
-            
             BreakButton(
                 state: .running, onSkip: {}, onCollect: {})
-            
-            Spacer().frame(height: 48)
             
             BreakButton(
                 state: .endable, onSkip: {}, onCollect: {})
