@@ -17,4 +17,4 @@ Many fellow ADHD friends struggle with Time Blindness, Hyperfocus, or Task Switc
 - Enjoy stimulating breaks that refresh your mind. 🎢 ⏰
 - Maintain a healthy work-rest balance for sustained focus. ⚖️
 
-### ➡️ Find your ideal flow, grow your own Pomodorino, and break free from hyperfocus! 🍅🕒 ⬅️
+### ➡️ Find your ideal flow, grow your Pomodorini, and break free from hyperfocus! 🍅🕒 ⬅️
