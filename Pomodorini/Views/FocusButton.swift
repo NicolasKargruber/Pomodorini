@@ -49,7 +49,7 @@ struct FocusButton: View {
                 .foregroundColor(.white).background(.white.opacity(0.3)).clipShape(Circle())
                 .transition(.move(edge: .top))
             }
-        }.frame(height: 132, alignment: .top)
+        }.frame(height: isTapped ? 132 : nil, alignment: .top)
         .onAppear(){ updateScale() } // For Preview
     }
 
